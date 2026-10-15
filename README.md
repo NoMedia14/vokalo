@@ -10,7 +10,7 @@ Ein Konto mit E-Mail und Passwort erstellen und die E-Mail bestätigen. Auf PC u
 
 ## Zentrale Speicherung
 
-Vokabeln, Wiederholungsintervalle, Aussprache-Ergebnisse, Kategorien, Lernziele und Einstellungen werden in Supabase gespeichert. Neue Lerndaten werden nicht in localStorage geschrieben. Die Anmeldung wird für die aktuelle Browser-Sitzung in sessionStorage gehalten.
+Vokabeln, Wiederholungsintervalle, Aussprache-Ergebnisse, Kategorien, Lernziele und Einstellungen werden in Supabase gespeichert. Neue Lerndaten werden nicht in localStorage geschrieben. Nur die Anmeldung wird dauerhaft im lokalen Gerätespeicher gehalten, damit Nutzer nach dem Schließen angemeldet bleiben. Lerndaten bleiben zentral in Supabase. Abmelden beendet nur die Sitzung des aktuellen Geräts.
 
 Beim ersten Anmelden in ein noch leeres Konto übernimmt die App vorhandene Vokalo-/Trainer-Daten aus diesem Browser. Bei bestehenden Konten ist ausschließlich der Cloud-Stand maßgeblich. Falls die Daten noch im alten Browser liegen, zuerst dort anmelden. Backups können weiterhin als JSON exportiert und importiert werden.
 

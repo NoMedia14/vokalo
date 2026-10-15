@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brasil Fokus-Trainer 4.0 – AI Edition</title>
+    <title>Vokalo – Sprachen lernen</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -15,7 +15,7 @@
             color: #0f172a;
         }
 
-        .brazil-gradient {
+        .vokalo-gradient {
             background: linear-gradient(135deg, #009c3b 0%, #007a2f 50%, #002776 100%);
         }
 
@@ -76,7 +76,7 @@
                 <div class="flex items-center gap-3">
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
-                            <h1 class="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">Brasil Fokus-Trainer</h1>
+                            <h1 class="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">Vokalo</h1>
 
                         </div>
                     </div>
@@ -461,7 +461,7 @@
             <div class="bg-white rounded-3xl p-6 sm:p-8 card-shadow border border-slate-100 space-y-6">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-5">
                     <div class="flex items-center gap-4">
-                        <div id="dashLevelBadge" class="w-16 h-16 rounded-2xl brazil-gradient text-white flex flex-col items-center justify-center font-extrabold shadow-md shrink-0">
+                        <div id="dashLevelBadge" class="w-16 h-16 rounded-2xl vokalo-gradient text-white flex flex-col items-center justify-center font-extrabold shadow-md shrink-0">
                             <span class="text-[10px] uppercase tracking-wider opacity-80">Niveau</span>
                             <span id="dashLevelCode" class="text-2xl">A1.1</span>
                         </div>
@@ -937,25 +937,34 @@
         // 2. INITIALIZATION & ROBUST STORAGE
         // ============================================================================
         function init() {
+            // Preserve existing progress and API settings when upgrading to Vokalo.
+            try {
+                ['VocabV3','VocabV2','CustomCatsV4','UserGoalV4','SettingsV3','AudioV3','UserApiKey','ShowPhotosV4','PhotoCacheV5'].forEach(suffix => {
+                    const previous = localStorage.getItem('pt' + 'Br' + suffix);
+                    if (previous !== null && localStorage.getItem('vokalo' + suffix) === null) {
+                        localStorage.setItem('vokalo' + suffix, previous);
+                    }
+                });
+            } catch (e) {}
             lucide.createIcons();
             try {
-                showPhotos = localStorage.getItem('ptBrShowPhotosV4') !== 'false';
-                const cache = JSON.parse(localStorage.getItem('ptBrPhotoCacheV5') || '{}');
+                showPhotos = localStorage.getItem('vokaloShowPhotosV4') !== 'false';
+                const cache = JSON.parse(localStorage.getItem('vokaloPhotoCacheV5') || '{}');
                 if (cache && typeof cache === 'object' && !Array.isArray(cache)) photoUrlCache = cache;
             } catch (e) {}
             updateImgModeBtnUI();
 
-            const savedCustomCats = localStorage.getItem('ptBrCustomCatsV4');
+            const savedCustomCats = localStorage.getItem('vokaloCustomCatsV4');
             if (savedCustomCats) {
                 try { customCategories = JSON.parse(savedCustomCats); } catch(e) { customCategories = []; }
             }
 
-            const savedVocab = localStorage.getItem('ptBrVocabV3');
+            const savedVocab = localStorage.getItem('vokaloVocabV3');
             if (savedVocab) {
                 try { vocabList = JSON.parse(savedVocab); } catch (e) { vocabList = []; }
             }
             if (!vocabList || vocabList.length === 0) {
-                const v2 = localStorage.getItem('ptBrVocabV2');
+                const v2 = localStorage.getItem('vokaloVocabV2');
                 if (v2) {
                     try { vocabList = JSON.parse(v2); } catch(e) {}
                 }
@@ -978,13 +987,13 @@
                 if (keyword) card.kw = keyword;
             });
             saveData();
-            const savedGoal = localStorage.getItem('ptBrUserGoalV4');
+            const savedGoal = localStorage.getItem('vokaloUserGoalV4');
             if (savedGoal) {
                 userGoalTarget = parseInt(savedGoal, 10) || 60;
                 document.getElementById('userGoalSelect').value = String(userGoalTarget);
             }
 
-            const savedSrs = localStorage.getItem('ptBrSettingsV3');
+            const savedSrs = localStorage.getItem('vokaloSettingsV3');
             if (savedSrs) {
                 try {
                     srsSettings = JSON.parse(savedSrs);
@@ -995,7 +1004,7 @@
                 } catch(e) {}
             }
 
-            const savedAudio = localStorage.getItem('ptBrAudioV3');
+            const savedAudio = localStorage.getItem('vokaloAudioV3');
             if (savedAudio) {
                 try {
                     audioSettings = JSON.parse(savedAudio);
@@ -1005,7 +1014,7 @@
                 } catch(e) {}
             }
 
-            const savedUserKey = localStorage.getItem('ptBrUserApiKey');
+            const savedUserKey = localStorage.getItem('vokaloUserApiKey');
             if (savedUserKey) {
                 userCustomApiKey = savedUserKey.trim();
                 document.getElementById('settingsApiKeyInput').value = userCustomApiKey;
@@ -1044,8 +1053,8 @@
         }
 
         function saveData() {
-            localStorage.setItem('ptBrVocabV3', JSON.stringify(vocabList));
-            localStorage.setItem('ptBrCustomCatsV4', JSON.stringify(customCategories));
+            localStorage.setItem('vokaloVocabV3', JSON.stringify(vocabList));
+            localStorage.setItem('vokaloCustomCatsV4', JSON.stringify(customCategories));
             const countEl = document.getElementById('discoverExistingCount');
             const deckCountEl = document.getElementById('deckTotalCount');
             if (countEl) countEl.innerText = vocabList.length;
@@ -1167,13 +1176,13 @@
         // 3. CEFR LEVEL & TOPIC PROGRESS DASHBOARD ENGINE
         // ============================================================================
         const cefrTiers = [
-            { minXP: 0,   maxXP: 50,  code: "A0",   title: "Brasil-Neuling",          sub: "Du sammelst deine ersten Überlebens-Wörter." },
+            { minXP: 0,   maxXP: 50,  code: "A0",   title: "Sprach-Neuling",          sub: "Du sammelst deine ersten Überlebens-Wörter." },
             { minXP: 50,  maxXP: 130, code: "A1.1", title: "Basis-Starter",           sub: "Du kannst bestellen, grüßen und einfache Wörter nutzen." },
             { minXP: 130, maxXP: 240, code: "A1.2", title: "Alltags-Entdecker",       sub: "Du verstehst häufige Sätze im Café, Uber und Alltag." },
             { minXP: 240, maxXP: 400, code: "A2.1", title: "Sicherer Reisender",      sub: "Du meisterst Smalltalk und wichtige Alltagssituationen." },
             { minXP: 400, maxXP: 620, code: "A2.2", title: "Konversations-Fit",       sub: "Du kombinierst Slang, Verben und flüssige Sätze." },
-            { minXP: 620, maxXP: 900, code: "B1",   title: "Fortgeschritten (Carioca)", sub: "Du führst spontane Gespräche auf Brasilianisch." },
-            { minXP: 900, maxXP: 1500,code: "B2",   title: "Brasil-Profi",            sub: "Breiter Wortschatz und sichere Aussprache in allen Gebieten." }
+            { minXP: 620, maxXP: 900, code: "B1",   title: "Fortgeschritten", sub: "Du führst spontane Gespräche auf Brasilianisch." },
+            { minXP: 900, maxXP: 1500,code: "B2",   title: "Sprach-Profi",            sub: "Breiter Wortschatz und sichere Aussprache in allen Gebieten." }
         ];
 
         function calculateUserStats() {
@@ -1232,7 +1241,7 @@
 
         function saveUserGoal() {
             userGoalTarget = parseInt(document.getElementById('userGoalSelect').value, 10) || 60;
-            localStorage.setItem('ptBrUserGoalV4', String(userGoalTarget));
+            localStorage.setItem('vokaloUserGoalV4', String(userGoalTarget));
             updateLevelAndProgressUI();
             showToast("Persönliches Lernziel aktualisiert!", "🎯");
         }
@@ -1745,7 +1754,7 @@ Antworte im JSON-Format:
         function saveApiKeyFromModal() {
             const val = document.getElementById('modalApiKeyInput').value.trim();
             userCustomApiKey = val;
-            localStorage.setItem('ptBrUserApiKey', val);
+            localStorage.setItem('vokaloUserApiKey', val);
             document.getElementById('settingsApiKeyInput').value = val;
             updateApiKeyStatusBadge();
             closeApiKeyModal();
@@ -1755,7 +1764,7 @@ Antworte im JSON-Format:
         function saveUserApiKey() {
             const val = document.getElementById('settingsApiKeyInput').value.trim();
             userCustomApiKey = val;
-            localStorage.setItem('ptBrUserApiKey', val);
+            localStorage.setItem('vokaloUserApiKey', val);
             document.getElementById('modalApiKeyInput').value = val;
             updateApiKeyStatusBadge();
             showToast(val ? "Gemini API-Key gespeichert!" : "Auf Standard-Modus zurückgesetzt.", "🔑");
@@ -1763,7 +1772,7 @@ Antworte im JSON-Format:
 
         function clearUserApiKey() {
             userCustomApiKey = "";
-            localStorage.removeItem('ptBrUserApiKey');
+            localStorage.removeItem('vokaloUserApiKey');
             document.getElementById('settingsApiKeyInput').value = "";
             document.getElementById('modalApiKeyInput').value = "";
             updateApiKeyStatusBadge();
@@ -1979,7 +1988,7 @@ Anforderungen für jedes Wort:
 
         function toggleImageMode() {
             showPhotos = !showPhotos;
-            try { localStorage.setItem('ptBrShowPhotosV4', String(showPhotos)); } catch (e) {}
+            try { localStorage.setItem('vokaloShowPhotosV4', String(showPhotos)); } catch (e) {}
             updateImgModeBtnUI();
             if (currentCard) renderVisual(currentCard);
         }
@@ -2037,7 +2046,7 @@ Anforderungen für jedes Wort:
                     // Keep the cache bounded; storage restrictions must never break the trainer.
                     const keys = Object.keys(photoUrlCache);
                     keys.slice(0, Math.max(0, keys.length - 200)).forEach(key => delete photoUrlCache[key]);
-                    try { localStorage.setItem('ptBrPhotoCacheV5', JSON.stringify(photoUrlCache)); } catch (e) {}
+                    try { localStorage.setItem('vokaloPhotoCacheV5', JSON.stringify(photoUrlCache)); } catch (e) {}
                 }
                 return result;
             })();
@@ -2703,7 +2712,7 @@ Regeln:
             audioSettings.engine = document.getElementById('voiceEngineSelect').value;
             audioSettings.voiceURI = document.getElementById('specificVoiceSelect').value;
             audioSettings.rate = parseFloat(document.getElementById('voiceRate').value) || 0.95;
-            localStorage.setItem('ptBrAudioV3', JSON.stringify(audioSettings));
+            localStorage.setItem('vokaloAudioV3', JSON.stringify(audioSettings));
         }
 
         function cleanTextForSpeech(text) {
@@ -2832,7 +2841,7 @@ Regeln:
                 easy: parseFloat(document.getElementById('setEasy').value) || 7,
                 factor: parseFloat(document.getElementById('setFactor').value) || 2.0
             };
-            localStorage.setItem('ptBrSettingsV3', JSON.stringify(srsSettings));
+            localStorage.setItem('vokaloSettingsV3', JSON.stringify(srsSettings));
             updateButtonLabels();
             showToast("SRS-Intervalle gespeichert!");
         }
@@ -2868,9 +2877,9 @@ Regeln:
         }
 
         function resetDeckConfirm() {
-            localStorage.removeItem('ptBrVocabV3');
-            localStorage.removeItem('ptBrVocabV2');
-            localStorage.removeItem('ptBrCustomCatsV4');
+            localStorage.removeItem('vokaloVocabV3');
+            localStorage.removeItem('vokaloVocabV2');
+            localStorage.removeItem('vokaloCustomCatsV4');
             location.reload();
         }
 
@@ -2888,7 +2897,7 @@ Regeln:
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `brasil-trainer-backup-${new Date().toISOString().slice(0, 10)}.json`;
+            a.download = `vokalo-backup-${new Date().toISOString().slice(0, 10)}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -2909,11 +2918,11 @@ Regeln:
                         if (Array.isArray(data.customCategories)) customCategories = data.customCategories;
                         if (data.userGoalTarget) {
                             userGoalTarget = data.userGoalTarget;
-                            localStorage.setItem('ptBrUserGoalV4', String(userGoalTarget));
+                            localStorage.setItem('vokaloUserGoalV4', String(userGoalTarget));
                         }
                         if (data.srsSettings) {
                             srsSettings = data.srsSettings;
-                            localStorage.setItem('ptBrSettingsV3', JSON.stringify(srsSettings));
+                            localStorage.setItem('vokaloSettingsV3', JSON.stringify(srsSettings));
                         }
                         saveData();
                         populateCategoryDropdowns();

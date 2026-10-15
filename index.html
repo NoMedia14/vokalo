@@ -184,6 +184,10 @@
 
     <nav id="mobileNav" aria-label="Hauptnavigation" class="mobile-nav"><button id="mobile-tab-trainer" onclick="switchTab('trainer')" class="mobile-tab mobile-active" aria-label="Lernen" aria-current="page"><i data-lucide="layers"></i><span>Lernen</span></button><button id="mobile-tab-pronounce" onclick="switchTab('pronounce')" class="mobile-tab" aria-label="Sprechen"><i data-lucide="mic"></i><span>Sprechen</span></button><button id="mobile-tab-progress" onclick="switchTab('progress')" class="mobile-tab" aria-label="Fortschritt"><i data-lucide="bar-chart-3"></i><span>Fortschritt</span></button><button id="mobile-tab-discover" onclick="switchTab('discover')" class="mobile-tab" aria-label="Wörter"><i data-lucide="sparkles"></i><span>Wörter</span></button><button id="mobile-tab-chat" onclick="switchTab('chat')" class="mobile-tab" aria-label="Dialoge"><i data-lucide="message-circle"></i><span>Dialoge</span></button><button id="mobile-tab-settings" onclick="switchTab('settings')" class="mobile-tab" aria-label="Konto"><i data-lucide="sliders"></i><span>Konto</span></button></nav>
 
+    <div id="audioPlaybackPanel" class="hidden fixed bottom-24 left-4 right-4 bg-white border rounded-2xl shadow-xl p-3 z-50">
+        <div class="flex justify-between items-center mb-2"><span class="font-bold text-sm">Aussprache anhören</span><button onclick="document.getElementById('audioPlayback').pause();document.getElementById('audioPlaybackPanel').classList.add('hidden')" class="px-3 py-2" aria-label="Audioplayer schließen">✕</button></div>
+        <audio id="audioPlayback" controls class="w-full"></audio>
+    </div>
     <!-- TOAST NOTIFICATION -->
     <div id="toast" class="fixed bottom-5 right-5 z-50 hidden bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-sm font-semibold animate-fade-in max-w-sm border border-slate-700">
         <span id="toastIcon" class="text-lg">✅</span>
@@ -821,6 +825,7 @@
                                 <span>🔑</span> <span id="apiKeyStatusText">KI: Aktiv</span>
                             </button>
 
+                <div class="flex gap-2 items-center flex-wrap"><button onclick="testApiConnection()" class="px-4 py-2 bg-slate-100 rounded-xl text-sm font-bold">KI-Verbindung testen</button><p id="apiConnectionResult" role="status" class="text-xs text-slate-600"></p></div>
                 <div class="flex flex-col sm:flex-row gap-2.5">
                     <input type="password" id="settingsApiKeyInput" placeholder="Gemini API-Key (AIzaSy...) eintragen" class="flex-grow bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     <button onclick="toggleShowApiKey()" class="px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs shrink-0">👁️ Zeigen</button>
@@ -1553,92 +1558,79 @@ Gehe konkret auf seine stärksten Themengebiete ein, nenne 1 Gebiet mit Aufholbe
         }
 
         function speakPronTarget(customRate = 0.95) {
-            const text = document.getElementById('pronTargetPt').innerText;
-            const prevRate = audioSettings.rate;
-            audioSettings.rate = customRate;
-            speakText(text);
-            audioSettings.rate = prevRate;
+            speakText(document.getElementById('pronTargetPt').innerText, customRate);
         }
 
+        let lastRecordedBlob = null, recordingStarting = false;
         async function togglePronunciationRecording() {
             const btn = document.getElementById('btnPronRecord');
-            const statusText = document.getElementById('pronStatusText');
-            const liveTranscriptEl = document.getElementById('pronLiveTranscript');
-
+            const status = document.getElementById('pronStatusText');
+            if (recordingStarting || isPronAnalyzing) return;
             if (isPronRecording) {
-                // Stop recording
                 isPronRecording = false;
-                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-                    mediaRecorder.stop();
-                }
-                if (pronSpeechRec) {
-                    try { pronSpeechRec.stop(); } catch(e) {}
-                }
-                btn.classList.remove('pulse-mic', 'bg-slate-900');
+                clearTimeout(recordingStopTimer);
+                isPronAnalyzing = true;
+                btn.disabled = true;
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+                btn.classList.remove('pulse-mic','bg-slate-900');
                 btn.classList.add('bg-rose-600');
-                statusText.innerText = "⏳ KI analysiert deine brasilianische Aussprache...";
+                status.innerText = 'Aufnahme wird vorbereitet und ausgewertet ...';
                 return;
             }
-
-            // Start Recording
-            pronLiveText = "";
-            liveTranscriptEl.innerText = "Höre zu...";
-            document.getElementById('pronResultBox').classList.add('hidden');
-
-            // 1. Start Parallel Browser SpeechRecognition (for live visual transcript & fallback)
-            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (SpeechRec) {
-                try {
-                    pronSpeechRec = new SpeechRec();
-                    pronSpeechRec.lang = 'pt-BR';
-                    pronSpeechRec.interimResults = true;
-                    pronSpeechRec.onresult = (ev) => {
-                        let t = '';
-                        for (let i = 0; i < ev.results.length; i++) {
-                            t += ev.results[i][0].transcript;
-                        }
-                        pronLiveText = t.trim();
-                        liveTranscriptEl.innerText = pronLiveText ? `Erkannt: „${pronLiveText}“` : "Höre zu...";
-                    };
-                    pronSpeechRec.start();
-                } catch (e) {}
-            }
-
-            // 2. Start MediaRecorder for real audio capture
+            if (!getActiveApiKey()) { openApiKeySetup(); return; }
+            recordingStarting = true;
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                audioChunks = [];
-                mediaRecorder = new MediaRecorder(stream);
-
-                mediaRecorder.ondataavailable = (e) => {
-                    if (e.data && e.data.size > 0) audioChunks.push(e.data);
+                if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') throw new Error('Aufnahmen werden in diesem Browser nicht unterstützt.');
+                if (window.speechSynthesis) window.speechSynthesis.cancel();
+                if (activePlaybackSource) { try { activePlaybackSource.stop(); } catch(e) {} }
+                if (recognition) { try { recognition.stop(); } catch(e) {} }
+                const captureTarget = pronTargetCard;
+                const captureText = document.getElementById('pronTargetPt').innerText.trim();
+                const stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});
+                const formats = ['audio/webm;codecs=opus','audio/mp4','audio/webm'];
+                const format = formats.find(type => MediaRecorder.isTypeSupported?.(type));
+                let recorder;
+                try { recorder = new MediaRecorder(stream,format ? {mimeType:format} : undefined); }
+                catch(e) { stream.getTracks().forEach(track=>track.stop()); throw e; }
+                mediaRecorder = recorder;
+                const chunks=[];
+                recorder.ondataavailable = event => { if(event.data?.size) chunks.push(event.data); };
+                recorder.onerror = () => {
+                    clearTimeout(recordingStopTimer); stream.getTracks().forEach(track=>track.stop());
+                    isPronRecording=false; isPronAnalyzing=false; btn.disabled=false;
+                    btn.classList.remove('pulse-mic','bg-slate-900'); btn.classList.add('bg-rose-600');
+                    status.innerText='Aufnahme fehlgeschlagen. Bitte erneut versuchen.';
                 };
-
-                mediaRecorder.onstop = async () => {
-                    stream.getTracks().forEach(track => track.stop());
-                    const mimeType = mediaRecorder.mimeType || 'audio/webm';
-                    const audioBlob = new Blob(audioChunks, { type: mimeType });
+                recorder.onstop = async () => {
+                    isPronAnalyzing = true; btn.disabled = true;
+                    clearTimeout(recordingStopTimer);
+                    stream.getTracks().forEach(track=>track.stop());
+                    isPronRecording=false;
+                    lastRecordedBlob=new Blob(chunks,{type:recorder.mimeType || 'audio/webm'});
                     if (lastRecordedBlobUrl) URL.revokeObjectURL(lastRecordedBlobUrl);
-                    lastRecordedBlobUrl = URL.createObjectURL(audioBlob);
-                    await evaluatePronunciationWithAI(audioBlob, mimeType);
+                    lastRecordedBlobUrl=URL.createObjectURL(lastRecordedBlob);
+                    try {
+                        if(pronTargetCard !== captureTarget || document.getElementById('pronTargetPt').innerText.trim() !== captureText) throw new Error('Ziel wurde während der Aufnahme geändert. Bitte neu aufnehmen.');
+                        if(lastRecordedBlob.size<200) throw new Error('Die Aufnahme enthält keinen Ton. Bitte erneut aufnehmen.');
+                        await evaluatePronunciationWithAI(lastRecordedBlob,lastRecordedBlob.type);
+                    } catch(e) { status.innerText=e.message; }
+                    finally { isPronAnalyzing=false; btn.disabled=false; btn.classList.remove('pulse-mic','bg-slate-900'); btn.classList.add('bg-rose-600'); }
                 };
-
-                mediaRecorder.start();
-                isPronRecording = true;
-                btn.classList.add('pulse-mic', 'bg-slate-900');
-                btn.classList.remove('bg-rose-600');
-                statusText.innerText = "🔴 Aufnahme läuft... Sprich jetzt und klicke danach erneut zum Stoppen!";
-            } catch (err) {
-                console.warn("MediaRecorder nicht verfügbar oder Mikrofon verweigert:", err);
-                showToast("Bitte erlaube den Mikrofon-Zugriff im Browser!", "🎙️");
-                statusText.innerText = "Mikrofon-Zugriff erforderlich.";
-            }
+                pronLiveText='';
+                document.getElementById('pronLiveTranscript').innerText='Die KI hört deine Aufnahme nach dem Stoppen an.';
+                document.getElementById('pronResultBox').classList.add('hidden');
+                recorder.start();
+                isPronRecording=true;
+                btn.classList.add('pulse-mic','bg-slate-900'); btn.classList.remove('bg-rose-600');
+                status.innerText='Aufnahme läuft. Zum Auswerten erneut tippen (max. 20 Sekunden).';
+                recordingStopTimer=setTimeout(()=>{if(isPronRecording) togglePronunciationRecording();},20000);
+            } catch(e) { status.innerText=e.name==='NotAllowedError'?'Bitte den Mikrofonzugriff in den Browser-Einstellungen erlauben.':e.message; }
+            finally { recordingStarting=false; }
         }
 
-        function playRecordedUserAudio() {
-            if (lastRecordedBlobUrl) {
-                new Audio(lastRecordedBlobUrl).play();
-            }
+        async function playRecordedUserAudio() {
+            if (!lastRecordedBlob) { showToast('Bitte zuerst eine Aufnahme machen.'); return; }
+            try { preparePlayback(); await playAudioBlob(lastRecordedBlob); } catch(e) { showToast('Wiedergabe nicht möglich. Bitte erneut auf Anhören tippen.'); }
         }
 
         function blobToBase64(blob) {
@@ -1659,8 +1651,10 @@ Gehe konkret auf seine stärksten Themengebiete ein, nenne 1 Gebiet mit Aufholbe
             const statusText = document.getElementById('pronStatusText');
 
             try {
-                const base64Audio = await blobToBase64(audioBlob);
-                const cleanMime = mimeType.split(';')[0] || 'audio/webm';
+                const evaluatedCard = pronTargetCard;
+                const preparedAudio = await preparePronunciationAudio(audioBlob);
+                const base64Audio = await blobToBase64(preparedAudio);
+                const cleanMime = preparedAudio.type.split(';')[0] || 'audio/wav';
 
                 const systemPrompt = `Du bist ein herzlicher, präziser Phonetik-Coach für Brasilianisches Portugiesisch (pt-BR).
 Der deutschsprachige Lernende wollte folgenden brasilianischen Ausdruck sprechen:
@@ -1721,60 +1715,21 @@ Antworte im JSON-Format:
                 };
 
                 const res = await callGeminiAPI(payload);
-                const evaluation = JSON.parse(res.candidates[0].content.parts[0].text);
+                const responseText = res?.candidates?.[0]?.content?.parts?.filter(part => part.text && !part.thought).map(part => part.text).join('') || '';
+                if (!responseText) throw new Error('Google hat kein verwertbares Feedback geliefert. Bitte erneut versuchen.');
+                const evaluation = JSON.parse(responseText);
+                if (pronTargetCard !== evaluatedCard || document.getElementById('pronTargetPt').innerText.trim() !== targetPt) { statusText.innerText = 'Ziel wurde geändert. Bitte eine neue Aufnahme machen.'; return; }
                 displayPronunciationResult(evaluation);
 
             } catch (err) {
-                console.error("Audio-Analyse Fehler, nutze Transcript-Fallback:", err);
-                // Fallback if audio inlineData fails
-                if (pronLiveText) {
-                    await evaluatePronunciationViaTranscriptFallback(targetPt, pronLiveText);
-                } else {
-                    statusText.innerText = "⚠️ Aufnahme konnte nicht ausgewertet werden. Bitte sprich laut und deutlich ins Mikrofon.";
-                }
+                statusText.innerText = err.message || 'Aufnahme konnte nicht ausgewertet werden. Bitte erneut versuchen.';
             }
         }
 
-        async function evaluatePronunciationViaTranscriptFallback(targetPt, heardText) {
-            const payload = {
-                contents: [{
-                    parts: [{
-                        text: `Ziel-Satz (pt-BR): "${targetPt}". Vom Mikrofon erkannt: "${heardText}". Bewerte die Übereinstimmung und gib Tipps zur brasilianischen Aussprache.`
-                    }]
-                }],
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "OBJECT",
-                        properties: {
-                            score: { type: "INTEGER" },
-                            headline: { type: "STRING" },
-                            spokenTranscript: { type: "STRING" },
-                            wordBreakdown: {
-                                type: "ARRAY",
-                                items: {
-                                    type: "OBJECT",
-                                    properties: {
-                                        word: { type: "STRING" },
-                                        status: { type: "STRING" },
-                                        tip: { type: "STRING" }
-                                    },
-                                    required: ["word", "status", "tip"]
-                                }
-                            },
-                            feedbackDe: { type: "STRING" }
-                        },
-                        required: ["score", "headline", "spokenTranscript", "wordBreakdown", "feedbackDe"]
-                    }
-                }
-            };
-            const res = await callGeminiAPI(payload);
-            const evaluation = JSON.parse(res.candidates[0].content.parts[0].text);
-            displayPronunciationResult(evaluation);
-        }
+
 
         function displayPronunciationResult(ev) {
-            document.getElementById('pronStatusText').innerText = "Klicke auf das Mikrofon für einen weiteren Versuch";
+            document.getElementById('pronStatusText').innerText = 'KI-Einschätzung deiner Aufnahme – für einen weiteren Versuch erneut aufnehmen.';
             const box = document.getElementById('pronResultBox');
             box.classList.remove('hidden');
 
@@ -1854,24 +1809,7 @@ Antworte im JSON-Format:
             document.getElementById('apiKeyModal').classList.add('hidden');
         }
 
-        function saveApiKeyFromModal() {
-            const val = document.getElementById('modalApiKeyInput').value.trim();
-            userCustomApiKey = val;
-            appStorage.setItem('vokaloUserApiKey', val);
-            document.getElementById('settingsApiKeyInput').value = val;
-            updateApiKeyStatusBadge();
-            closeApiKeyModal();
-            showToast(val ? "Eigener Gemini API-Key gespeichert!" : "API-Key aktualisiert!", "🔑");
-        }
 
-        function saveUserApiKey() {
-            const val = document.getElementById('settingsApiKeyInput').value.trim();
-            userCustomApiKey = val;
-            appStorage.setItem('vokaloUserApiKey', val);
-            document.getElementById('modalApiKeyInput').value = val;
-            updateApiKeyStatusBadge();
-            showToast(val ? "Gemini API-Key gespeichert!" : "Auf Standard-Modus zurückgesetzt.", "🔑");
-        }
 
         function clearUserApiKey() {
             userCustomApiKey = "";
@@ -1887,31 +1825,7 @@ Antworte im JSON-Format:
             inp.type = inp.type === 'password' ? 'text' : 'password';
         }
 
-        async function callGeminiAPI(payload, model = 'gemini-3-flash-preview') {
-            const activeKey = getActiveApiKey();
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${activeKey}`;
-            const delays = [1000, 2000, 4000];
-            
-            for (let attempt = 0; attempt <= delays.length; attempt++) {
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (!response.ok) {
-                        if (response.status === 400 || response.status === 403) {
-                            openApiKeySetup();
-                        }
-                        throw new Error(`HTTP ${response.status}`);
-                    }
-                    return await response.json();
-                } catch (err) {
-                    if (attempt === delays.length) throw err;
-                    await new Promise(r => setTimeout(r, delays[attempt]));
-                }
-            }
-        }
+
 
         // ============================================================================
         // 6. DYNAMIC AI VOCABULARY DISCOVERY & GUARANTEED SAVING (BUGFIXED)
@@ -2827,65 +2741,46 @@ Regeln:
                 .trim();
         }
 
-        async function speakText(rawText) {
-            const text = cleanTextForSpeech(rawText);
+        async function speakText(rawText, requestedRate = audioSettings.rate) {
+            const text = cleanTextForSpeech(String(rawText || ''));
             if (!text) return;
-
+            if (isPronRecording || recordingStarting) { showToast('Bitte zuerst die Aufnahme stoppen.'); return; }
+            const rate = Number(requestedRate) || 0.95;
+            if (recognition) { try { recognition.stop(); } catch(e) {} }
             if (audioSettings.engine === 'gemini') {
-                await speakWithGeminiTTS(text);
+                preparePlayback();
+                try { await speakWithGeminiTTS(text, rate); }
+                catch(e) { showToast(e.message || 'KI-Stimme nicht verfügbar. Bitte Systemstimme in den Einstellungen wählen.'); }
             } else {
-                speakWithBrowser(text);
+                speakWithBrowser(text, rate);
             }
         }
-
-        async function speakWithGeminiTTS(text) {
-            if (ttsAudioCache[text]) {
-                const cachedAudio = new Audio(ttsAudioCache[text]);
-                cachedAudio.playbackRate = audioSettings.rate;
-                cachedAudio.play();
-                return;
+        async function speakWithGeminiTTS(text, rate = audioSettings.rate) {
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+            if (!ttsAudioCache[text]) {
+                showToast('KI-Stimme wird geladen ...');
+                const res = await callGeminiAPI({
+                    contents:[{parts:[{text:'Say naturally in Brazilian Portuguese: '+text}]}],
+                    generationConfig:{responseModalities:['AUDIO'],speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:'Aoede'}}}}
+                },'gemini-2.5-flash-preview-tts',{timeoutMs:15000});
+                const part = res?.candidates?.[0]?.content?.parts?.find(part=>part.inlineData?.data);
+                if (!part) throw new Error('Google hat keinen Ton geliefert. Bitte die Systemstimme wählen oder erneut versuchen.');
+                const mime=part.inlineData.mimeType || 'audio/L16;rate=24000';
+                const binary=atob(part.inlineData.data);
+                const bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));
+                ttsAudioCache[text]=/audio\/(L16|pcm)/i.test(mime)
+                    ? pcmToWav(new Int16Array(bytes.buffer), Number(mime.match(/rate=(\d+)/)?.[1]) || 24000)
+                    : new Blob([bytes],{type:mime});
             }
-
-            try {
-                const payload = {
-                    contents: [{ parts: [{ text: `Say naturally in Brazilian Portuguese (pt-BR): ${text}` }] }],
-                    generationConfig: {
-                        responseModalities: ["AUDIO"],
-                        speechConfig: {
-                            voiceConfig: {
-                                prebuiltVoiceConfig: { voiceName: "Aoede" }
-                            }
-                        }
-                    },
-                    model: "gemini-2.5-flash-preview-tts"
-                };
-
-                const res = await callGeminiAPI(payload, "gemini-2.5-flash-preview-tts");
-                const part = res?.candidates?.[0]?.content?.parts?.[0];
-                const audioData = part?.inlineData?.data;
-                const mimeType = part?.inlineData?.mimeType || "audio/L16;rate=24000";
-
-                if (audioData) {
-                    const rateMatch = mimeType.match(/rate=(\d+)/);
-                    const sampleRate = rateMatch ? parseInt(rateMatch[1], 10) : 24000;
-                    const binary = atob(audioData);
-                    const bytes = new Uint8Array(binary.length);
-                    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-                    const pcm16 = new Int16Array(bytes.buffer);
-                    const wavBlob = pcmToWav(pcm16, sampleRate);
-                    const url = URL.createObjectURL(wavBlob);
-                    ttsAudioCache[text] = url;
-
-                    const audio = new Audio(url);
-                    audio.playbackRate = audioSettings.rate;
-                    audio.play();
-                    return;
-                }
-            } catch (e) {
-                console.warn("Gemini TTS Fallback auf Browser-Stimme:", e);
+            try { await playAudioBlob(ttsAudioCache[text],rate); }
+            catch(e) {
+                const panel=document.getElementById('audioPlaybackPanel'), player=document.getElementById('audioPlayback');
+                if (player.dataset.url) URL.revokeObjectURL(player.dataset.url);
+                player.dataset.url=URL.createObjectURL(ttsAudioCache[text]);
+                player.src=player.dataset.url; player.playbackRate=rate;
+                panel.classList.remove('hidden');
+                showToast('Bitte im Audioplayer auf Wiedergabe tippen.');
             }
-
-            speakWithBrowser(text);
         }
 
         function pcmToWav(pcm16, sampleRate) {
@@ -2913,18 +2808,23 @@ Regeln:
             return new Blob([buffer], { type: 'audio/wav' });
         }
 
-        function speakWithBrowser(text) {
-            if (!('speechSynthesis' in window)) return;
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'pt-BR';
-            utterance.rate = audioSettings.rate;
-
-            if (availableVoices.length > 0) {
-                const chosen = availableVoices.find(v => v.voiceURI === audioSettings.voiceURI) || availableVoices[0];
-                utterance.voice = chosen;
-            }
-            window.speechSynthesis.speak(utterance);
+        function speakWithBrowser(text, rate = audioSettings.rate) {
+            if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) { showToast('Die Systemstimme wird in diesem Browser nicht unterstützt. Bitte Safari oder Chrome verwenden.'); return; }
+            if (activePlaybackSource) { try { activePlaybackSource.stop(); } catch(e) {} }
+            const synth = window.speechSynthesis;
+            synth.cancel();
+            synth.resume();
+            activeSpeechUtterance = new window.SpeechSynthesisUtterance(text);
+            activeSpeechUtterance.lang='pt-BR'; activeSpeechUtterance.rate=Number(rate)||0.95;
+            activeSpeechUtterance.volume=1;
+            const voices=synth.getVoices().filter(voice=>/^pt[-_]BR/i.test(voice.lang) || /^pt/i.test(voice.lang));
+            const chosen=voices.find(voice=>voice.voiceURI===audioSettings.voiceURI)||voices.find(voice=>/^pt[-_]BR/i.test(voice.lang))||voices[0];
+            if(chosen) activeSpeechUtterance.voice=chosen;
+            activeSpeechUtterance.onerror=event=>{
+                if(!['canceled','interrupted'].includes(event.error)) showToast('Systemstimme konnte nicht starten ('+event.error+'). Bitte erneut tippen oder in den Einstellungen die KI-Stimme wählen.');
+            };
+            synth.speak(activeSpeechUtterance);
+            synth.resume();
         }
 
         function speakCurrentWord() {
@@ -3242,6 +3142,116 @@ Regeln:
                 });
                 window.addEventListener('online', () => flushCloud().catch(() => {}));
             } catch (error) { document.getElementById('cloudAuthMessage').textContent = error.message || 'Cloud-Verbindung fehlgeschlagen.'; }
+        }
+
+        let lastApiError = '', activeSpeechUtterance = null, playbackContext = null, activePlaybackSource = null;
+        let isPronAnalyzing = false, recordingStopTimer = null;
+        function apiErrorMessage(status, body) {
+            const reason = (body?.error?.details || []).map(item => item.reason || '').join(' ');
+            const message = body?.error?.message || '';
+            if (/API_KEY_INVALID|API_KEY_EXPIRED/.test(reason) || /API key not valid|API key expired/i.test(message)) return 'Der Gemini-Key ist ungültig oder abgelaufen. Bitte in den Einstellungen prüfen.';
+            if (status === 401 || status === 403) return 'Google verweigert den Zugriff. Bitte API-Berechtigungen, Key-Beschränkungen und Projektfreigabe in Google AI Studio prüfen.';
+            if (status === 429) return 'Das Google-Kontingent ist ausgeschöpft. Bitte später erneut versuchen; der gespeicherte Key bleibt erhalten.';
+            if (status === 404) return 'Das gewählte Gemini-Modell ist für dein Projekt nicht verfügbar.';
+            if (status === 400) return 'Google hat die Anfrage abgelehnt: ' + (message || 'Format oder Parameter nicht unterstützt.');
+            if (status >= 500) return 'Google ist vorübergehend nicht erreichbar. Bitte erneut versuchen.';
+            return 'KI-Anfrage fehlgeschlagen (HTTP ' + status + ').';
+        }
+        async function callGeminiAPI(payload, model = 'gemini-3-flash-preview', options = {}) {
+            const activeKey = getActiveApiKey();
+            if (!activeKey) { openApiKeySetup(); throw new Error('Bitte zuerst deinen Gemini-Key speichern.'); }
+            const request = {...payload};
+            delete request.model;
+            if (model === 'gemini-3-flash-preview') request.generationConfig = { ...request.generationConfig, thinkingConfig:{thinkingLevel:'minimal'} };
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), options.timeoutMs || 22000);
+            try {
+                const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent', {
+                    method:'POST', headers:{'Content-Type':'application/json','x-goog-api-key':activeKey}, body:JSON.stringify(request), signal:controller.signal
+                });
+                const body = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    const err = new Error(apiErrorMessage(response.status, body).split(activeKey).join('[Key]'));
+                    err.status = response.status;
+                    throw err;
+                }
+                lastApiError = '';
+                return body;
+            } catch (error) {
+                const message = error.name === 'AbortError' ? 'Google antwortet zu langsam. Die Anfrage wurde nach dem Zeitlimit beendet. Bitte erneut versuchen.' : error.message || 'Netzwerkfehler bei der KI-Verbindung.';
+                lastApiError = message;
+                const status = document.getElementById('apiConnectionResult');
+                if (status) status.textContent = message;
+                throw new Error(message);
+            } finally { clearTimeout(timeout); }
+        }
+        async function persistApiKey(value) {
+            const val = value.trim();
+            if (val && (val.length < 20 || /\s/.test(val))) { showToast('Bitte den vollständigen API-Key ohne Leerzeichen einfügen.'); return false; }
+            userCustomApiKey = val;
+            appStorage.setItem('vokaloUserApiKey',val);
+            document.getElementById('settingsApiKeyInput').value = val;
+            document.getElementById('modalApiKeyInput').value = val;
+            updateApiKeyStatusBadge();
+            try { await flushCloud(); showToast('API-Key in deinem Konto gespeichert.', '\ud83d\udd11'); return true; }
+            catch (e) { showToast('Key ist noch nicht zentral gespeichert. Bitte Cloud-Verbindung prüfen.'); return false; }
+        }
+        async function saveApiKeyFromModal() { if (await persistApiKey(document.getElementById('modalApiKeyInput').value)) closeApiKeyModal(); }
+        async function saveUserApiKey() { await persistApiKey(document.getElementById('settingsApiKeyInput').value); }
+        async function testApiConnection() {
+            const status = document.getElementById('apiConnectionResult');
+            status.textContent = 'Verbindung zu Google wird geprüft ...';
+            try {
+                if (!await persistApiKey(document.getElementById('settingsApiKeyInput').value)) return;
+                await callGeminiAPI({contents:[{parts:[{text:'Antworte nur mit OK.'}]}]},'gemini-3-flash-preview',{timeoutMs:12000});
+                status.textContent = 'Verbindung erfolgreich. Der Key und das Textmodell funktionieren.';
+            } catch (e) { status.textContent = e.message; }
+        }
+        function preparePlayback() {
+            const Context = window.AudioContext || window.webkitAudioContext;
+            if (!Context) return null;
+            if (!playbackContext || playbackContext.state === 'closed') playbackContext = new Context();
+            if (playbackContext.state === 'suspended') playbackContext.resume().catch(() => {});
+            return playbackContext;
+        }
+        async function playAudioBlob(blob, rate = 1) {
+            const ctx = preparePlayback();
+            if (!ctx) { const audio = new Audio(URL.createObjectURL(blob)); audio.playbackRate=rate; await audio.play(); return; }
+            const buffer = await ctx.decodeAudioData(await blob.arrayBuffer());
+            await ctx.resume();
+            if (ctx.state !== 'running') throw new Error('Audio-Wiedergabe benötigt einen weiteren Fingertipp.');
+            if (activePlaybackSource) { try { activePlaybackSource.stop(); } catch (e) {} }
+            activePlaybackSource = ctx.createBufferSource();
+            activePlaybackSource.buffer = buffer;
+            activePlaybackSource.playbackRate.value = rate;
+            activePlaybackSource.connect(ctx.destination);
+            activePlaybackSource.start();
+        }
+        async function preparePronunciationAudio(blob) {
+            const ctx = preparePlayback();
+            if (!ctx) {
+                if (!/audio\/(webm|wav|ogg|mpeg|mp3|aac|flac)/i.test(blob.type)) throw new Error('Dieses Aufnahmeformat wird hier nicht unterstützt. Bitte einen aktuellen Safari oder Chrome verwenden.');
+                return blob;
+            }
+            let decoded;
+            try { decoded = await ctx.decodeAudioData(await blob.arrayBuffer()); }
+            catch (e) { throw new Error('Die Audioaufnahme konnte nicht gelesen werden. Bitte noch einmal aufnehmen.'); }
+            if (decoded.duration < 0.3) throw new Error('Die Aufnahme war zu kurz. Bitte ein Wort oder einen kurzen Satz sprechen.');
+            if (decoded.duration > 25) throw new Error('Bitte nur einen kurzen Satz aufnehmen (höchstens 20 Sekunden).');
+            const rate = 16000, samples = Math.ceil(decoded.duration * rate), pcm = new Int16Array(samples);
+            const channels = Array.from({length:decoded.numberOfChannels},(_,i)=>decoded.getChannelData(i));
+            const step = decoded.sampleRate / rate;
+            let energy = 0;
+            for (let i=0;i<samples;i++) {
+                const start=Math.floor(i*step), end=Math.min(decoded.length,Math.max(start+1,Math.floor((i+1)*step)));
+                let value=0;
+                for(let p=start;p<end;p++) for(const channel of channels) value+=channel[p];
+                value/=Math.max(1,(end-start)*channels.length);
+                energy+=value*value;
+                pcm[i]=Math.max(-1,Math.min(1,value))*32767;
+            }
+            if (Math.sqrt(energy/samples)<0.001) throw new Error('Es war kaum Ton in der Aufnahme. Bitte Mikrofon prüfen und näher hineinsprechen.');
+            return pcmToWav(pcm,rate);
         }
 
         window.onload = bootstrapCloud;

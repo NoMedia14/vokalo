@@ -62,7 +62,7 @@
 <body class="min-h-screen flex flex-col">
 
     <!-- TOP NAVIGATION HEADER + PERSISTENT LEVEL BAR -->
-    <header class="app-header border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <header id="appHeader" class="hidden app-header border-b border-slate-200 sticky top-0 z-30 shadow-sm">
         <svg class="header-flag" viewBox="0 0 1000 700" aria-hidden="true" focusable="false">
             <rect width="1000" height="700" fill="#009b3a"/>
             <path d="M500 85 915 350 500 615 85 350Z" fill="#fedf00"/>
@@ -3051,6 +3051,7 @@ Regeln:
             const canonical = value => JSON.stringify(Object.entries(value || {}).sort(([a],[b]) => a.localeCompare(b)));
             cloudDirty = !data || canonical(data.payload) !== canonical(currentPayload);
             await flushCloud();
+            document.getElementById('appHeader').classList.remove('hidden');
             document.getElementById('cloudLogin').classList.add('hidden');
             document.querySelector('main').classList.remove('hidden');
             cloudStatus('In der Cloud gespeichert');
@@ -3101,7 +3102,7 @@ Regeln:
                 if (error) throw error;
                 if (data.session) await enterCloudApp(data.session.user);
                 cloudClient.auth.onAuthStateChange((event) => {
-                    if (event === 'SIGNED_OUT') { cloudReady=false; document.querySelector('main').classList.add('hidden'); document.getElementById('cloudLogin').classList.remove('hidden'); }
+                    if (event === 'SIGNED_OUT') { document.getElementById('appHeader').classList.add('hidden'); cloudReady=false; document.querySelector('main').classList.add('hidden'); document.getElementById('cloudLogin').classList.remove('hidden'); }
                 });
                 window.addEventListener('beforeunload', event => {
                     if (cloudDirty || cloudSaving) { event.preventDefault(); event.returnValue = ''; }

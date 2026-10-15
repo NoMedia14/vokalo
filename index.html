@@ -49,6 +49,8 @@
         .app-header { position: sticky; isolation: isolate; overflow: hidden; background: #f1f9f4; }
         .header-flag { position: absolute; z-index: -2; top: 50%; right: 0; width: min(800px, 100%); height: auto; transform: translateY(-50%); opacity: .38; pointer-events: none; }
         .app-header::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(255,255,255,.98), rgba(255,255,255,.77) 45%, rgba(255,255,255,.28)); pointer-events: none; }
+        .photo-shimmer { background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%); background-size: 200% 100%; animation: photoLoad 1.5s infinite; border-radius: 1rem; }
+        @keyframes photoLoad { from { background-position: 200% 0; } to { background-position: -200% 0; } }
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
@@ -866,39 +868,39 @@
         ];
 
         const starterVocab = [
-            { id: 1, cat: "🥑 Essen & Supermarkt", de: "die Haferflocken", pt: "a aveia", phon: "[a a-wej-a]", visual: "🥣", kw: "oats", sentPt: "Minha aveia com mirtilos parece cimento, mas dá muita força!", sentDe: "Meine Haferflocken mit Blaubeeren sehen aus wie Zement, geben aber viel Kraft!" },
-            { id: 2, cat: "🥑 Essen & Supermarkt", de: "die Blaubeeren", pt: "os mirtilos", phon: "[us mir-tschi-lus]", visual: "🫐", kw: "blueberries", sentPt: "Comi tantos mirtilos que minha língua ficou azul como um Smurf.", sentDe: "Ich habe so viele Blaubeeren gegessen, dass meine Zunge blau wie ein Schlumpf wurde." },
-            { id: 3, cat: "🥑 Essen & Supermarkt", de: "der Käse", pt: "o queijo", phon: "[u kej-schu]", visual: "🧀", kw: "cheese", sentPt: "Duas fatias de queijo resolvem 90% dos meus problemas.", sentDe: "Zwei Scheiben Käse lösen 90 % meiner Probleme." },
-            { id: 4, cat: "🥑 Essen & Supermarkt", de: "das Knäckebrot / der Cracker", pt: "a torrada / o biscoito salgado", phon: "[a to-ha-da]", visual: "🍘", kw: "crackers", sentPt: "Minha torrada fez tanto barulho que acordou o gato.", sentDe: "Mein Knäckebrot hat so laut gekracht, dass es die Katze geweckt hat." },
-            { id: 5, cat: "🥑 Essen & Supermarkt", de: "der Naturjoghurt", pt: "o iogurte natural", phon: "[u jo-gur-tschi na-tu-rau]", visual: "🥛", kw: "yogurt", sentPt: "Iogurte natural à noite é o segredo dos campeões.", sentDe: "Naturjoghurt am Abend ist das Geheimnis der Champions." },
-            { id: 6, cat: "🥑 Essen & Supermarkt", de: "der Reis mit Bohnen", pt: "o arroz com feijão", phon: "[u a-hojs kom fej-schaung]", visual: "🍛", kw: "rice beans", sentPt: "Arroz com feijão é a verdadeira religião do Brasil.", sentDe: "Reis mit Bohnen ist die wahre Religion Brasiliens." },
+            { id: 1, cat: "🥑 Essen & Supermarkt", de: "die Haferflocken", pt: "a aveia", phon: "[a a-wej-a]", visual: "🥣", kw: "Rolled_oats", sentPt: "Minha aveia com mirtilos parece cimento, mas dá muita força!", sentDe: "Meine Haferflocken mit Blaubeeren sehen aus wie Zement, geben aber viel Kraft!" },
+            { id: 2, cat: "🥑 Essen & Supermarkt", de: "die Blaubeeren", pt: "os mirtilos", phon: "[us mir-tschi-lus]", visual: "🫐", kw: "Blueberry", sentPt: "Comi tantos mirtilos que minha língua ficou azul como um Smurf.", sentDe: "Ich habe so viele Blaubeeren gegessen, dass meine Zunge blau wie ein Schlumpf wurde." },
+            { id: 3, cat: "🥑 Essen & Supermarkt", de: "der Käse", pt: "o queijo", phon: "[u kej-schu]", visual: "🧀", kw: "Cheese", sentPt: "Duas fatias de queijo resolvem 90% dos meus problemas.", sentDe: "Zwei Scheiben Käse lösen 90 % meiner Probleme." },
+            { id: 4, cat: "🥑 Essen & Supermarkt", de: "das Knäckebrot / der Cracker", pt: "a torrada / o biscoito salgado", phon: "[a to-ha-da]", visual: "🍘", kw: "Crispbread", sentPt: "Minha torrada fez tanto barulho que acordou o gato.", sentDe: "Mein Knäckebrot hat so laut gekracht, dass es die Katze geweckt hat." },
+            { id: 5, cat: "🥑 Essen & Supermarkt", de: "der Naturjoghurt", pt: "o iogurte natural", phon: "[u jo-gur-tschi na-tu-rau]", visual: "🥛", kw: "Yogurt", sentPt: "Iogurte natural à noite é o segredo dos campeões.", sentDe: "Naturjoghurt am Abend ist das Geheimnis der Champions." },
+            { id: 6, cat: "🥑 Essen & Supermarkt", de: "der Reis mit Bohnen", pt: "o arroz com feijão", phon: "[u a-hojs kom fej-schaung]", visual: "🍛", kw: "Feijoada", sentPt: "Arroz com feijão é a verdadeira religião do Brasil.", sentDe: "Reis mit Bohnen ist die wahre Religion Brasiliens." },
 
-            { id: 7, cat: "☕ Restaurant & Café", de: "die Rechnung, bitte", pt: "a conta, por favor", phon: "[a kon-ta, pur fa-wor]", visual: "🧾", kw: "receipt", sentPt: "Garçom, traz a conta antes que eu peça mais uma sobremesa!", sentDe: "Kellner, bring die Rechnung, bevor ich noch ein Dessert bestelle!" },
-            { id: 8, cat: "☕ Restaurant & Café", de: "stilles Wasser / mit Gas", pt: "água sem gás / com gás", phon: "[a-gua seng gas]", visual: "💧", kw: "water glass", sentPt: "No calor do Rio, bebo três litros de água sem gás por hora.", sentDe: "In der Hitze von Rio trinke ich drei Liter stilles Wasser pro Stunde." },
-            { id: 9, cat: "☕ Restaurant & Café", de: "das brasilianische Käsebrötchen", pt: "o pão de queijo", phon: "[u paung dschi kej-schu]", visual: "🥯", kw: "cheese bread", sentPt: "É impossível comer apenas um pão de queijo, é uma armadilha!", sentDe: "Es ist unmöglich, nur ein Pão de Queijo zu essen – es ist eine Falle!" },
-            { id: 10, cat: "☕ Restaurant & Café", de: "lecker / köstlich", pt: "gostoso / uma delícia", phon: "[gos-to-su / u-ma de-li-sja]", visual: "🤤", kw: "delicious food", sentPt: "Isso aqui está tão gostoso que quase chorei na mesa.", sentDe: "Das hier ist so lecker, dass ich am Tisch fast geweint hätte." },
-            { id: 11, cat: "☕ Restaurant & Café", de: "mit Karte (Kredit / Debit)", pt: "no cartão (crédito / débito)", phon: "[nu kar-taung]", visual: "💳", kw: "credit card", sentPt: "No Brasil, até o coco na praia você paga no cartão.", sentDe: "In Brasilien zahlst du selbst die Kokosnuss am Strand mit Karte." },
+            { id: 7, cat: "☕ Restaurant & Café", de: "die Rechnung, bitte", pt: "a conta, por favor", phon: "[a kon-ta, pur fa-wor]", visual: "🧾", kw: "Receipt", sentPt: "Garçom, traz a conta antes que eu peça mais uma sobremesa!", sentDe: "Kellner, bring die Rechnung, bevor ich noch ein Dessert bestelle!" },
+            { id: 8, cat: "☕ Restaurant & Café", de: "stilles Wasser / mit Gas", pt: "água sem gás / com gás", phon: "[a-gua seng gas]", visual: "💧", kw: "Drinking_water", sentPt: "No calor do Rio, bebo três litros de água sem gás por hora.", sentDe: "In der Hitze von Rio trinke ich drei Liter stilles Wasser pro Stunde." },
+            { id: 9, cat: "☕ Restaurant & Café", de: "das brasilianische Käsebrötchen", pt: "o pão de queijo", phon: "[u paung dschi kej-schu]", visual: "🥯", kw: "Pão_de_queijo", sentPt: "É impossível comer apenas um pão de queijo, é uma armadilha!", sentDe: "Es ist unmöglich, nur ein Pão de Queijo zu essen – es ist eine Falle!" },
+            { id: 10, cat: "☕ Restaurant & Café", de: "lecker / köstlich", pt: "gostoso / uma delícia", phon: "[gos-to-su / u-ma de-li-sja]", visual: "🤤", kw: "Brigadeiro", sentPt: "Isso aqui está tão gostoso que quase chorei na mesa.", sentDe: "Das hier ist so lecker, dass ich am Tisch fast geweint hätte." },
+            { id: 11, cat: "☕ Restaurant & Café", de: "mit Karte (Kredit / Debit)", pt: "no cartão (crédito / débito)", phon: "[nu kar-taung]", visual: "💳", kw: "Credit_card", sentPt: "No Brasil, até o coco na praia você paga no cartão.", sentDe: "In Brasilien zahlst du selbst die Kokosnuss am Strand mit Karte." },
 
-            { id: 12, cat: "🗣️ Echt Brasilianisch (Slang & Alltag)", de: "Alles gut? / Alles klar!", pt: "Tudo bem? / Tudo bom!", phon: "[tu-du beng / tu-du bong]", visual: "🤙", kw: "brazil beach", sentPt: "„Tudo bem?“ funciona como oi, como vai e até como tchau.", sentDe: "„Tudo bem?“ funktioniert als Hallo, Wie geht's und sogar als Tschüss." },
-            { id: 13, cat: "🗣️ Echt Brasilianisch (Slang & Alltag)", de: "Cool / Super / Abgemacht!", pt: "Legal! / Beleza!", phon: "[le-gau / be-le-sa]", visual: "😎", kw: "sunglasses", sentPt: "Nos vemos às três horas? — Beleza, combinado!", sentDe: "Sehen wir uns um drei Uhr? — Alles klar, abgemacht!" },
-            { id: 14, cat: "🗣️ Echt Brasilianisch (Slang & Alltag)", de: "Wir (im echten Alltag)", pt: "a gente (statt 'nós')", phon: "[a schen-tschi]", visual: "🧑‍🤝‍🧑", kw: "friends", sentPt: "Brasileiro quase não diz „nós“, a gente fala „a gente“!", sentDe: "Brasilianer sagen fast nie „nós“, wir sagen „a gente“!" },
-            { id: 15, cat: "🗣️ Echt Brasilianisch (Slang & Alltag)", de: "Kein Problem / Alles entspannt", pt: "De boa / Tranquilo", phon: "[dschi bo-a / tran-kwi-lu]", visual: "🌴", kw: "hammock", sentPt: "Sem estresse, hoje eu só quero ficar de boa.", sentDe: "Kein Stress, heute will ich einfach nur entspannt bleiben." },
-            { id: 16, cat: "🗣️ Echt Brasilianisch (Slang & Alltag)", de: "Kannst du langsamer sprechen?", pt: "Pode falar mais devagar?", phon: "[po-dschi fa-lar majs de-wa-gar]", visual: "🐢", kw: "turtle", sentPt: "Calma, amigo! Pode falar mais devagar? Meu cérebro ainda está em alemão.", sentDe: "Ruhig, mein Freund! Kannst du langsamer sprechen? Mein Gehirn ist noch auf Deutsch." },
-            { id: 17, cat: "🗣️ Echt Brasilianisch (Slang & Alltag)", de: "Auf geht's! / Lass uns!", pt: "Bora! / Vamos!", phon: "[bo-ra / wa-mus]", visual: "🚀", kw: "rocket", sentPt: "Bora tomar um café antes que eu durma na cadeira!", sentDe: "Auf geht's, lass uns einen Kaffee trinken, bevor ich auf dem Stuhl einschlafe!" },
+            { id: 12, cat: "🗣️ Echt Brasilianisch (Slang & Alltag)", de: "Alles gut? / Alles klar!", pt: "Tudo bem? / Tudo bom!", phon: "[tu-du beng / tu-du bong]", visual: "🤙", kw: "Rio_de_Janeiro", sentPt: "„Tudo bem?“ funciona como oi, como vai e até como tchau.", sentDe: "„Tudo bem?“ funktioniert als Hallo, Wie geht's und sogar als Tschüss." },
+            { id: 13, cat: "🗣️ Echt Brasilianisch (Slang & Alltag)", de: "Cool / Super / Abgemacht!", pt: "Legal! / Beleza!", phon: "[le-gau / be-le-sa]", visual: "😎", kw: "Sunglasses", sentPt: "Nos vemos às três horas? — Beleza, combinado!", sentDe: "Sehen wir uns um drei Uhr? — Alles klar, abgemacht!" },
+            { id: 14, cat: "🗣️ Echt Brasilianisch (Slang & Alltag)", de: "Wir (im echten Alltag)", pt: "a gente (statt 'nós')", phon: "[a schen-tschi]", visual: "🧑‍🤝‍🧑", kw: "Friendship", sentPt: "Brasileiro quase não diz „nós“, a gente fala „a gente“!", sentDe: "Brasilianer sagen fast nie „nós“, wir sagen „a gente“!" },
+            { id: 15, cat: "🗣️ Echt Brasilianisch (Slang & Alltag)", de: "Kein Problem / Alles entspannt", pt: "De boa / Tranquilo", phon: "[dschi bo-a / tran-kwi-lu]", visual: "🌴", kw: "Hammock", sentPt: "Sem estresse, hoje eu só quero ficar de boa.", sentDe: "Kein Stress, heute will ich einfach nur entspannt bleiben." },
+            { id: 16, cat: "🗣️ Echt Brasilianisch (Slang & Alltag)", de: "Kannst du langsamer sprechen?", pt: "Pode falar mais devagar?", phon: "[po-dschi fa-lar majs de-wa-gar]", visual: "🐢", kw: "Tortoise", sentPt: "Calma, amigo! Pode falar mais devagar? Meu cérebro ainda está em alemão.", sentDe: "Ruhig, mein Freund! Kannst du langsamer sprechen? Mein Gehirn ist noch auf Deutsch." },
+            { id: 17, cat: "🗣️ Echt Brasilianisch (Slang & Alltag)", de: "Auf geht's! / Lass uns!", pt: "Bora! / Vamos!", phon: "[bo-ra / wa-mus]", visual: "🚀", kw: "Skateboard", sentPt: "Bora tomar um café antes que eu durma na cadeira!", sentDe: "Auf geht's, lass uns einen Kaffee trinken, bevor ich auf dem Stuhl einschlafe!" },
 
             { id: 18, cat: "⚡ Power-Verben & Struktur", de: "ich will / ich brauche", pt: "eu quero / eu preciso de", phon: "[eu kä-ru / pre-si-su dschi]", visual: "🎯", kw: "target", sentPt: "Hoje eu só quero paz e preciso de um café forte.", sentDe: "Heute will ich nur Ruhe und brauche einen starken Kaffee." },
-            { id: 19, cat: "⚡ Power-Verben & Struktur", de: "es gibt / hat", pt: "tem", phon: "[teng]", visual: "📦", kw: "box", sentPt: "Tem Wi-Fi grátis aqui ou preciso conversar com as pessoas?", sentDe: "Gibt es hier kostenloses WLAN oder muss ich mit den Leuten reden?" },
-            { id: 20, cat: "⚡ Power-Verben & Struktur", de: "ich bin gerade (Zustand / Ort)", pt: "eu estou (kurz: tô)", phon: "[eu is-tou / to]", visual: "📍", kw: "map pin", sentPt: "Tô chegando em cinco minutos! (Mentira, ainda tô em casa).", sentDe: "Ich bin in fünf Minuten da! (Lüge, ich bin noch zu Hause)." },
-            { id: 21, cat: "⚡ Power-Verben & Struktur", de: "ich werde (Zukunft bauen)", pt: "eu vou + [Verb]", phon: "[eu wou]", visual: "🔜", kw: "road", sentPt: "Mais tarde eu vou caminhar meia hora ao ar livre.", sentDe: "Später werde ich eine halbe Stunde an der frischen Luft spazieren gehen." },
+            { id: 19, cat: "⚡ Power-Verben & Struktur", de: "es gibt / hat", pt: "tem", phon: "[teng]", visual: "📦", kw: "Wi-Fi", sentPt: "Tem Wi-Fi grátis aqui ou preciso conversar com as pessoas?", sentDe: "Gibt es hier kostenloses WLAN oder muss ich mit den Leuten reden?" },
+            { id: 20, cat: "⚡ Power-Verben & Struktur", de: "ich bin gerade (Zustand / Ort)", pt: "eu estou (kurz: tô)", phon: "[eu is-tou / to]", visual: "📍", kw: "Map", sentPt: "Tô chegando em cinco minutos! (Mentira, ainda tô em casa).", sentDe: "Ich bin in fünf Minuten da! (Lüge, ich bin noch zu Hause)." },
+            { id: 21, cat: "⚡ Power-Verben & Struktur", de: "ich werde (Zukunft bauen)", pt: "eu vou + [Verb]", phon: "[eu wou]", visual: "🔜", kw: "Footpath", sentPt: "Mais tarde eu vou caminhar meia hora ao ar livre.", sentDe: "Später werde ich eine halbe Stunde an der frischen Luft spazieren gehen." },
 
-            { id: 22, cat: "💪 Körper, Training & Erholung", de: "die Klimmzugstange", pt: "a barra fixa", phon: "[a ba-ha fik-sa]", visual: "🏋️‍♂️", kw: "pullup", sentPt: "Fazer barra fixa em casa é ótimo até o gato pular nas suas costas.", sentDe: "Zuhause Klimmzüge zu machen ist super, bis die Katze auf deinen Rücken springt." },
-            { id: 23, cat: "💪 Körper, Training & Erholung", de: "spazieren gehen", pt: "caminhar / dar uma volta", phon: "[ka-min-jar / dar u-ma wol-ta]", visual: "🚶‍♂️", kw: "walking park", sentPt: "Depois do escritório, preciso dar uma volta para não enferrujar.", sentDe: "Nach dem Büro muss ich eine Runde spazieren gehen, um nicht einzurosten." },
-            { id: 24, cat: "💪 Körper, Training & Erholung", de: "der Schlaf / gut schlafen", pt: "o sono / dormir bem", phon: "[u so-nu / dor-mir beng]", visual: "🛌", kw: "sleeping", sentPt: "Meu anel inteligente disse que meu sono hoje foi nota dez!", sentDe: "Mein Smart-Ring hat gesagt, mein Schlaf war heute eine glatte Zehn!" },
+            { id: 22, cat: "💪 Körper, Training & Erholung", de: "die Klimmzugstange", pt: "a barra fixa", phon: "[a ba-ha fik-sa]", visual: "🏋️‍♂️", kw: "Pull-up_(exercise)", sentPt: "Fazer barra fixa em casa é ótimo até o gato pular nas suas costas.", sentDe: "Zuhause Klimmzüge zu machen ist super, bis die Katze auf deinen Rücken springt." },
+            { id: 23, cat: "💪 Körper, Training & Erholung", de: "spazieren gehen", pt: "caminhar / dar uma volta", phon: "[ka-min-jar / dar u-ma wol-ta]", visual: "🚶‍♂️", kw: "Walking", sentPt: "Depois do escritório, preciso dar uma volta para não enferrujar.", sentDe: "Nach dem Büro muss ich eine Runde spazieren gehen, um nicht einzurosten." },
+            { id: 24, cat: "💪 Körper, Training & Erholung", de: "der Schlaf / gut schlafen", pt: "o sono / dormir bem", phon: "[u so-nu / dor-mir beng]", visual: "🛌", kw: "Sleep", sentPt: "Meu anel inteligente disse que meu sono hoje foi nota dez!", sentDe: "Mein Smart-Ring hat gesagt, mein Schlaf war heute eine glatte Zehn!" },
 
-            { id: 25, cat: "✈️ Reise, Orientierung & Notfall", de: "Wo ist...?", pt: "Onde fica...?", phon: "[on-dschi fi-ka]", visual: "🗺️", kw: "map", sentPt: "Socorro, onde fica o banheiro mais próximo?!", sentDe: "Hilfe, wo ist die nächste Toilette?!" },
-            { id: 26, cat: "✈️ Reise, Orientierung & Notfall", de: "Wie viel kostet das?", pt: "Quanto custa isso?", phon: "[kwan-tu kus-ta i-su]", visual: "🏷️", kw: "price", sentPt: "Quanto custa? Se for preço para turista, eu choro!", sentDe: "Wie viel kostet das? Wenn es der Touristenpreis ist, weine ich!" },
-            { id: 27, cat: "✈️ Reise, Orientierung & Notfall", de: "die Katze", pt: "o gato", phon: "[u ga-tu]", visual: "🐈", kw: "cat", sentPt: "O gato ocupa metade da cama e eu durmo na beirada.", sentDe: "Die Katze nimmt das halbe Bett ein und ich schlafe an der Kante." },
-            { id: 28, cat: "✈️ Reise, Orientierung & Notfall", de: "der Strand", pt: "a praia", phon: "[a praj-a]", visual: "🏖️", kw: "beach", sentPt: "A reunião foi cancelada por motivo de: fui à praia.", sentDe: "Das Meeting wurde abgesagt wegen: Ich bin zum Strand gegangen." }
+            { id: 25, cat: "✈️ Reise, Orientierung & Notfall", de: "Wo ist...?", pt: "Onde fica...?", phon: "[on-dschi fi-ka]", visual: "🗺️", kw: "Christ_the_Redeemer_(statue)", sentPt: "Socorro, onde fica o banheiro mais próximo?!", sentDe: "Hilfe, wo ist die nächste Toilette?!" },
+            { id: 26, cat: "✈️ Reise, Orientierung & Notfall", de: "Wie viel kostet das?", pt: "Quanto custa isso?", phon: "[kwan-tu kus-ta i-su]", visual: "🏷️", kw: "Brazilian_real", sentPt: "Quanto custa? Se for preço para turista, eu choro!", sentDe: "Wie viel kostet das? Wenn es der Touristenpreis ist, weine ich!" },
+            { id: 27, cat: "✈️ Reise, Orientierung & Notfall", de: "die Katze", pt: "o gato", phon: "[u ga-tu]", visual: "🐈", kw: "Cat", sentPt: "O gato ocupa metade da cama e eu durmo na beirada.", sentDe: "Die Katze nimmt das halbe Bett ein und ich schlafe an der Kante." },
+            { id: 28, cat: "✈️ Reise, Orientierung & Notfall", de: "der Strand", pt: "a praia", phon: "[a praj-a]", visual: "🏖️", kw: "Copacabana,_Rio_de_Janeiro", sentPt: "A reunião foi cancelada por motivo de: fui à praia.", sentDe: "Das Meeting wurde abgesagt wegen: Ich bin zum Strand gegangen." }
         ];
 
         // State Variables
@@ -908,6 +910,9 @@
         let audioSettings = { engine: 'auto', voiceURI: '', rate: 0.95 };
         let userGoalTarget = 60;
         let showPhotos = true;
+        let photoUrlCache = {};
+        const photoPending = new Map();
+        let photoRenderVersion = 0;
         let currentCard = null;
         let currentCategory = "Alle";
         let availableVoices = [];
@@ -933,6 +938,12 @@
         // ============================================================================
         function init() {
             lucide.createIcons();
+            try {
+                showPhotos = localStorage.getItem('ptBrShowPhotosV4') !== 'false';
+                const cache = JSON.parse(localStorage.getItem('ptBrPhotoCacheV5') || '{}');
+                if (cache && typeof cache === 'object' && !Array.isArray(cache)) photoUrlCache = cache;
+            } catch (e) {}
+            updateImgModeBtnUI();
 
             const savedCustomCats = localStorage.getItem('ptBrCustomCatsV4');
             if (savedCustomCats) {
@@ -960,6 +971,13 @@
                 saveData();
             }
 
+            // Match by vocabulary text, never by IDs that changed in older decks.
+            const starterKeywords = new Map(starterVocab.map(card => [card.pt.toLowerCase().trim(), card.kw]));
+            vocabList.forEach(card => {
+                const keyword = starterKeywords.get(String(card.pt || '').toLowerCase().trim());
+                if (keyword) card.kw = keyword;
+            });
+            saveData();
             const savedGoal = localStorage.getItem('ptBrUserGoalV4');
             if (savedGoal) {
                 userGoalTarget = parseInt(savedGoal, 10) || 60;
@@ -1954,24 +1972,112 @@ Anforderungen für jedes Wort:
             loadNextCard();
         }
 
+        function updateImgModeBtnUI() {
+            const btn = document.getElementById('imgModeBtn');
+            if (btn) btn.innerText = showPhotos ? '\ud83d\uddbc\ufe0f Fotos: An' : '\ud83d\ude0a Fotos: Aus (Emojis)';
+        }
+
         function toggleImageMode() {
             showPhotos = !showPhotos;
-            document.getElementById('imgModeBtn').innerText = showPhotos ? "🖼️ Fotos: An" : "😊 Emojis: An";
+            try { localStorage.setItem('ptBrShowPhotosV4', String(showPhotos)); } catch (e) {}
+            updateImgModeBtnUI();
             if (currentCard) renderVisual(currentCard);
         }
 
-        function renderVisual(card) {
-            const visEl = document.getElementById('cardVisual');
-            if (!visEl) return;
-            if (card.visual && card.visual.startsWith('http')) {
-                visEl.innerHTML = `<img src="${card.visual}" class="max-h-36 rounded-2xl shadow-md object-cover" alt="Bild">`;
-            } else if (showPhotos && card.kw) {
-                const imgUrl = `https://loremflickr.com/340/220/${encodeURIComponent(card.kw)}?lock=${card.id % 1000}`;
-                visEl.innerHTML = `<img src="${imgUrl}" class="max-h-36 rounded-2xl shadow-md object-cover" alt="${escapeHtml(card.de)}" onerror="this.outerHTML='<span class=\\'text-7xl\\'>${card.visual || '🇧🇷'}</span>'">`;
-            } else {
-                visEl.innerHTML = `<span class="text-7xl">${card.visual || "🇧🇷"}</span>`;
-            }
+        function cleanTermForWiki(str) {
+            return String(str || '').replace(/^(o|a|os|as|um|uma|der|die|das|ein|eine)\s+/i, '')
+                .split('/')[0].split('(')[0].replace(/[?!.,]/g, '').trim();
         }
+
+        function safePhotoUrl(value) {
+            try { const url = new URL(value); return url.protocol === 'https:' ? url.href : null; }
+            catch (e) { return null; }
+        }
+
+        async function fetchPhotoJson(url) {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 2200);
+            try {
+                const response = await fetch(url, { signal: controller.signal });
+                return response.ok ? await response.json() : null;
+            } catch (e) { return null; }
+            finally { clearTimeout(timeout); }
+        }
+
+        async function resolveCardPhotoUrl(card) {
+            const directUrl = safePhotoUrl(card.visual);
+            if (directUrl) return directUrl;
+            const cacheKey = JSON.stringify([card.kw || '', card.pt || '', card.de || '']);
+            const cached = safePhotoUrl(photoUrlCache[cacheKey]);
+            if (cached) return cached;
+            if (photoPending.has(cacheKey)) return photoPending.get(cacheKey);
+            const task = (async () => {
+                const candidates = [];
+                if (card.kw && card.kw.toLowerCase() !== 'brazil') candidates.push({lang:'en',term:card.kw});
+                const pt = cleanTermForWiki(card.pt);
+                const de = cleanTermForWiki(card.de);
+                if (pt) candidates.push({lang:'pt',term:pt});
+                if (de) candidates.push({lang:'de',term:de});
+                let result = null;
+                for (const candidate of candidates) {
+                    const title = encodeURIComponent(candidate.term.replace(/\s+/g, '_'));
+                    const data = await fetchPhotoJson(`https://${candidate.lang}.wikipedia.org/api/rest_v1/page/summary/${title}`);
+                    if (data?.type !== 'disambiguation') result = safePhotoUrl(data?.thumbnail?.source);
+                    if (result) break;
+                }
+                if (!result && candidates.length) {
+                    const candidate = candidates[0];
+                    const search = encodeURIComponent(candidate.term.replace(/_/g, ' '));
+                    const data = await fetchPhotoJson(`https://${candidate.lang}.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${search}&gsrlimit=3&prop=pageimages&pithumbsize=420&format=json&origin=*`);
+                    const pages = Object.values(data?.query?.pages || {}).sort((a,b)=>(a.index || 0)-(b.index || 0));
+                    for (const page of pages) { result = safePhotoUrl(page.thumbnail?.source); if (result) break; }
+                }
+                if (result) {
+                    photoUrlCache[cacheKey] = result;
+                    // Keep the cache bounded; storage restrictions must never break the trainer.
+                    const keys = Object.keys(photoUrlCache);
+                    keys.slice(0, Math.max(0, keys.length - 200)).forEach(key => delete photoUrlCache[key]);
+                    try { localStorage.setItem('ptBrPhotoCacheV5', JSON.stringify(photoUrlCache)); } catch (e) {}
+                }
+                return result;
+            })();
+            photoPending.set(cacheKey, task);
+            try { return await task; } finally { photoPending.delete(cacheKey); }
+        }
+
+        async function renderVisual(card) {
+            const visEl = document.getElementById('cardVisual');
+            const request = ++photoRenderVersion;
+            if (!visEl || !card) return;
+            visEl.classList.remove('photo-shimmer');
+            visEl.removeAttribute('aria-busy');
+            const emoji = card.visual && !/^https?:/i.test(card.visual) ? card.visual : '\ud83c\udde7\ud83c\uddf7';
+            const showEmoji = () => {
+                visEl.innerHTML = '';
+                const span = document.createElement('span');
+                span.className = 'text-7xl sm:text-8xl';
+                span.textContent = emoji;
+                visEl.appendChild(span);
+            };
+            showEmoji();
+            if (!showPhotos) return;
+            visEl.classList.add('photo-shimmer');
+            visEl.setAttribute('aria-busy', 'true');
+            const url = await resolveCardPhotoUrl(card);
+            if (request !== photoRenderVersion || !showPhotos || currentCard !== card) return;
+            visEl.classList.remove('photo-shimmer');
+            visEl.removeAttribute('aria-busy');
+            if (!url) return;
+            const image = document.createElement('img');
+            image.className = 'h-36 sm:h-40 w-64 sm:w-72 rounded-2xl shadow-md object-cover border border-slate-200';
+            image.alt = card.de || 'Vokabelbild';
+            image.referrerPolicy = 'no-referrer';
+            image.onerror = () => { if (request === photoRenderVersion) showEmoji(); };
+            visEl.innerHTML = '';
+            visEl.appendChild(image);
+            image.src = url;
+        }
+
 
         function updateStats(filteredList) {
             const now = Date.now();

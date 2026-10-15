@@ -24,5 +24,5 @@ F�r eine �ffentliche Nutzung empfiehlt sich sp�ter eine Supabase Edge Func
 
 ## GitHub Pages
 
-Das Repository enth�lt einen fertigen Pages-Workflow. In GitHub unter **Settings  Pages  Source** einmalig **GitHub Actions** w�hlen. Danach ver�ffentlicht jeder Push auf `main` automatisch die aktuelle Webseite.
+In GitHub unter **Settings  Pages** als Quelle **Deploy from a branch** w�hlen. Anschlie�end den Branch `main` und den Ordner `/ (root)` ausw�hlen und speichern. �nderungen auf `main` werden danach automatisch ver�ffentlicht.
 

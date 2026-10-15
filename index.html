@@ -46,6 +46,9 @@
             100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
+        .app-header { position: sticky; isolation: isolate; overflow: hidden; background: #f1f9f4; }
+        .header-flag { position: absolute; z-index: -2; top: 50%; right: 0; width: min(800px, 100%); height: auto; transform: translateY(-50%); opacity: .38; pointer-events: none; }
+        .app-header::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(255,255,255,.98), rgba(255,255,255,.77) 45%, rgba(255,255,255,.28)); pointer-events: none; }
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
@@ -56,24 +59,24 @@
 <body class="min-h-screen flex flex-col">
 
     <!-- TOP NAVIGATION HEADER + PERSISTENT LEVEL BAR -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <header class="app-header border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <svg class="header-flag" viewBox="0 0 1000 700" aria-hidden="true" focusable="false">
+            <rect width="1000" height="700" fill="#009b3a"/>
+            <path d="M500 85 915 350 500 615 85 350Z" fill="#fedf00"/>
+            <circle cx="500" cy="350" r="175" fill="#002776"/>
+            <path d="M332 310Q500 290 660 400" fill="none" stroke="white" stroke-width="24"/>
+            <g fill="white"><circle cx="450" cy="400" r="6"/><circle cx="540" cy="445" r="5"/><circle cx="485" cy="470" r="6"/><circle cx="600" cy="430" r="5"/><circle cx="407" cy="360" r="5"/><circle cx="552" cy="310" r="5"/><circle cx="500" cy="410" r="4"/></g>
+        </svg>
         <div class="max-w-5xl mx-auto px-4 pt-3 pb-2.5 flex flex-col gap-2.5">
             
             <!-- Top Row: Brand & Navigation Tabs -->
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl brazil-gradient flex items-center justify-center text-white font-extrabold text-xl shadow-sm shrink-0">
-                        🇧🇷
-                    </div>
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
                             <h1 class="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">Brasil Fokus-Trainer</h1>
-                            <span class="bg-emerald-100 text-emerald-800 text-[11px] font-extrabold px-2 py-0.5 rounded-full border border-emerald-200">4.0 AI</span>
-                            <button onclick="openApiKeySetup()" id="apiKeyStatusBadge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full border transition flex items-center gap-1 bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200" title="KI-Verbindung & Standalone API-Key verwalten">
-                                <span>🔑</span> <span id="apiKeyStatusText">KI: Aktiv</span>
-                            </button>
+
                         </div>
-                        <p class="text-[11px] text-slate-500 hidden sm:block">Pareto-Vokabeln, Aussprache-Prüfung, Niveau-Tracking & Live-Dialoge</p>
                     </div>
                 </div>
 
@@ -95,7 +98,7 @@
                         <i data-lucide="message-circle" class="w-3.5 h-3.5 text-blue-600"></i> Dialoge
                     </button>
                     <button onclick="switchTab('settings')" id="tab-settings" class="tab-btn flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 whitespace-nowrap" title="Einstellungen & Backup">
-                        <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                        <i data-lucide="sliders" class="w-3.5 h-3.5"></i> Einstellungen
                     </button>
                 </nav>
             </div>
@@ -715,17 +718,21 @@
                             <i data-lucide="key" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <h2 class="font-extrabold text-lg text-slate-900">🔑 Standalone KI-Verbindung & Web-Hosting</h2>
-                            <p class="text-xs text-slate-500">Damit KI-Vokabelsuche, Aussprache-Coach & Dialoge auch außerhalb des Chats auf deinem Handy/PC laufen.</p>
+                            <h2 class="font-extrabold text-lg text-slate-900">KI-Verbindung</h2>
+                            <p class="text-xs text-slate-500">Verbinde Gemini für KI-Vokabeln, Aussprache-Auswertung und Dialoge. Dein Key wird in diesem Browser gespeichert.</p>
                         </div>
                     </div>
                     <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-xl transition">
-                        ↗ Kostenlosen Gemini Key holen
+                        ↗ Gemini API-Key erstellen
                     </a>
                 </div>
 
+<button onclick="openApiKeySetup()" id="apiKeyStatusBadge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full border transition flex items-center gap-1 bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200" title="KI-Verbindung & Standalone API-Key verwalten">
+                                <span>🔑</span> <span id="apiKeyStatusText">KI: Aktiv</span>
+                            </button>
+
                 <div class="flex flex-col sm:flex-row gap-2.5">
-                    <input type="password" id="settingsApiKeyInput" placeholder="Optional im Chat • Für eigene Webseite/Handy hier Gemini API-Key (AIzaSy...) eintragen" class="flex-grow bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <input type="password" id="settingsApiKeyInput" placeholder="Gemini API-Key (AIzaSy...) eintragen" class="flex-grow bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     <button onclick="toggleShowApiKey()" class="px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs shrink-0">👁️ Zeigen</button>
                     <button onclick="saveUserApiKey()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shrink-0 shadow-sm">Key speichern</button>
                     <button onclick="clearUserApiKey()" class="px-3 py-2.5 rounded-xl border border-slate-200 hover:bg-rose-50 hover:text-rose-600 text-slate-500 font-bold text-xs shrink-0">Löschen</button>

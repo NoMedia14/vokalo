@@ -232,6 +232,12 @@
                 <button data-cloud-auth type="submit" class="w-full bg-emerald-600 text-white font-bold p-3 rounded-xl">Anmelden</button>
                 <button data-cloud-auth type="button" onclick="cloudAuthAction('signup')" class="w-full bg-slate-100 font-bold p-3 rounded-xl">Konto erstellen</button>
             </form>
+            <button type="button" onclick="cloudResetEmail()" class="text-sm font-bold text-emerald-700 underline">Passwort vergessen?</button>
+            <div id="cloudRecovery" class="hidden space-y-3">
+                <label for="cloudNewPassword" class="block text-sm font-bold">Neues Passwort</label>
+                <input id="cloudNewPassword" type="password" minlength="8" autocomplete="new-password" class="w-full border rounded-xl p-3">
+                <button onclick="cloudUpdatePassword()" class="w-full bg-emerald-600 text-white font-bold p-3 rounded-xl">Neues Passwort speichern</button>
+            </div>
             <p id="cloudAuthMessage" role="status" class="text-sm text-slate-600">Beim ersten Anmelden übernehmen wir vorhandene Vokabeln aus diesem Browser, wenn dein Konto noch keinen Lernstand hat.</p>
         </div>
     </section>
@@ -3071,11 +3077,11 @@ Regeln:
                     ? await cloudClient.auth.signUp({email,password,options:{emailRedirectTo:'https://nomedia14.github.io/vokalo/'}})
                     : await cloudClient.auth.signInWithPassword({email,password});
                 if (result.error) throw result.error;
-                if (!result.data.session) { message.textContent = 'Bitte bestätige deine E-Mail. Danach hier mit E-Mail und Passwort anmelden.'; return; }
+                if (!result.data.session) { message.textContent = 'Falls dein Konto neu ist, bestätige die E-Mail. Falls du bereits ein Konto hast, melde dich mit dem bisherigen Passwort an oder nutze „Passwort vergessen“.'; return; }
                 document.getElementById('cloudPassword').value = '';
                 await enterCloudApp(result.data.user);
             } catch (error) {
-                message.textContent = error.message || 'Anmeldung fehlgeschlagen.';
+                message.textContent = error.code === 'invalid_credentials' ? 'E-Mail oder Passwort stimmt nicht. Bei einem vorhandenen Konto gilt dein bisheriges Passwort. Nutze bei Bedarf „Passwort vergessen“.' : error.message || 'Anmeldung fehlgeschlagen.';
                 document.getElementById('cloudLogin').classList.remove('hidden');
             } finally { buttons.forEach(button => button.disabled = false); }
         }
@@ -3092,6 +3098,40 @@ Regeln:
             try { await flushCloud(); location.reload(); }
             catch (e) { showToast('Nicht gespeichert. Bitte ein Backup herunterladen, bevor du die Seite neu lädst.'); }
         }
+
+        async function cloudResetEmail() {
+            const email = document.getElementById('cloudEmail').value.trim();
+            const message = document.getElementById('cloudAuthMessage');
+            if (!email) { message.textContent = 'Bitte zuerst deine E-Mail-Adresse eintragen.'; return; }
+            try {
+                if (!cloudClient) throw new Error('Anmeldung noch nicht geladen. Bitte neu laden.');
+                const {error} = await cloudClient.auth.resetPasswordForEmail(email, {redirectTo:'https://nomedia14.github.io/vokalo/?reset=1'});
+                if (error) throw error;
+                message.textContent = 'Falls ein Konto existiert, wurde eine E-Mail zum Zurücksetzen angefordert. Bitte auch den Spamordner prüfen.';
+            } catch (e) { message.textContent = e.message || 'E-Mail konnte nicht angefordert werden.'; }
+        }
+        function showCloudRecovery() {
+            document.getElementById('appHeader').classList.add('hidden');
+            document.querySelector('main').classList.add('hidden');
+            document.getElementById('cloudLogin').classList.remove('hidden');
+            document.getElementById('cloudRecovery').classList.remove('hidden');
+            document.getElementById('cloudAuthMessage').textContent = 'Wähle ein neues Passwort mit mindestens 8 Zeichen.';
+        }
+        async function cloudUpdatePassword() {
+            const password = document.getElementById('cloudNewPassword').value;
+            const message = document.getElementById('cloudAuthMessage');
+            if (password.length < 8) { message.textContent = 'Bitte mindestens 8 Zeichen verwenden.'; return; }
+            try {
+                const {data,error} = await cloudClient.auth.updateUser({password});
+                if (error) throw error;
+                document.getElementById('cloudNewPassword').value = '';
+                document.getElementById('cloudRecovery').classList.add('hidden');
+                history.replaceState(null, '', location.pathname);
+                await enterCloudApp(data.user);
+                showToast('Neues Passwort gespeichert.');
+            } catch (e) { message.textContent = e.message || 'Passwort konnte nicht geändert werden.'; }
+        }
+
         async function bootstrapCloud() {
             try {
                 if (!window.supabase) throw new Error('Anmeldung konnte nicht geladen werden. Bitte neu laden.');
@@ -3100,8 +3140,12 @@ Regeln:
                 });
                 const {data,error} = await cloudClient.auth.getSession();
                 if (error) throw error;
-                if (data.session) await enterCloudApp(data.session.user);
+                if (data.session) {
+                    if (new URLSearchParams(location.search).get('reset') === '1') showCloudRecovery();
+                    else await enterCloudApp(data.session.user);
+                }
                 cloudClient.auth.onAuthStateChange((event) => {
+                    if (event === 'PASSWORD_RECOVERY') showCloudRecovery();
                     if (event === 'SIGNED_OUT') { document.getElementById('appHeader').classList.add('hidden'); cloudReady=false; document.querySelector('main').classList.add('hidden'); document.getElementById('cloudLogin').classList.remove('hidden'); }
                 });
                 window.addEventListener('beforeunload', event => {

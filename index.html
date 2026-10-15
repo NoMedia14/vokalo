@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Vokalo – Sprachen lernen</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -57,6 +57,60 @@
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .mobile-nav { display: none; }
+        #trainerTools summary, #cardExample summary { display: none; }
+        @media (max-width: 639px) {
+            body.is-authenticated { padding-bottom: calc(66px + env(safe-area-inset-bottom)); }
+            #appHeader { position: relative; top: auto; }
+            #appHeader > div { padding: 10px 14px; }
+            #appHeader h1 { font-size: 18px; }
+            #appHeader nav, #headerProgress { display: none; }
+            .header-flag { width: 230px; opacity: .25; }
+            .is-authenticated .mobile-nav { position: fixed; display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); bottom: 0; left: 0; right: 0; z-index: 40; padding: 5px 4px calc(5px + env(safe-area-inset-bottom)); background: rgba(255,255,255,.97); border-top: 1px solid #e2e8f0; box-shadow: 0 -4px 20px #0f172a08; }
+            .mobile-tab { display: flex; min-height: 48px; min-width: 0; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border-radius: 12px; color: #64748b; font-size: 9px; font-weight: 700; }
+            .mobile-tab svg { width: 19px; height: 19px; }
+            .mobile-active { background: #ecfdf5; color: #047857; }
+            main { padding: 8px 10px 4px !important; }
+            #view-trainer { display: flex; flex-direction: column; gap: 8px; }
+            #view-trainer.hidden { display: none; }
+            #view-trainer > * { margin-top: 0 !important; }
+            #trainerToolbar { flex-direction: row; align-items: center; padding: 6px; gap: 6px; position: relative; z-index: 20; }
+            #trainerToolbar > div { min-width: 0; }
+            #trainerToolbar > div > svg { display: none; }
+            #categorySelect { min-height: 42px; padding: 8px; font-size: 12px; }
+            #trainerTools { flex-shrink: 0; }
+            #trainerTools summary { display: block; list-style: none; padding: 10px; font-size: 12px; font-weight: 800; cursor: pointer; border-radius: 10px; background: #f1f5f9; }
+            #trainerTools summary::-webkit-details-marker { display: none; }
+            #trainerTools[open] .trainer-tool-actions { display: flex; flex-direction: column; align-items: stretch; position: absolute; right: 0; top: calc(100% + 5px); padding: 10px; width: 210px; background: white; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 10px 30px #0f172a26; }
+            .trainer-tool-actions button { min-height: 44px; }
+            #trainerStats { gap: 4px; }
+            #trainerStats > div { padding: 6px 3px; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 4px; }
+            #trainerStats > div > div:first-child { font-size: 9px; }
+            #trainerStats > div > div:last-child { font-size: 15px; }
+            #cardContainer { min-height: 310px; height: calc(100dvh - 220px - env(safe-area-inset-bottom)); padding: 12px; border-radius: 20px; gap: 8px; }
+            #cardCategory { display: none; }
+            #cardContainer > div:first-child { justify-content: flex-end; min-height: 18px; }
+            #cardContent { padding: 2px; margin: auto 0; overflow-y: auto; min-height: 0; overscroll-behavior: contain; }
+            #cardVisual { height: clamp(60px,13dvh,110px); margin-bottom: 8px; }
+            #cardVisual img { height: 100%; max-height: 110px; width: 175px; }
+            #cardVisual span { font-size: 64px; }
+            #cardDe { font-size: 23px; line-height: 1.2; }
+            #cardPt { font-size: 23px; line-height: 1.2; }
+            #answerSection { margin-top: 10px; padding-top: 10px; }
+            #cardContainer:has(#answerSection:not(.hidden)) #cardVisual { display: none; }
+            #cardPhonetic { margin-bottom: 8px; font-size: 12px; }
+            #cardExample summary { display: block; padding: 10px; min-height: 40px; border-radius: 10px; background: #fffbeb; color: #92400e; font-size: 12px; font-weight: 700; cursor: pointer; }
+            #cardExample > div { padding: 10px; }
+            #actionArea { padding-top: 0; flex-shrink: 0; }
+            #btnShow { min-height: 46px; padding: 12px; font-size: 15px; }
+            #btnShow > span:last-child { display: none; }
+            #srsButtons { gap: 5px; }
+            #srsButtons > button { min-height: 48px; padding: 8px 2px; border-radius: 12px; }
+            #srsButtons > button > span:last-child { font-size: 10px; }
+            #toast { bottom: calc(78px + env(safe-area-inset-bottom)); right: 10px; left: 10px; }
+        }
+
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -107,7 +161,7 @@
             </div>
 
             <!-- Persistent Overall CEFR Level Bar -->
-            <div onclick="switchTab('progress')" class="bg-slate-50 hover:bg-slate-100/90 border border-slate-200/80 rounded-xl px-3 py-1.5 flex flex-wrap items-center justify-between gap-3 cursor-pointer transition group" title="Klicken für detaillierte Niveau-Aufschlüsselung">
+            <div id="headerProgress" onclick="switchTab('progress')" class="bg-slate-50 hover:bg-slate-100/90 border border-slate-200/80 rounded-xl px-3 py-1.5 flex flex-wrap items-center justify-between gap-3 cursor-pointer transition group" title="Klicken für detaillierte Niveau-Aufschlüsselung">
                 <div class="flex items-center gap-2.5">
                     <span id="headerLevelBadge" class="bg-emerald-600 text-white text-xs font-extrabold px-2.5 py-0.5 rounded-lg shadow-sm">A1.1</span>
                     <div class="text-xs">
@@ -127,6 +181,8 @@
 
         </div>
     </header>
+
+    <nav id="mobileNav" aria-label="Hauptnavigation" class="mobile-nav"><button id="mobile-tab-trainer" onclick="switchTab('trainer')" class="mobile-tab mobile-active" aria-label="Lernen" aria-current="page"><i data-lucide="layers"></i><span>Lernen</span></button><button id="mobile-tab-pronounce" onclick="switchTab('pronounce')" class="mobile-tab" aria-label="Sprechen"><i data-lucide="mic"></i><span>Sprechen</span></button><button id="mobile-tab-progress" onclick="switchTab('progress')" class="mobile-tab" aria-label="Fortschritt"><i data-lucide="bar-chart-3"></i><span>Fortschritt</span></button><button id="mobile-tab-discover" onclick="switchTab('discover')" class="mobile-tab" aria-label="Wörter"><i data-lucide="sparkles"></i><span>Wörter</span></button><button id="mobile-tab-chat" onclick="switchTab('chat')" class="mobile-tab" aria-label="Dialoge"><i data-lucide="message-circle"></i><span>Dialoge</span></button><button id="mobile-tab-settings" onclick="switchTab('settings')" class="mobile-tab" aria-label="Konto"><i data-lucide="sliders"></i><span>Konto</span></button></nav>
 
     <!-- TOAST NOTIFICATION -->
     <div id="toast" class="fixed bottom-5 right-5 z-50 hidden bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-sm font-semibold animate-fade-in max-w-sm border border-slate-700">
@@ -248,13 +304,13 @@
         <!-- ========================================== -->
         <section id="view-trainer" class="space-y-4">
             <!-- Top Filter & Action Bar -->
-            <div class="flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center justify-between bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+            <div id="trainerToolbar" class="flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center justify-between bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
                 <div class="flex items-center gap-2 flex-grow">
                     <i data-lucide="folder-kanban" class="w-5 h-5 text-emerald-600 shrink-0 ml-1"></i>
                     <select id="categorySelect" onchange="changeCategory()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm font-bold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     </select>
                 </div>
-                <div class="flex items-center gap-2 flex-wrap">
+                <details id="trainerTools" open><summary>Mehr <span aria-hidden="true">⋯</span></summary><div class="trainer-tool-actions flex items-center gap-2 flex-wrap">
                     <button onclick="openQuickAddModal()" class="px-3 py-2 rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-xs font-extrabold text-emerald-800 flex items-center gap-1 shrink-0 transition">
                         ➕ Eigenes Wort
                     </button>
@@ -264,11 +320,11 @@
                     <button onclick="quickGenerateForCurrentCat()" id="quickAiBtn" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 text-xs font-extrabold flex items-center gap-1.5 shadow-sm shrink-0 transition">
                         <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> +5 KI-Wörter
                     </button>
-                </div>
+                </div></details>
             </div>
 
             <!-- SRS Stats Bar -->
-            <div class="grid grid-cols-4 gap-2 sm:gap-3">
+            <div id="trainerStats" class="grid grid-cols-4 gap-2 sm:gap-3">
                 <div class="bg-white p-2.5 sm:p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
                     <div class="text-[11px] font-semibold text-slate-500">🔥 Fällig</div>
                     <div id="statDue" class="text-lg sm:text-xl font-extrabold text-rose-600">0</div>
@@ -334,7 +390,7 @@
                         </div>
                         <div id="cardPhonetic" class="text-sm font-mono text-slate-500 mt-1 mb-4">[Lautschrift]</div>
 
-                        <!-- Funny Memorable Hook Box -->
+                        <details id="cardExample" open><summary>Beispielsatz anhören &amp; lesen</summary>
                         <div class="bg-amber-50/90 border-l-4 border-amber-400 p-3.5 rounded-xl text-left flex items-center justify-between gap-3 max-w-xl mx-auto">
                             <div class="space-y-1">
                                 <div id="cardSentPt" class="font-bold text-slate-900 text-sm sm:text-base leading-snug">Beispielsatz PT</div>
@@ -343,7 +399,7 @@
                             <button onclick="speakCurrentSentence()" class="w-9 h-9 shrink-0 rounded-full bg-amber-200/70 hover:bg-amber-300 text-amber-950 flex items-center justify-center transition" title="Ganzen Beispielsatz anhören">
                                 <i data-lucide="play" class="w-4 h-4 fill-current"></i>
                             </button>
-                        </div>
+                        </div></details>
                     </div>
                 </div>
 
@@ -970,6 +1026,20 @@
         // ============================================================================
         function init() {
             lucide.createIcons();
+            const compactMobile = window.matchMedia ? window.matchMedia('(max-width: 639px)').matches : false;
+            document.getElementById('trainerTools').open = !compactMobile;
+            document.getElementById('cardExample').open = !compactMobile;
+            document.getElementById('trainerTools').addEventListener('click', event => {
+                if (window.matchMedia && window.matchMedia('(max-width: 639px)').matches && event.target.closest('button')) {
+                    document.getElementById('trainerTools').open = false;
+                }
+            });
+            if (window.matchMedia) {
+                window.matchMedia('(max-width: 639px)').addEventListener('change', event => {
+                    document.getElementById('trainerTools').open = !event.matches;
+                    document.getElementById('cardExample').open = !event.matches;
+                });
+            }
             try {
                 showPhotos = appStorage.getItem('vokaloShowPhotosV4') !== 'false';
                 const cache = JSON.parse(appStorage.getItem('vokaloPhotoCacheV5') || '{}');
@@ -1189,6 +1259,16 @@
                 activeBtn.classList.remove('text-slate-600');
             }
 
+            document.body.dataset.activeTab = tab;
+            ['trainer','pronounce','progress','discover','chat','settings'].forEach(t => {
+                const mobile = document.getElementById('mobile-tab-' + t);
+                if (mobile) {
+                    mobile.classList.toggle('mobile-active', t === tab);
+                    if (t === tab) mobile.setAttribute('aria-current','page');
+                    else mobile.removeAttribute('aria-current');
+                }
+            });
+            if (window.scrollTo) window.scrollTo({top:0,behavior:'instant'});
             if (tab === 'trainer') loadNextCard();
             if (tab === 'progress') updateLevelAndProgressUI();
             if (tab === 'settings') renderDeckManager();
@@ -2163,6 +2243,7 @@ Anforderungen für jedes Wort:
                 pronBadge.classList.add('hidden');
             }
 
+            document.getElementById('cardContent').scrollTop = 0;
             renderVisual(currentCard);
 
             document.getElementById('cardDe').innerText = currentCard.de;
@@ -3057,6 +3138,7 @@ Regeln:
             const canonical = value => JSON.stringify(Object.entries(value || {}).sort(([a],[b]) => a.localeCompare(b)));
             cloudDirty = !data || canonical(data.payload) !== canonical(currentPayload);
             await flushCloud();
+            document.body.classList.add('is-authenticated');
             document.getElementById('appHeader').classList.remove('hidden');
             document.getElementById('cloudLogin').classList.add('hidden');
             document.querySelector('main').classList.remove('hidden');
@@ -3088,7 +3170,7 @@ Regeln:
         async function cloudLogout() {
             try {
                 await flushCloud();
-                const {error} = await cloudClient.auth.signOut();
+                const {error} = await cloudClient.auth.signOut({scope:'local'});
                 if (error) throw error;
                 cloudValues.clear();
                 location.reload();
@@ -3111,6 +3193,7 @@ Regeln:
             } catch (e) { message.textContent = e.message || 'E-Mail konnte nicht angefordert werden.'; }
         }
         function showCloudRecovery() {
+            document.body.classList.remove('is-authenticated');
             document.getElementById('appHeader').classList.add('hidden');
             document.querySelector('main').classList.add('hidden');
             document.getElementById('cloudLogin').classList.remove('hidden');
@@ -3135,8 +3218,14 @@ Regeln:
         async function bootstrapCloud() {
             try {
                 if (!window.supabase) throw new Error('Anmeldung konnte nicht geladen werden. Bitte neu laden.');
+                // Keep an already open session when upgrading from session-only storage.
+                try {
+                    const previous = window.sessionStorage.getItem('sb-ykeirkmikpoovvuifcds-auth-token');
+                    if (previous && !window.localStorage.getItem('vokalo-auth-session')) window.localStorage.setItem('vokalo-auth-session', previous);
+                    window.sessionStorage.removeItem('sb-ykeirkmikpoovvuifcds-auth-token');
+                } catch (e) {}
                 cloudClient = window.supabase.createClient('https://ykeirkmikpoovvuifcds.supabase.co', 'sb_publishable_eqHVskuoZHJNy4xVsrf7vg_IBCeEP8X', {
-                    auth:{persistSession:true,storage:window.sessionStorage,autoRefreshToken:true,detectSessionInUrl:true}
+                    auth:{persistSession:true,storage:window.localStorage,storageKey:'vokalo-auth-session',autoRefreshToken:true,detectSessionInUrl:true}
                 });
                 const {data,error} = await cloudClient.auth.getSession();
                 if (error) throw error;
@@ -3146,7 +3235,7 @@ Regeln:
                 }
                 cloudClient.auth.onAuthStateChange((event) => {
                     if (event === 'PASSWORD_RECOVERY') showCloudRecovery();
-                    if (event === 'SIGNED_OUT') { document.getElementById('appHeader').classList.add('hidden'); cloudReady=false; document.querySelector('main').classList.add('hidden'); document.getElementById('cloudLogin').classList.remove('hidden'); }
+                    if (event === 'SIGNED_OUT') { document.body.classList.remove('is-authenticated'); document.getElementById('appHeader').classList.add('hidden'); cloudReady=false; document.querySelector('main').classList.add('hidden'); document.getElementById('cloudLogin').classList.remove('hidden'); }
                 });
                 window.addEventListener('beforeunload', event => {
                     if (cloudDirty || cloudSaving) { event.preventDefault(); event.returnValue = ''; }

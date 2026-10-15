@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brasil Fokus-Trainer 4.0 - AI Edition</title>
+    <title>Brasil Fokus-Trainer 4.0 – AI Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -63,17 +63,17 @@
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl brazil-gradient flex items-center justify-center text-white font-extrabold text-xl shadow-sm shrink-0">
-                        ????
+                        🇧🇷
                     </div>
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
                             <h1 class="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">Brasil Fokus-Trainer</h1>
                             <span class="bg-emerald-100 text-emerald-800 text-[11px] font-extrabold px-2 py-0.5 rounded-full border border-emerald-200">4.0 AI</span>
                             <button onclick="openApiKeySetup()" id="apiKeyStatusBadge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full border transition flex items-center gap-1 bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200" title="KI-Verbindung & Standalone API-Key verwalten">
-                                <span>??</span> <span id="apiKeyStatusText">KI: Aktiv</span>
+                                <span>🔑</span> <span id="apiKeyStatusText">KI: Aktiv</span>
                             </button>
                         </div>
-                        <p class="text-[11px] text-slate-500 hidden sm:block">Pareto-Vokabeln, Aussprache-Pr�fung, Niveau-Tracking & Live-Dialoge</p>
+                        <p class="text-[11px] text-slate-500 hidden sm:block">Pareto-Vokabeln, Aussprache-Prüfung, Niveau-Tracking & Live-Dialoge</p>
                     </div>
                 </div>
 
@@ -89,7 +89,7 @@
                         <i data-lucide="bar-chart-3" class="w-3.5 h-3.5 text-indigo-600"></i> Niveau & Ziele
                     </button>
                     <button onclick="switchTab('discover')" id="tab-discover" class="tab-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 whitespace-nowrap">
-                        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i> KI-W�rter
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i> KI-Wörter
                     </button>
                     <button onclick="switchTab('chat')" id="tab-chat" class="tab-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 whitespace-nowrap">
                         <i data-lucide="message-circle" class="w-3.5 h-3.5 text-blue-600"></i> Dialoge
@@ -101,12 +101,12 @@
             </div>
 
             <!-- Persistent Overall CEFR Level Bar -->
-            <div onclick="switchTab('progress')" class="bg-slate-50 hover:bg-slate-100/90 border border-slate-200/80 rounded-xl px-3 py-1.5 flex flex-wrap items-center justify-between gap-3 cursor-pointer transition group" title="Klicken f�r detaillierte Niveau-Aufschl�sselung">
+            <div onclick="switchTab('progress')" class="bg-slate-50 hover:bg-slate-100/90 border border-slate-200/80 rounded-xl px-3 py-1.5 flex flex-wrap items-center justify-between gap-3 cursor-pointer transition group" title="Klicken für detaillierte Niveau-Aufschlüsselung">
                 <div class="flex items-center gap-2.5">
                     <span id="headerLevelBadge" class="bg-emerald-600 text-white text-xs font-extrabold px-2.5 py-0.5 rounded-lg shadow-sm">A1.1</span>
                     <div class="text-xs">
                         <span id="headerLevelTitle" class="font-extrabold text-slate-800">Basis-Starter</span>
-                        <span class="text-slate-400 mx-1"></span>
+                        <span class="text-slate-400 mx-1">•</span>
                         <span id="headerXpText" class="text-slate-500 font-semibold">0 XP</span>
                     </div>
                 </div>
@@ -124,7 +124,7 @@
 
     <!-- TOAST NOTIFICATION -->
     <div id="toast" class="fixed bottom-5 right-5 z-50 hidden bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-sm font-semibold animate-fade-in max-w-sm border border-slate-700">
-        <span id="toastIcon" class="text-lg">?</span>
+        <span id="toastIcon" class="text-lg">✅</span>
         <span id="toastMsg">Gespeichert!</span>
     </div>
 
@@ -133,15 +133,15 @@
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 card-shadow border border-slate-200 space-y-4 animate-fade-in">
             <div class="flex items-center justify-between">
                 <h3 class="font-extrabold text-lg text-slate-900 flex items-center gap-2">
-                    <span>? Eigene Vokabel sofort speichern</span>
+                    <span>➕ Eigene Vokabel sofort speichern</span>
                 </h3>
-                <button onclick="closeQuickAddModal()" class="text-slate-400 hover:text-slate-700 font-bold text-lg px-2">?</button>
+                <button onclick="closeQuickAddModal()" class="text-slate-400 hover:text-slate-700 font-bold text-lg px-2">✕</button>
             </div>
 
             <div class="grid sm:grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-500 mb-1">Deutsches Wort *</label>
-                    <input type="text" id="modalDe" placeholder="z.B. die H�ngematte" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm font-semibold focus:outline-none focus:border-emerald-500">
+                    <input type="text" id="modalDe" placeholder="z.B. die Hängematte" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm font-semibold focus:outline-none focus:border-emerald-500">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-500 mb-1">Portugiesisch (BR) *</label>
@@ -156,25 +156,25 @@
                 </div>
                 <div id="modalCustomCatBox" class="hidden">
                     <label class="block text-xs font-bold text-emerald-700 mb-1">Neuer Bereichs-Name</label>
-                    <input type="text" id="modalCustomCatInput" placeholder="z.B. ? Fu�ball & Sport" class="w-full bg-white border-2 border-emerald-500 rounded-xl px-3 py-2 text-sm font-semibold">
+                    <input type="text" id="modalCustomCatInput" placeholder="z.B. ⚽ Fußball & Sport" class="w-full bg-white border-2 border-emerald-500 rounded-xl px-3 py-2 text-sm font-semibold">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-500 mb-1">Lautschrift & Emoji (optional)</label>
                     <div class="flex gap-2">
-                        <input type="text" id="modalPhon" placeholder="[a h�-dschi]" class="w-2/3 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm">
-                        <input type="text" id="modalVisual" placeholder="??" class="w-1/3 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-center">
+                        <input type="text" id="modalPhon" placeholder="[a hä-dschi]" class="w-2/3 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm">
+                        <input type="text" id="modalVisual" placeholder="🌴" class="w-1/3 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-center">
                     </div>
                 </div>
             </div>
 
             <div class="space-y-2">
                 <input type="text" id="modalSentPt" placeholder="Merksatz auf Portugiesisch (optional)" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm">
-                <input type="text" id="modalSentDe" placeholder="Deutsche �bersetzung des Merksatzes (optional)" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm">
+                <input type="text" id="modalSentDe" placeholder="Deutsche Übersetzung des Merksatzes (optional)" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm">
             </div>
 
             <div class="flex justify-end gap-2 pt-2">
                 <button onclick="closeQuickAddModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs">Abbrechen</button>
-                <button onclick="saveWordFromModal()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md">? Wort dauerhaft speichern</button>
+                <button onclick="saveWordFromModal()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md">✅ Wort dauerhaft speichern</button>
             </div>
         </div>
     </div>
@@ -184,20 +184,20 @@
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 card-shadow border border-slate-200 space-y-4 animate-fade-in">
             <div class="flex items-start justify-between gap-3">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xl">??</div>
+                    <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xl">🔑</div>
                     <div>
-                        <h3 class="font-extrabold text-lg text-slate-900">KI f�r eigene Webseite / Handy aktivieren</h3>
-                        <p class="text-xs text-slate-500">Kostenloser Google Gemini API-Schl�ssel f�r den Standalone-Betrieb</p>
+                        <h3 class="font-extrabold text-lg text-slate-900">KI für eigene Webseite / Handy aktivieren</h3>
+                        <p class="text-xs text-slate-500">Kostenloser Google Gemini API-Schlüssel für den Standalone-Betrieb</p>
                     </div>
                 </div>
-                <button onclick="closeApiKeyModal()" class="text-slate-400 hover:text-slate-700 font-bold text-lg px-2">?</button>
+                <button onclick="closeApiKeyModal()" class="text-slate-400 hover:text-slate-700 font-bold text-lg px-2">✕</button>
             </div>
 
             <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs space-y-2 text-slate-700 leading-relaxed">
                 <p>Innerhalb dieses Vorschau-Fensters ist die KI automatisch verbunden. Wenn du die App als eigene Webseite oder auf dem Smartphone nutzt, hinterlege hier deinen kostenlosen Gemini-Key:</p>
                 <ol class="list-decimal list-inside space-y-1 font-semibold text-slate-800">
-                    <li>�ffne <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="text-emerald-600 underline">aistudio.google.com/apikey</a></li>
-                    <li>Klicke auf <strong>"Create API Key"</strong> und f�ge ihn unten ein (100% lokal im Browser gespeichert).</li>
+                    <li>Öffne <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="text-emerald-600 underline">aistudio.google.com/apikey</a></li>
+                    <li>Klicke auf <strong>„Create API Key“</strong> und füge ihn unten ein (100% lokal im Browser gespeichert).</li>
                 </ol>
             </div>
 
@@ -207,8 +207,8 @@
             </div>
 
             <div class="flex items-center justify-end gap-2 pt-2">
-                <button onclick="closeApiKeyModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs">Sp�ter</button>
-                <button onclick="saveApiKeyFromModal()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-sm">?? Key speichern</button>
+                <button onclick="closeApiKeyModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs">Später</button>
+                <button onclick="saveApiKeyFromModal()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-sm">🔑 Key speichern</button>
             </div>
         </div>
     </div>
@@ -229,13 +229,13 @@
                 </div>
                 <div class="flex items-center gap-2 flex-wrap">
                     <button onclick="openQuickAddModal()" class="px-3 py-2 rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-xs font-extrabold text-emerald-800 flex items-center gap-1 shrink-0 transition">
-                        ? Eigenes Wort
+                        ➕ Eigenes Wort
                     </button>
                     <button onclick="toggleImageMode()" id="imgModeBtn" class="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-700 flex items-center gap-1 shrink-0 transition">
-                        ??? Fotos: An
+                        🖼️ Fotos: An
                     </button>
                     <button onclick="quickGenerateForCurrentCat()" id="quickAiBtn" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 text-xs font-extrabold flex items-center gap-1.5 shadow-sm shrink-0 transition">
-                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> +5 KI-W�rter
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> +5 KI-Wörter
                     </button>
                 </div>
             </div>
@@ -243,19 +243,19 @@
             <!-- SRS Stats Bar -->
             <div class="grid grid-cols-4 gap-2 sm:gap-3">
                 <div class="bg-white p-2.5 sm:p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
-                    <div class="text-[11px] font-semibold text-slate-500">?? F�llig</div>
+                    <div class="text-[11px] font-semibold text-slate-500">🔥 Fällig</div>
                     <div id="statDue" class="text-lg sm:text-xl font-extrabold text-rose-600">0</div>
                 </div>
                 <div class="bg-white p-2.5 sm:p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
-                    <div class="text-[11px] font-semibold text-slate-500">?? Neu</div>
+                    <div class="text-[11px] font-semibold text-slate-500">🆕 Neu</div>
                     <div id="statNew" class="text-lg sm:text-xl font-extrabold text-blue-600">0</div>
                 </div>
                 <div class="bg-white p-2.5 sm:p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
-                    <div class="text-[11px] font-semibold text-slate-500">? Gelernt</div>
+                    <div class="text-[11px] font-semibold text-slate-500">✅ Gelernt</div>
                     <div id="statLearned" class="text-lg sm:text-xl font-extrabold text-emerald-600">0</div>
                 </div>
                 <div class="bg-white p-2.5 sm:p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
-                    <div class="text-[11px] font-semibold text-slate-500">?? Im Bereich</div>
+                    <div class="text-[11px] font-semibold text-slate-500">📦 Im Bereich</div>
                     <div id="statTotal" class="text-lg sm:text-xl font-extrabold text-slate-800">0</div>
                 </div>
             </div>
@@ -266,29 +266,29 @@
                 <div class="flex items-center justify-between gap-2 z-10">
                     <span id="cardCategory" class="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1 rounded-full">Kategorie</span>
                     <div class="flex items-center gap-2">
-                        <span id="cardPronBadge" class="hidden text-xs font-bold px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">??? --%</span>
+                        <span id="cardPronBadge" class="hidden text-xs font-bold px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">🎙️ --%</span>
                         <span id="cardSrsBadge" class="text-xs font-semibold text-slate-400">Neu</span>
                     </div>
                 </div>
 
                 <!-- Card Center Content (Dynamic Wrapper for Empty State vs Active Card) -->
                 <div id="cardEmptyState" class="hidden my-auto py-8 px-4 text-center space-y-4 max-w-md mx-auto">
-                    <div class="text-6xl">??</div>
-                    <h3 class="text-xl font-extrabold text-slate-900">Alle f�lligen Vokabeln geschafft!</h3>
-                    <p class="text-sm text-slate-600">Alle Karten in diesem Bereich sind im Langzeitged�chtnis geplant. Entdecke jetzt frische Vokabeln per KI oder f�ge eigene hinzu!</p>
+                    <div class="text-6xl">🎉</div>
+                    <h3 class="text-xl font-extrabold text-slate-900">Alle fälligen Vokabeln geschafft!</h3>
+                    <p class="text-sm text-slate-600">Alle Karten in diesem Bereich sind im Langzeitgedächtnis geplant. Entdecke jetzt frische Vokabeln per KI oder füge eigene hinzu!</p>
                     <div class="flex flex-wrap justify-center gap-2 pt-2">
                         <button onclick="quickGenerateForCurrentCat()" class="px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs sm:text-sm shadow-md inline-flex items-center gap-2">
-                            ? +5 neue KI-Vokabeln laden
+                            ✨ +5 neue KI-Vokabeln laden
                         </button>
                         <button onclick="openQuickAddModal()" class="px-4 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs sm:text-sm">
-                            ? Eigenes Wort
+                            ➕ Eigenes Wort
                         </button>
                     </div>
                 </div>
 
                 <div id="cardContent" class="my-auto py-4 text-center">
                     <div id="cardVisual" class="h-32 sm:h-36 flex items-center justify-center text-7xl select-none mx-auto mb-3">
-                        ???
+                        🍽️
                     </div>
                     
                     <div class="text-xs uppercase tracking-wider font-bold text-slate-400 mb-1">Deutsch</div>
@@ -298,11 +298,11 @@
                     <div id="answerSection" class="hidden mt-5 pt-5 border-t-2 border-dashed border-slate-200 animate-fade-in">
                         <div class="flex items-center justify-center gap-2.5 flex-wrap">
                             <span id="cardPt" class="text-2xl sm:text-3xl font-extrabold text-emerald-600">Portugiesisch</span>
-                            <button onclick="speakCurrentWord()" class="w-10 h-10 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 flex items-center justify-center transition shadow-sm" title="Brasilianische Aussprache anh�ren">
+                            <button onclick="speakCurrentWord()" class="w-10 h-10 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 flex items-center justify-center transition shadow-sm" title="Brasilianische Aussprache anhören">
                                 <i data-lucide="volume-2" class="w-5 h-5"></i>
                             </button>
-                            <button onclick="openPronunciationForCurrentCard()" class="px-3 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-extrabold flex items-center gap-1 transition shadow-sm" title="Deine Aussprache f�r dieses Wort testen">
-                                ??? Aussprache pr�fen
+                            <button onclick="openPronunciationForCurrentCard()" class="px-3 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-extrabold flex items-center gap-1 transition shadow-sm" title="Deine Aussprache für dieses Wort testen">
+                                🎙️ Aussprache prüfen
                             </button>
                         </div>
                         <div id="cardPhonetic" class="text-sm font-mono text-slate-500 mt-1 mb-4">[Lautschrift]</div>
@@ -313,7 +313,7 @@
                                 <div id="cardSentPt" class="font-bold text-slate-900 text-sm sm:text-base leading-snug">Beispielsatz PT</div>
                                 <div id="cardSentDe" class="text-slate-600 italic text-xs sm:text-sm">Beispielsatz DE</div>
                             </div>
-                            <button onclick="speakCurrentSentence()" class="w-9 h-9 shrink-0 rounded-full bg-amber-200/70 hover:bg-amber-300 text-amber-950 flex items-center justify-center transition" title="Ganzen Beispielsatz anh�ren">
+                            <button onclick="speakCurrentSentence()" class="w-9 h-9 shrink-0 rounded-full bg-amber-200/70 hover:bg-amber-300 text-amber-950 flex items-center justify-center transition" title="Ganzen Beispielsatz anhören">
                                 <i data-lucide="play" class="w-4 h-4 fill-current"></i>
                             </button>
                         </div>
@@ -359,16 +359,16 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
                     <div>
                         <span class="bg-rose-100 text-rose-800 text-xs font-extrabold px-3 py-1 rounded-full">KI PHONETIK-LABOR (pt-BR)</span>
-                        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">??? Brasilianischer Aussprache-Trainer</h2>
-                        <p class="text-xs sm:text-sm text-slate-600">H�re dir das Original an, sprich es ins Mikrofon und erhalte pr�zises Feedback zu Klang, Betonung & brasilianischem Akzent.</p>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">🎙️ Brasilianischer Aussprache-Trainer</h2>
+                        <p class="text-xs sm:text-sm text-slate-600">Höre dir das Original an, sprich es ins Mikrofon und erhalte präzises Feedback zu Klang, Betonung & brasilianischem Akzent.</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-2 shrink-0">
                         <select id="pronModeSelect" onchange="pickPronunciationTarget()" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
-                            <option value="word">?? Einzelnes Wort �ben</option>
-                            <option value="sentence">??? Ganzen Merksatz �ben</option>
+                            <option value="word">🎯 Einzelnes Wort üben</option>
+                            <option value="sentence">🗣️ Ganzen Merksatz üben</option>
                         </select>
                         <button onclick="pickRandomPronTarget()" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold flex items-center gap-1.5 shadow-sm transition">
-                            <i data-lucide="shuffle" class="w-3.5 h-3.5"></i> N�chstes Beispiel
+                            <i data-lucide="shuffle" class="w-3.5 h-3.5"></i> Nächstes Beispiel
                         </button>
                     </div>
                 </div>
@@ -377,23 +377,23 @@
                 <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 text-center space-y-3 relative">
                     <div class="flex items-center justify-between text-xs text-slate-400 font-bold">
                         <span id="pronCatBadge" class="bg-white border border-slate-200 px-2.5 py-0.5 rounded-full text-slate-600">Kategorie</span>
-                        <span id="pronLastScoreBadge">Noch nicht gepr�ft</span>
+                        <span id="pronLastScoreBadge">Noch nicht geprüft</span>
                     </div>
 
-                    <div id="pronEmoji" class="text-5xl my-1">????</div>
+                    <div id="pronEmoji" class="text-5xl my-1">🇧🇷</div>
                     
                     <div id="pronTargetPt" class="text-2xl sm:text-3xl font-extrabold text-emerald-700 leading-snug">
-                        o p�o de queijo
+                        o pão de queijo
                     </div>
                     <div id="pronTargetPhon" class="text-sm font-mono text-slate-500">[u paung dschi kej-schu]</div>
-                    <div id="pronTargetDe" class="text-sm font-semibold text-slate-700">das brasilianische K�sebr�tchen</div>
+                    <div id="pronTargetDe" class="text-sm font-semibold text-slate-700">das brasilianische Käsebrötchen</div>
 
                     <div class="pt-3 flex flex-wrap items-center justify-center gap-3">
                         <button onclick="speakPronTarget(0.95)" class="px-4 py-2.5 rounded-xl bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-200 font-extrabold text-xs flex items-center gap-2 shadow-sm transition">
-                            <i data-lucide="volume-2" class="w-4 h-4"></i> ?? Vorh�ren (Normal)
+                            <i data-lucide="volume-2" class="w-4 h-4"></i> 🔊 Vorhören (Normal)
                         </button>
                         <button onclick="speakPronTarget(0.75)" class="px-4 py-2.5 rounded-xl bg-white hover:bg-amber-50 text-amber-900 border border-amber-200 font-bold text-xs flex items-center gap-2 shadow-sm transition">
-                            ?? Langsam (0.75x)
+                            🐢 Langsam (0.75x)
                         </button>
                     </div>
                 </div>
@@ -420,12 +420,12 @@
                             <div>
                                 <div id="pronResultHeadline" class="font-extrabold text-base text-slate-900">Muito bom! Fast wie ein Carioca!</div>
                                 <div class="text-xs text-slate-500 mt-0.5">
-                                    Erkannt / Geh�rt: <strong id="pronHeardText" class="text-slate-800">"..."</strong>
+                                    Erkannt / Gehört: <strong id="pronHeardText" class="text-slate-800">„...“</strong>
                                 </div>
                             </div>
                         </div>
                         <button onclick="playRecordedUserAudio()" id="btnPlayOwnAudio" class="hidden px-3.5 py-2 rounded-xl bg-white border border-slate-300 hover:bg-slate-100 text-xs font-bold text-slate-700 items-center gap-1.5 self-start sm:self-center shrink-0">
-                            ?? Eigene Aufnahme anh�ren
+                            🎧 Eigene Aufnahme anhören
                         </button>
                     </div>
 
@@ -438,7 +438,7 @@
                     <!-- Concrete Coaching Tip -->
                     <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-xl text-xs sm:text-sm text-slate-800 space-y-1">
                         <div class="font-extrabold text-amber-950 flex items-center gap-1.5">
-                            <span>???? Brasil-Phonetik-Tipp vom KI-Coach:</span>
+                            <span>🇧🇷 Brasil-Phonetik-Tipp vom KI-Coach:</span>
                         </div>
                         <p id="pronFeedbackDe" class="leading-relaxed text-slate-700"></p>
                     </div>
@@ -463,18 +463,18 @@
                         <div>
                             <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700">Gesamtbeurteilung (GER / CEFR)</span>
                             <h2 id="dashLevelName" class="text-xl sm:text-2xl font-extrabold text-slate-900">Brasilianischer Basis-Starter</h2>
-                            <p id="dashLevelSub" class="text-xs sm:text-sm text-slate-500">Du baust gerade dein Pareto-Fundament f�r den Alltag auf.</p>
+                            <p id="dashLevelSub" class="text-xs sm:text-sm text-slate-500">Du baust gerade dein Pareto-Fundament für den Alltag auf.</p>
                         </div>
                     </div>
 
                     <!-- Personal Target Selector -->
                     <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 min-w-[240px]">
-                        <label class="block text-[11px] font-extrabold uppercase text-slate-500 mb-1">?? Dein pers�nliches Lernziel:</label>
+                        <label class="block text-[11px] font-extrabold uppercase text-slate-500 mb-1">🎯 Dein persönliches Lernziel:</label>
                         <select id="userGoalSelect" onchange="saveUserGoal()" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-extrabold text-slate-800 focus:outline-none focus:border-emerald-500">
-                            <option value="30">??? Ziel 1: Urlaubs-Survival (A1.1  ~30 W�rter)</option>
-                            <option value="60" selected>? Ziel 2: Sicher im Alltag & Caf� (A1.2  ~60 W�rter)</option>
-                            <option value="100">??? Ziel 3: Lockere Gespr�che f�hren (A2  ~100 W�rter)</option>
-                            <option value="160">???? Ziel 4: Flie�end im Alltag (B1  ~160 W�rter)</option>
+                            <option value="30">🏖️ Ziel 1: Urlaubs-Survival (A1.1 • ~30 Wörter)</option>
+                            <option value="60" selected>☕ Ziel 2: Sicher im Alltag & Café (A1.2 • ~60 Wörter)</option>
+                            <option value="100">🗣️ Ziel 3: Lockere Gespräche führen (A2 • ~100 Wörter)</option>
+                            <option value="160">🇧🇷 Ziel 4: Fließend im Alltag (B1 • ~160 Wörter)</option>
                         </select>
                     </div>
                 </div>
@@ -482,37 +482,37 @@
                 <!-- Target Achievement Progress Bar -->
                 <div class="space-y-2">
                     <div class="flex items-center justify-between text-xs sm:text-sm font-bold">
-                        <span class="text-slate-700">?? Zielerreichung f�r dein gew�hltes Ziel:</span>
+                        <span class="text-slate-700">🎯 Zielerreichung für dein gewähltes Ziel:</span>
                         <span id="dashGoalPercent" class="text-emerald-700 font-extrabold">0% erreicht</span>
                     </div>
                     <div class="w-full h-4 bg-slate-100 rounded-full overflow-hidden border border-slate-200 p-0.5">
                         <div id="dashGoalBar" class="level-gradient h-full rounded-full transition-all duration-700" style="width: 10%"></div>
                     </div>
                     <div class="flex justify-between text-[11px] text-slate-500 font-semibold">
-                        <span id="dashGoalDetailLeft">0 gemeisterte / aktive W�rter</span>
-                        <span id="dashGoalDetailRight">Ziel: 60 W�rter</span>
+                        <span id="dashGoalDetailLeft">0 gemeisterte / aktive Wörter</span>
+                        <span id="dashGoalDetailRight">Ziel: 60 Wörter</span>
                     </div>
                 </div>
 
                 <!-- Key KPI Metrics Grid -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
                     <div class="bg-emerald-50/70 border border-emerald-200 p-3.5 rounded-2xl">
-                        <div class="text-xs font-bold text-emerald-800">?? Gemeistert (SRS = 2)</div>
+                        <div class="text-xs font-bold text-emerald-800">🏆 Gemeistert (SRS ≥ 2)</div>
                         <div id="kpiMastered" class="text-2xl font-extrabold text-emerald-700 mt-1">0</div>
-                        <div class="text-[11px] text-emerald-600">Langzeitged�chtnis</div>
+                        <div class="text-[11px] text-emerald-600">Langzeitgedächtnis</div>
                     </div>
                     <div class="bg-blue-50/70 border border-blue-200 p-3.5 rounded-2xl">
-                        <div class="text-xs font-bold text-blue-800">?? Im Training (SRS 1)</div>
+                        <div class="text-xs font-bold text-blue-800">🔄 Im Training (SRS 1)</div>
                         <div id="kpiLearning" class="text-2xl font-extrabold text-blue-700 mt-1">0</div>
                         <div class="text-[11px] text-blue-600">Aktiv angefangen</div>
                     </div>
                     <div class="bg-rose-50/70 border border-rose-200 p-3.5 rounded-2xl">
-                        <div class="text-xs font-bold text-rose-800">??? Aussprache-Schnitt</div>
+                        <div class="text-xs font-bold text-rose-800">🎙️ Aussprache-Schnitt</div>
                         <div id="kpiPronAvg" class="text-2xl font-extrabold text-rose-700 mt-1">--%</div>
-                        <div id="kpiPronCount" class="text-[11px] text-rose-600">0 W�rter gepr�ft</div>
+                        <div id="kpiPronCount" class="text-[11px] text-rose-600">0 Wörter geprüft</div>
                     </div>
                     <div class="bg-amber-50/70 border border-amber-200 p-3.5 rounded-2xl">
-                        <div class="text-xs font-bold text-amber-900">?? Gesamter Wortschatz</div>
+                        <div class="text-xs font-bold text-amber-900">📦 Gesamter Wortschatz</div>
                         <div id="kpiTotalCards" class="text-2xl font-extrabold text-amber-700 mt-1">0</div>
                         <div class="text-[11px] text-amber-700">Inkl. KI-Entdeckungen</div>
                     </div>
@@ -523,12 +523,12 @@
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
                             <h3 class="font-extrabold text-sm sm:text-base flex items-center gap-2">
-                                <span>?? Pers�nliche KI-Gesamtbeurteilung & Lernplan</span>
+                                <span>🧠 Persönliche KI-Gesamtbeurteilung & Lernplan</span>
                             </h3>
-                            <p class="text-xs text-slate-300">Lass die KI deinen aktuellen Stand nach Themengebieten analysieren und dir sagen, worauf du dich als N�chstes fokussieren solltest.</p>
+                            <p class="text-xs text-slate-300">Lass die KI deinen aktuellen Stand nach Themengebieten analysieren und dir sagen, worauf du dich als Nächstes fokussieren solltest.</p>
                         </div>
                         <button onclick="generateAiAssessment()" id="btnAiAssessment" class="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs shrink-0 transition shadow-sm">
-                            ? Beurteilung erstellen
+                            ✨ Beurteilung erstellen
                         </button>
                     </div>
                     <div id="aiAssessmentOutput" class="hidden text-xs sm:text-sm text-slate-100 bg-slate-800/90 border border-slate-700 rounded-xl p-4 leading-relaxed space-y-2"></div>
@@ -539,8 +539,8 @@
             <div class="bg-white rounded-3xl p-6 sm:p-8 card-shadow border border-slate-100 space-y-4">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">?? Niveau & Zielerreichung nach Themengebieten</h3>
-                        <p class="text-xs text-slate-500">Jedes Themengebiet hat eigene Meilensteine (Gr�n = Gemeistert, Blau = Im Training, Grau = Noch offen).</p>
+                        <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">📂 Niveau & Zielerreichung nach Themengebieten</h3>
+                        <p class="text-xs text-slate-500">Jedes Themengebiet hat eigene Meilensteine (Grün = Gemeistert, Blau = Im Training, Grau = Noch offen).</p>
                     </div>
                 </div>
 
@@ -559,26 +559,26 @@
                 <div class="flex items-start justify-between gap-4 mb-6">
                     <div>
                         <span class="bg-amber-100 text-amber-800 text-xs font-extrabold px-3 py-1 rounded-full">PARETO KI-GENERATOR</span>
-                        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">? Neue Vokabeln aktiv per KI suchen</h2>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">✨ Neue Vokabeln aktiv per KI suchen</h2>
                         <p class="text-sm text-slate-600 mt-1">
-                            Die KI gleicht automatisch deine <strong id="discoverExistingCount">0</strong> gespeicherten W�rter ab und sucht dir garantiert <strong>neue, hochfrequente Vokabeln</strong> (inkl. Lautschrift & Eselsbr�cke) heraus.
+                            Die KI gleicht automatisch deine <strong id="discoverExistingCount">0</strong> gespeicherten Wörter ab und sucht dir garantiert <strong>neue, hochfrequente Vokabeln</strong> (inkl. Lautschrift & Eselsbrücke) heraus.
                         </p>
                     </div>
                 </div>
 
                 <div class="grid sm:grid-cols-2 gap-4 mb-5">
                     <div>
-                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1.5">Themenbereich ausw�hlen</label>
+                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1.5">Themenbereich auswählen</label>
                         <select id="aiCategorySelect" onchange="toggleCustomTopicInput()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                         </select>
                     </div>
                     <div id="customTopicWrapper" class="hidden">
                         <label class="block text-xs font-bold uppercase text-emerald-700 mb-1.5">Neues Wunsch-Thema eingeben</label>
-                        <input type="text" id="aiCustomTopic" placeholder="z.B. Flirten, Fu�ball, Strandbar, Homeoffice, Katzen..." class="w-full bg-white border-2 border-emerald-500 rounded-xl px-3.5 py-2.5 text-sm font-semibold focus:outline-none">
+                        <input type="text" id="aiCustomTopic" placeholder="z.B. Flirten, Fußball, Strandbar, Homeoffice, Katzen..." class="w-full bg-white border-2 border-emerald-500 rounded-xl px-3.5 py-2.5 text-sm font-semibold focus:outline-none">
                     </div>
                     <div>
                         <label class="block text-xs font-bold uppercase text-slate-500 mb-1.5">Spezieller Fokus / Niveau (Optional)</label>
-                        <input type="text" id="aiFocusInput" placeholder="z.B. A1 Anf�nger, Umgangssprache in Rio, Verben..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <input type="text" id="aiFocusInput" placeholder="z.B. A1 Anfänger, Umgangssprache in Rio, Verben..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     </div>
                     <div>
                         <label class="block text-xs font-bold uppercase text-slate-500 mb-1.5">Anzahl neuer Vokabeln</label>
@@ -603,9 +603,9 @@
 
                 <div id="aiGeneratedListWrapper" class="hidden mt-6 space-y-3">
                     <div class="flex items-center justify-between">
-                        <h3 class="font-extrabold text-slate-800 text-sm uppercase tracking-wider">?? Frisch gespeicherte Vokabeln (Sofort lernbereit):</h3>
+                        <h3 class="font-extrabold text-slate-800 text-sm uppercase tracking-wider">🎉 Frisch gespeicherte Vokabeln (Sofort lernbereit):</h3>
                         <button onclick="switchTab('trainer')" class="text-xs font-bold text-emerald-700 hover:underline flex items-center gap-1">
-                            Jetzt im Trainer �ben <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                            Jetzt im Trainer üben <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                         </button>
                     </div>
                     <div id="aiGeneratedList" class="grid sm:grid-cols-2 gap-3"></div>
@@ -618,36 +618,36 @@
                     <i data-lucide="plus-circle" class="w-5 h-5 text-emerald-600"></i> Eigene Vokabel manuell eintragen
                 </h3>
                 <div class="grid sm:grid-cols-3 gap-3 mb-3">
-                    <input type="text" id="newDe" placeholder="Deutsch * (z.B. die H�ngematte)" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-semibold">
+                    <input type="text" id="newDe" placeholder="Deutsch * (z.B. die Hängematte)" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-semibold">
                     <input type="text" id="newPt" placeholder="Portugiesisch * (z.B. a rede)" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-semibold">
-                    <input type="text" id="newPhon" placeholder="Lautschrift (z.B. [a h�-dschi])" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
+                    <input type="text" id="newPhon" placeholder="Lautschrift (z.B. [a hä-dschi])" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
                 </div>
                 <div class="grid sm:grid-cols-3 gap-3 mb-3">
                     <select id="newCat" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-semibold"></select>
-                    <input type="text" id="newVisual" placeholder="Emoji (z.B. ??)" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
+                    <input type="text" id="newVisual" placeholder="Emoji (z.B. 🌴)" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
                     <input type="text" id="newSentPt" placeholder="Merksatz Portugiesisch" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
                 </div>
                 <div class="flex flex-col sm:flex-row gap-3">
-                    <input type="text" id="newSentDe" placeholder="Merksatz �bersetzung (Deutsch)" class="flex-grow bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
+                    <input type="text" id="newSentDe" placeholder="Merksatz Übersetzung (Deutsch)" class="flex-grow bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
                     <button onclick="addNewCardManual()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm rounded-xl shrink-0 shadow-sm">
-                        ? Vokabel speichern
+                        ✅ Vokabel speichern
                     </button>
                 </div>
             </div>
         </section>
 
         <!-- ========================================== -->
-        <!-- TAB 5: GESPR�CHS-SIMULATOR (REALISTIC CHAT)-->
+        <!-- TAB 5: GESPRÄCHS-SIMULATOR (REALISTIC CHAT)-->
         <!-- ========================================== -->
         <section id="view-chat" class="hidden space-y-4 animate-fade-in">
             <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
                         <h2 class="font-extrabold text-base sm:text-lg text-slate-900 flex items-center gap-2">
-                            <span>?? Realistischer Gespr�chs-Simulator</span>
+                            <span>💬 Realistischer Gesprächs-Simulator</span>
                             <span class="text-xs bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-full font-bold">Inkl. Fehler-Korrektur</span>
                         </h2>
-                        <p class="text-xs text-slate-500">Schreibe oder sprich auf Portugiesisch (einzelne deutsche W�rter sind erlaubt, wenn dir eins fehlt!).</p>
+                        <p class="text-xs text-slate-500">Schreibe oder sprich auf Portugiesisch (einzelne deutsche Wörter sind erlaubt, wenn dir eins fehlt!).</p>
                     </div>
                     <button onclick="startNewConversation()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-1.5 self-start sm:self-auto shrink-0">
                         <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Szene neu starten
@@ -657,16 +657,16 @@
                 <div class="grid sm:grid-cols-3 gap-2.5">
                     <div class="sm:col-span-2">
                         <select id="scenarioSelect" onchange="onScenarioChange()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="cafe">? Im Caf� in Rio: P�o de Queijo & Kaffee bestellen</option>
-                            <option value="smalltalk">??? Lockerer Smalltalk: �ber Alltag, Arbeit, Katze & Training</option>
-                            <option value="beach">??? Am Strand von Ipanema: Kokosnuss & Sonnenschirm mieten</option>
-                            <option value="market">?? Im Supermarkt / Feira: Nach frischen Lebensmitteln fragen</option>
-                            <option value="uber">?? Im Uber in S�o Paulo: Lockeres Gespr�ch mit dem Fahrer</option>
-                            <option value="custom">? Eigenes Szenario frei definieren...</option>
+                            <option value="cafe">☕ Im Café in Rio: Pão de Queijo & Kaffee bestellen</option>
+                            <option value="smalltalk">🗣️ Lockerer Smalltalk: Über Alltag, Arbeit, Katze & Training</option>
+                            <option value="beach">🏖️ Am Strand von Ipanema: Kokosnuss & Sonnenschirm mieten</option>
+                            <option value="market">🥑 Im Supermarkt / Feira: Nach frischen Lebensmitteln fragen</option>
+                            <option value="uber">🚕 Im Uber in São Paulo: Lockeres Gespräch mit dem Fahrer</option>
+                            <option value="custom">✨ Eigenes Szenario frei definieren...</option>
                         </select>
                     </div>
                     <div id="customScenarioBox" class="hidden sm:col-span-3 flex gap-2">
-                        <input type="text" id="customScenarioInput" placeholder="Beschreibe die Situation (z.B. Tisch im Restaurant f�r 2 Personen reservieren)..." class="flex-grow bg-white border-2 border-blue-500 rounded-xl px-3.5 py-2 text-sm">
+                        <input type="text" id="customScenarioInput" placeholder="Beschreibe die Situation (z.B. Tisch im Restaurant für 2 Personen reservieren)..." class="flex-grow bg-white border-2 border-blue-500 rounded-xl px-3.5 py-2 text-sm">
                         <button onclick="startNewConversation()" class="px-4 py-2 bg-blue-600 text-white font-bold text-xs rounded-xl shrink-0">Starten</button>
                     </div>
                 </div>
@@ -678,8 +678,8 @@
 
                 <div id="chatHintBox" class="hidden bg-amber-50 border-t border-amber-200 px-4 py-2.5 text-xs">
                     <div class="flex items-center justify-between mb-1">
-                        <span class="font-extrabold text-amber-900">?? Satz-Hilfe (Klicke auf einen Vorschlag zum �bernehmen):</span>
-                        <button onclick="document.getElementById('chatHintBox').classList.add('hidden')" class="text-amber-700 font-bold">?</button>
+                        <span class="font-extrabold text-amber-900">💡 Satz-Hilfe (Klicke auf einen Vorschlag zum Übernehmen):</span>
+                        <button onclick="document.getElementById('chatHintBox').classList.add('hidden')" class="text-amber-700 font-bold">✕</button>
                     </div>
                     <div id="chatHintOptions" class="flex flex-wrap gap-1.5"></div>
                 </div>
@@ -715,20 +715,20 @@
                             <i data-lucide="key" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <h2 class="font-extrabold text-lg text-slate-900">?? Standalone KI-Verbindung & Web-Hosting</h2>
-                            <p class="text-xs text-slate-500">Damit KI-Vokabelsuche, Aussprache-Coach & Dialoge auch au�erhalb des Chats auf deinem Handy/PC laufen.</p>
+                            <h2 class="font-extrabold text-lg text-slate-900">🔑 Standalone KI-Verbindung & Web-Hosting</h2>
+                            <p class="text-xs text-slate-500">Damit KI-Vokabelsuche, Aussprache-Coach & Dialoge auch außerhalb des Chats auf deinem Handy/PC laufen.</p>
                         </div>
                     </div>
                     <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-xl transition">
-                        ? Kostenlosen Gemini Key holen
+                        ↗ Kostenlosen Gemini Key holen
                     </a>
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-2.5">
-                    <input type="password" id="settingsApiKeyInput" placeholder="Optional im Chat  F�r eigene Webseite/Handy hier Gemini API-Key (AIzaSy...) eintragen" class="flex-grow bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    <button onclick="toggleShowApiKey()" class="px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs shrink-0">??? Zeigen</button>
+                    <input type="password" id="settingsApiKeyInput" placeholder="Optional im Chat • Für eigene Webseite/Handy hier Gemini API-Key (AIzaSy...) eintragen" class="flex-grow bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <button onclick="toggleShowApiKey()" class="px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs shrink-0">👁️ Zeigen</button>
                     <button onclick="saveUserApiKey()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shrink-0 shadow-sm">Key speichern</button>
-                    <button onclick="clearUserApiKey()" class="px-3 py-2.5 rounded-xl border border-slate-200 hover:bg-rose-50 hover:text-rose-600 text-slate-500 font-bold text-xs shrink-0">L�schen</button>
+                    <button onclick="clearUserApiKey()" class="px-3 py-2.5 rounded-xl border border-slate-200 hover:bg-rose-50 hover:text-rose-600 text-slate-500 font-bold text-xs shrink-0">Löschen</button>
                 </div>
             </div>
 
@@ -739,26 +739,26 @@
                         <i data-lucide="hard-drive-download" class="w-5 h-5"></i>
                     </div>
                     <div>
-                        <h2 class="font-extrabold text-lg text-slate-900">?? Backup, Synchronisation & App-Download</h2>
+                        <h2 class="font-extrabold text-lg text-slate-900">💾 Backup, Synchronisation & App-Download</h2>
                         <p class="text-xs text-slate-500">Dein Lernstand wird sofort im Browser (`localStorage`) gespeichert. Hier kannst du ihn als Datei sichern.</p>
                     </div>
                 </div>
 
                 <div class="grid sm:grid-cols-3 gap-3">
                     <button onclick="exportBackupJson()" class="p-3.5 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 text-left transition group">
-                        <div class="font-extrabold text-sm text-slate-900 group-hover:text-emerald-800">?? Backup speichern (.json)</div>
+                        <div class="font-extrabold text-sm text-slate-900 group-hover:text-emerald-800">📥 Backup speichern (.json)</div>
                         <p class="text-[11px] text-slate-500 mt-1">Sichert alle Vokabeln, Aussprache-Scores & SRS-Stufen.</p>
                     </button>
 
                     <label class="p-3.5 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-blue-50 hover:border-blue-300 text-left transition cursor-pointer group block">
-                        <div class="font-extrabold text-sm text-slate-900 group-hover:text-blue-800">?? Backup laden (.json)</div>
+                        <div class="font-extrabold text-sm text-slate-900 group-hover:text-blue-800">📤 Backup laden (.json)</div>
                         <p class="text-[11px] text-slate-500 mt-1">Stellt deinen Lernstand auf dem Handy oder PC wieder her.</p>
                         <input type="file" id="importBackupInput" accept=".json" onchange="importBackupJson(event)" class="hidden">
                     </label>
 
                     <button onclick="downloadStandaloneHtml()" class="p-3.5 rounded-2xl border border-emerald-300 bg-emerald-50/70 hover:bg-emerald-100 text-left transition group">
-                        <div class="font-extrabold text-sm text-emerald-900">?? App herunterladen (.html)</div>
-                        <p class="text-[11px] text-emerald-700 mt-1">L�dt diese komplette Web-App als `index.html` herunter.</p>
+                        <div class="font-extrabold text-sm text-emerald-900">🚀 App herunterladen (.html)</div>
+                        <p class="text-[11px] text-emerald-700 mt-1">Lädt diese komplette Web-App als `index.html` herunter.</p>
                     </button>
                 </div>
             </div>
@@ -771,7 +771,7 @@
                     </div>
                     <div>
                         <h2 class="font-extrabold text-lg text-slate-900">Brasilianische Sprachausgabe (Audio-Engine)</h2>
-                        <p class="text-xs text-slate-500">W�hle zwischen echter Gemini-KI-Stimme oder System-Stimme.</p>
+                        <p class="text-xs text-slate-500">Wähle zwischen echter Gemini-KI-Stimme oder System-Stimme.</p>
                     </div>
                 </div>
 
@@ -779,8 +779,8 @@
                     <div>
                         <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Bevorzugte Sprach-Engine</label>
                         <select id="voiceEngineSelect" onchange="saveAudioSettings()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-bold">
-                            <option value="gemini">? Gemini Native KI-Stimme (Sehr nat�rlich)</option>
-                            <option value="auto">? Beste Browser-Stimme (Sofortige Wiedergabe)</option>
+                            <option value="gemini">✨ Gemini Native KI-Stimme (Sehr natürlich)</option>
+                            <option value="auto">⚡ Beste Browser-Stimme (Sofortige Wiedergabe)</option>
                         </select>
                     </div>
                     <div>
@@ -794,15 +794,15 @@
                         <label class="block text-xs font-bold text-slate-600">Sprechgeschwindigkeit: <span id="rateVal">0.95</span>x</label>
                         <input type="range" id="voiceRate" min="0.75" max="1.15" step="0.05" value="0.95" oninput="document.getElementById('rateVal').innerText=this.value; saveAudioSettings();" class="w-full accent-emerald-600 mt-1">
                     </div>
-                    <button onclick="speakText('Oi, tudo bem? Agora minha pron�ncia brasileira est� super natural!')" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shrink-0">
-                        ??? Stimme testen
+                    <button onclick="speakText('Oi, tudo bem? Agora minha pronúncia brasileira está super natural!')" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shrink-0">
+                        🎙️ Stimme testen
                     </button>
                 </div>
             </div>
 
             <!-- SRS Settings -->
             <div class="bg-white rounded-3xl p-6 card-shadow border border-slate-100 space-y-4">
-                <h2 class="font-extrabold text-lg text-slate-900">?? Spaced Repetition (SRS) Intervalle</h2>
+                <h2 class="font-extrabold text-lg text-slate-900">⏱️ Spaced Repetition (SRS) Intervalle</h2>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div>
                         <label class="block text-xs font-bold text-slate-500 mb-1">Schwer (Tage)</label>
@@ -828,11 +828,11 @@
             <div class="bg-white rounded-3xl p-6 card-shadow border border-slate-100 space-y-4">
                 <div class="flex items-center justify-between flex-wrap gap-2">
                     <div>
-                        <h2 class="font-extrabold text-lg text-slate-900">?? Gespeicherter Wortschatz (<span id="deckTotalCount">0</span> W�rter)</h2>
-                        <p class="text-xs text-slate-500">Alle W�rter inkl. eigener Eintr�ge und KI-W�rter.</p>
+                        <h2 class="font-extrabold text-lg text-slate-900">📚 Gespeicherter Wortschatz (<span id="deckTotalCount">0</span> Wörter)</h2>
+                        <p class="text-xs text-slate-500">Alle Wörter inkl. eigener Einträge und KI-Wörter.</p>
                     </div>
                     <button onclick="resetDeckConfirm()" class="px-3 py-2 rounded-xl border border-rose-200 text-rose-600 hover:bg-rose-50 text-xs font-bold">
-                        Auf Basis-Deck zur�cksetzen
+                        Auf Basis-Deck zurücksetzen
                     </button>
                 </div>
                 <div id="deckListContainer" class="max-h-72 overflow-y-auto divide-y divide-slate-100 border border-slate-100 rounded-2xl p-2 text-xs"></div>
@@ -850,48 +850,48 @@
 
         const defaultCategories = [
             "Alle",
-            "?? Essen & Supermarkt",
-            "? Restaurant & Caf�",
-            "??? Echt Brasilianisch (Slang & Alltag)",
-            "? Power-Verben & Struktur",
-            "?? K�rper, Training & Erholung",
-            "?? Reise, Orientierung & Notfall"
+            "🥑 Essen & Supermarkt",
+            "☕ Restaurant & Café",
+            "🗣️ Echt Brasilianisch (Slang & Alltag)",
+            "⚡ Power-Verben & Struktur",
+            "💪 Körper, Training & Erholung",
+            "✈️ Reise, Orientierung & Notfall"
         ];
 
         const starterVocab = [
-            { id: 1, cat: "?? Essen & Supermarkt", de: "die Haferflocken", pt: "a aveia", phon: "[a a-wej-a]", visual: "??", kw: "oats", sentPt: "Minha aveia com mirtilos parece cimento, mas d� muita for�a!", sentDe: "Meine Haferflocken mit Blaubeeren sehen aus wie Zement, geben aber viel Kraft!" },
-            { id: 2, cat: "?? Essen & Supermarkt", de: "die Blaubeeren", pt: "os mirtilos", phon: "[us mir-tschi-lus]", visual: "??", kw: "blueberries", sentPt: "Comi tantos mirtilos que minha l�ngua ficou azul como um Smurf.", sentDe: "Ich habe so viele Blaubeeren gegessen, dass meine Zunge blau wie ein Schlumpf wurde." },
-            { id: 3, cat: "?? Essen & Supermarkt", de: "der K�se", pt: "o queijo", phon: "[u kej-schu]", visual: "??", kw: "cheese", sentPt: "Duas fatias de queijo resolvem 90% dos meus problemas.", sentDe: "Zwei Scheiben K�se l�sen 90 % meiner Probleme." },
-            { id: 4, cat: "?? Essen & Supermarkt", de: "das Kn�ckebrot / der Cracker", pt: "a torrada / o biscoito salgado", phon: "[a to-ha-da]", visual: "??", kw: "crackers", sentPt: "Minha torrada fez tanto barulho que acordou o gato.", sentDe: "Mein Kn�ckebrot hat so laut gekracht, dass es die Katze geweckt hat." },
-            { id: 5, cat: "?? Essen & Supermarkt", de: "der Naturjoghurt", pt: "o iogurte natural", phon: "[u jo-gur-tschi na-tu-rau]", visual: "??", kw: "yogurt", sentPt: "Iogurte natural � noite � o segredo dos campe�es.", sentDe: "Naturjoghurt am Abend ist das Geheimnis der Champions." },
-            { id: 6, cat: "?? Essen & Supermarkt", de: "der Reis mit Bohnen", pt: "o arroz com feij�o", phon: "[u a-hojs kom fej-schaung]", visual: "??", kw: "rice beans", sentPt: "Arroz com feij�o � a verdadeira religi�o do Brasil.", sentDe: "Reis mit Bohnen ist die wahre Religion Brasiliens." },
+            { id: 1, cat: "🥑 Essen & Supermarkt", de: "die Haferflocken", pt: "a aveia", phon: "[a a-wej-a]", visual: "🥣", kw: "oats", sentPt: "Minha aveia com mirtilos parece cimento, mas dá muita força!", sentDe: "Meine Haferflocken mit Blaubeeren sehen aus wie Zement, geben aber viel Kraft!" },
+            { id: 2, cat: "🥑 Essen & Supermarkt", de: "die Blaubeeren", pt: "os mirtilos", phon: "[us mir-tschi-lus]", visual: "🫐", kw: "blueberries", sentPt: "Comi tantos mirtilos que minha língua ficou azul como um Smurf.", sentDe: "Ich habe so viele Blaubeeren gegessen, dass meine Zunge blau wie ein Schlumpf wurde." },
+            { id: 3, cat: "🥑 Essen & Supermarkt", de: "der Käse", pt: "o queijo", phon: "[u kej-schu]", visual: "🧀", kw: "cheese", sentPt: "Duas fatias de queijo resolvem 90% dos meus problemas.", sentDe: "Zwei Scheiben Käse lösen 90 % meiner Probleme." },
+            { id: 4, cat: "🥑 Essen & Supermarkt", de: "das Knäckebrot / der Cracker", pt: "a torrada / o biscoito salgado", phon: "[a to-ha-da]", visual: "🍘", kw: "crackers", sentPt: "Minha torrada fez tanto barulho que acordou o gato.", sentDe: "Mein Knäckebrot hat so laut gekracht, dass es die Katze geweckt hat." },
+            { id: 5, cat: "🥑 Essen & Supermarkt", de: "der Naturjoghurt", pt: "o iogurte natural", phon: "[u jo-gur-tschi na-tu-rau]", visual: "🥛", kw: "yogurt", sentPt: "Iogurte natural à noite é o segredo dos campeões.", sentDe: "Naturjoghurt am Abend ist das Geheimnis der Champions." },
+            { id: 6, cat: "🥑 Essen & Supermarkt", de: "der Reis mit Bohnen", pt: "o arroz com feijão", phon: "[u a-hojs kom fej-schaung]", visual: "🍛", kw: "rice beans", sentPt: "Arroz com feijão é a verdadeira religião do Brasil.", sentDe: "Reis mit Bohnen ist die wahre Religion Brasiliens." },
 
-            { id: 7, cat: "? Restaurant & Caf�", de: "die Rechnung, bitte", pt: "a conta, por favor", phon: "[a kon-ta, pur fa-wor]", visual: "??", kw: "receipt", sentPt: "Gar�om, traz a conta antes que eu pe�a mais uma sobremesa!", sentDe: "Kellner, bring die Rechnung, bevor ich noch ein Dessert bestelle!" },
-            { id: 8, cat: "? Restaurant & Caf�", de: "stilles Wasser / mit Gas", pt: "�gua sem g�s / com g�s", phon: "[a-gua seng gas]", visual: "??", kw: "water glass", sentPt: "No calor do Rio, bebo tr�s litros de �gua sem g�s por hora.", sentDe: "In der Hitze von Rio trinke ich drei Liter stilles Wasser pro Stunde." },
-            { id: 9, cat: "? Restaurant & Caf�", de: "das brasilianische K�sebr�tchen", pt: "o p�o de queijo", phon: "[u paung dschi kej-schu]", visual: "??", kw: "cheese bread", sentPt: "� imposs�vel comer apenas um p�o de queijo, � uma armadilha!", sentDe: "Es ist unm�glich, nur ein P�o de Queijo zu essen - es ist eine Falle!" },
-            { id: 10, cat: "? Restaurant & Caf�", de: "lecker / k�stlich", pt: "gostoso / uma del�cia", phon: "[gos-to-su / u-ma de-li-sja]", visual: "??", kw: "delicious food", sentPt: "Isso aqui est� t�o gostoso que quase chorei na mesa.", sentDe: "Das hier ist so lecker, dass ich am Tisch fast geweint h�tte." },
-            { id: 11, cat: "? Restaurant & Caf�", de: "mit Karte (Kredit / Debit)", pt: "no cart�o (cr�dito / d�bito)", phon: "[nu kar-taung]", visual: "??", kw: "credit card", sentPt: "No Brasil, at� o coco na praia voc� paga no cart�o.", sentDe: "In Brasilien zahlst du selbst die Kokosnuss am Strand mit Karte." },
+            { id: 7, cat: "☕ Restaurant & Café", de: "die Rechnung, bitte", pt: "a conta, por favor", phon: "[a kon-ta, pur fa-wor]", visual: "🧾", kw: "receipt", sentPt: "Garçom, traz a conta antes que eu peça mais uma sobremesa!", sentDe: "Kellner, bring die Rechnung, bevor ich noch ein Dessert bestelle!" },
+            { id: 8, cat: "☕ Restaurant & Café", de: "stilles Wasser / mit Gas", pt: "água sem gás / com gás", phon: "[a-gua seng gas]", visual: "💧", kw: "water glass", sentPt: "No calor do Rio, bebo três litros de água sem gás por hora.", sentDe: "In der Hitze von Rio trinke ich drei Liter stilles Wasser pro Stunde." },
+            { id: 9, cat: "☕ Restaurant & Café", de: "das brasilianische Käsebrötchen", pt: "o pão de queijo", phon: "[u paung dschi kej-schu]", visual: "🥯", kw: "cheese bread", sentPt: "É impossível comer apenas um pão de queijo, é uma armadilha!", sentDe: "Es ist unmöglich, nur ein Pão de Queijo zu essen – es ist eine Falle!" },
+            { id: 10, cat: "☕ Restaurant & Café", de: "lecker / köstlich", pt: "gostoso / uma delícia", phon: "[gos-to-su / u-ma de-li-sja]", visual: "🤤", kw: "delicious food", sentPt: "Isso aqui está tão gostoso que quase chorei na mesa.", sentDe: "Das hier ist so lecker, dass ich am Tisch fast geweint hätte." },
+            { id: 11, cat: "☕ Restaurant & Café", de: "mit Karte (Kredit / Debit)", pt: "no cartão (crédito / débito)", phon: "[nu kar-taung]", visual: "💳", kw: "credit card", sentPt: "No Brasil, até o coco na praia você paga no cartão.", sentDe: "In Brasilien zahlst du selbst die Kokosnuss am Strand mit Karte." },
 
-            { id: 12, cat: "??? Echt Brasilianisch (Slang & Alltag)", de: "Alles gut? / Alles klar!", pt: "Tudo bem? / Tudo bom!", phon: "[tu-du beng / tu-du bong]", visual: "??", kw: "brazil beach", sentPt: ""Tudo bem?" funciona como oi, como vai e at� como tchau.", sentDe: ""Tudo bem?" funktioniert als Hallo, Wie geht's und sogar als Tsch�ss." },
-            { id: 13, cat: "??? Echt Brasilianisch (Slang & Alltag)", de: "Cool / Super / Abgemacht!", pt: "Legal! / Beleza!", phon: "[le-gau / be-le-sa]", visual: "??", kw: "sunglasses", sentPt: "Nos vemos �s tr�s horas? - Beleza, combinado!", sentDe: "Sehen wir uns um drei Uhr? - Alles klar, abgemacht!" },
-            { id: 14, cat: "??? Echt Brasilianisch (Slang & Alltag)", de: "Wir (im echten Alltag)", pt: "a gente (statt 'n�s')", phon: "[a schen-tschi]", visual: "????????", kw: "friends", sentPt: "Brasileiro quase n�o diz "n�s", a gente fala "a gente"!", sentDe: "Brasilianer sagen fast nie "n�s", wir sagen "a gente"!" },
-            { id: 15, cat: "??? Echt Brasilianisch (Slang & Alltag)", de: "Kein Problem / Alles entspannt", pt: "De boa / Tranquilo", phon: "[dschi bo-a / tran-kwi-lu]", visual: "??", kw: "hammock", sentPt: "Sem estresse, hoje eu s� quero ficar de boa.", sentDe: "Kein Stress, heute will ich einfach nur entspannt bleiben." },
-            { id: 16, cat: "??? Echt Brasilianisch (Slang & Alltag)", de: "Kannst du langsamer sprechen?", pt: "Pode falar mais devagar?", phon: "[po-dschi fa-lar majs de-wa-gar]", visual: "??", kw: "turtle", sentPt: "Calma, amigo! Pode falar mais devagar? Meu c�rebro ainda est� em alem�o.", sentDe: "Ruhig, mein Freund! Kannst du langsamer sprechen? Mein Gehirn ist noch auf Deutsch." },
-            { id: 17, cat: "??? Echt Brasilianisch (Slang & Alltag)", de: "Auf geht's! / Lass uns!", pt: "Bora! / Vamos!", phon: "[bo-ra / wa-mus]", visual: "??", kw: "rocket", sentPt: "Bora tomar um caf� antes que eu durma na cadeira!", sentDe: "Auf geht's, lass uns einen Kaffee trinken, bevor ich auf dem Stuhl einschlafe!" },
+            { id: 12, cat: "🗣️ Echt Brasilianisch (Slang & Alltag)", de: "Alles gut? / Alles klar!", pt: "Tudo bem? / Tudo bom!", phon: "[tu-du beng / tu-du bong]", visual: "🤙", kw: "brazil beach", sentPt: "„Tudo bem?“ funciona como oi, como vai e até como tchau.", sentDe: "„Tudo bem?“ funktioniert als Hallo, Wie geht's und sogar als Tschüss." },
+            { id: 13, cat: "🗣️ Echt Brasilianisch (Slang & Alltag)", de: "Cool / Super / Abgemacht!", pt: "Legal! / Beleza!", phon: "[le-gau / be-le-sa]", visual: "😎", kw: "sunglasses", sentPt: "Nos vemos às três horas? — Beleza, combinado!", sentDe: "Sehen wir uns um drei Uhr? — Alles klar, abgemacht!" },
+            { id: 14, cat: "🗣️ Echt Brasilianisch (Slang & Alltag)", de: "Wir (im echten Alltag)", pt: "a gente (statt 'nós')", phon: "[a schen-tschi]", visual: "🧑‍🤝‍🧑", kw: "friends", sentPt: "Brasileiro quase não diz „nós“, a gente fala „a gente“!", sentDe: "Brasilianer sagen fast nie „nós“, wir sagen „a gente“!" },
+            { id: 15, cat: "🗣️ Echt Brasilianisch (Slang & Alltag)", de: "Kein Problem / Alles entspannt", pt: "De boa / Tranquilo", phon: "[dschi bo-a / tran-kwi-lu]", visual: "🌴", kw: "hammock", sentPt: "Sem estresse, hoje eu só quero ficar de boa.", sentDe: "Kein Stress, heute will ich einfach nur entspannt bleiben." },
+            { id: 16, cat: "🗣️ Echt Brasilianisch (Slang & Alltag)", de: "Kannst du langsamer sprechen?", pt: "Pode falar mais devagar?", phon: "[po-dschi fa-lar majs de-wa-gar]", visual: "🐢", kw: "turtle", sentPt: "Calma, amigo! Pode falar mais devagar? Meu cérebro ainda está em alemão.", sentDe: "Ruhig, mein Freund! Kannst du langsamer sprechen? Mein Gehirn ist noch auf Deutsch." },
+            { id: 17, cat: "🗣️ Echt Brasilianisch (Slang & Alltag)", de: "Auf geht's! / Lass uns!", pt: "Bora! / Vamos!", phon: "[bo-ra / wa-mus]", visual: "🚀", kw: "rocket", sentPt: "Bora tomar um café antes que eu durma na cadeira!", sentDe: "Auf geht's, lass uns einen Kaffee trinken, bevor ich auf dem Stuhl einschlafe!" },
 
-            { id: 18, cat: "? Power-Verben & Struktur", de: "ich will / ich brauche", pt: "eu quero / eu preciso de", phon: "[eu k�-ru / pre-si-su dschi]", visual: "??", kw: "target", sentPt: "Hoje eu s� quero paz e preciso de um caf� forte.", sentDe: "Heute will ich nur Ruhe und brauche einen starken Kaffee." },
-            { id: 19, cat: "? Power-Verben & Struktur", de: "es gibt / hat", pt: "tem", phon: "[teng]", visual: "??", kw: "box", sentPt: "Tem Wi-Fi gr�tis aqui ou preciso conversar com as pessoas?", sentDe: "Gibt es hier kostenloses WLAN oder muss ich mit den Leuten reden?" },
-            { id: 20, cat: "? Power-Verben & Struktur", de: "ich bin gerade (Zustand / Ort)", pt: "eu estou (kurz: t�)", phon: "[eu is-tou / to]", visual: "??", kw: "map pin", sentPt: "T� chegando em cinco minutos! (Mentira, ainda t� em casa).", sentDe: "Ich bin in f�nf Minuten da! (L�ge, ich bin noch zu Hause)." },
-            { id: 21, cat: "? Power-Verben & Struktur", de: "ich werde (Zukunft bauen)", pt: "eu vou + [Verb]", phon: "[eu wou]", visual: "??", kw: "road", sentPt: "Mais tarde eu vou caminhar meia hora ao ar livre.", sentDe: "Sp�ter werde ich eine halbe Stunde an der frischen Luft spazieren gehen." },
+            { id: 18, cat: "⚡ Power-Verben & Struktur", de: "ich will / ich brauche", pt: "eu quero / eu preciso de", phon: "[eu kä-ru / pre-si-su dschi]", visual: "🎯", kw: "target", sentPt: "Hoje eu só quero paz e preciso de um café forte.", sentDe: "Heute will ich nur Ruhe und brauche einen starken Kaffee." },
+            { id: 19, cat: "⚡ Power-Verben & Struktur", de: "es gibt / hat", pt: "tem", phon: "[teng]", visual: "📦", kw: "box", sentPt: "Tem Wi-Fi grátis aqui ou preciso conversar com as pessoas?", sentDe: "Gibt es hier kostenloses WLAN oder muss ich mit den Leuten reden?" },
+            { id: 20, cat: "⚡ Power-Verben & Struktur", de: "ich bin gerade (Zustand / Ort)", pt: "eu estou (kurz: tô)", phon: "[eu is-tou / to]", visual: "📍", kw: "map pin", sentPt: "Tô chegando em cinco minutos! (Mentira, ainda tô em casa).", sentDe: "Ich bin in fünf Minuten da! (Lüge, ich bin noch zu Hause)." },
+            { id: 21, cat: "⚡ Power-Verben & Struktur", de: "ich werde (Zukunft bauen)", pt: "eu vou + [Verb]", phon: "[eu wou]", visual: "🔜", kw: "road", sentPt: "Mais tarde eu vou caminhar meia hora ao ar livre.", sentDe: "Später werde ich eine halbe Stunde an der frischen Luft spazieren gehen." },
 
-            { id: 22, cat: "?? K�rper, Training & Erholung", de: "die Klimmzugstange", pt: "a barra fixa", phon: "[a ba-ha fik-sa]", visual: "?????", kw: "pullup", sentPt: "Fazer barra fixa em casa � �timo at� o gato pular nas suas costas.", sentDe: "Zuhause Klimmz�ge zu machen ist super, bis die Katze auf deinen R�cken springt." },
-            { id: 23, cat: "?? K�rper, Training & Erholung", de: "spazieren gehen", pt: "caminhar / dar uma volta", phon: "[ka-min-jar / dar u-ma wol-ta]", visual: "????", kw: "walking park", sentPt: "Depois do escrit�rio, preciso dar uma volta para n�o enferrujar.", sentDe: "Nach dem B�ro muss ich eine Runde spazieren gehen, um nicht einzurosten." },
-            { id: 24, cat: "?? K�rper, Training & Erholung", de: "der Schlaf / gut schlafen", pt: "o sono / dormir bem", phon: "[u so-nu / dor-mir beng]", visual: "??", kw: "sleeping", sentPt: "Meu anel inteligente disse que meu sono hoje foi nota dez!", sentDe: "Mein Smart-Ring hat gesagt, mein Schlaf war heute eine glatte Zehn!" },
+            { id: 22, cat: "💪 Körper, Training & Erholung", de: "die Klimmzugstange", pt: "a barra fixa", phon: "[a ba-ha fik-sa]", visual: "🏋️‍♂️", kw: "pullup", sentPt: "Fazer barra fixa em casa é ótimo até o gato pular nas suas costas.", sentDe: "Zuhause Klimmzüge zu machen ist super, bis die Katze auf deinen Rücken springt." },
+            { id: 23, cat: "💪 Körper, Training & Erholung", de: "spazieren gehen", pt: "caminhar / dar uma volta", phon: "[ka-min-jar / dar u-ma wol-ta]", visual: "🚶‍♂️", kw: "walking park", sentPt: "Depois do escritório, preciso dar uma volta para não enferrujar.", sentDe: "Nach dem Büro muss ich eine Runde spazieren gehen, um nicht einzurosten." },
+            { id: 24, cat: "💪 Körper, Training & Erholung", de: "der Schlaf / gut schlafen", pt: "o sono / dormir bem", phon: "[u so-nu / dor-mir beng]", visual: "🛌", kw: "sleeping", sentPt: "Meu anel inteligente disse que meu sono hoje foi nota dez!", sentDe: "Mein Smart-Ring hat gesagt, mein Schlaf war heute eine glatte Zehn!" },
 
-            { id: 25, cat: "?? Reise, Orientierung & Notfall", de: "Wo ist...?", pt: "Onde fica...?", phon: "[on-dschi fi-ka]", visual: "???", kw: "map", sentPt: "Socorro, onde fica o banheiro mais pr�ximo?!", sentDe: "Hilfe, wo ist die n�chste Toilette?!" },
-            { id: 26, cat: "?? Reise, Orientierung & Notfall", de: "Wie viel kostet das?", pt: "Quanto custa isso?", phon: "[kwan-tu kus-ta i-su]", visual: "???", kw: "price", sentPt: "Quanto custa? Se for pre�o para turista, eu choro!", sentDe: "Wie viel kostet das? Wenn es der Touristenpreis ist, weine ich!" },
-            { id: 27, cat: "?? Reise, Orientierung & Notfall", de: "die Katze", pt: "o gato", phon: "[u ga-tu]", visual: "??", kw: "cat", sentPt: "O gato ocupa metade da cama e eu durmo na beirada.", sentDe: "Die Katze nimmt das halbe Bett ein und ich schlafe an der Kante." },
-            { id: 28, cat: "?? Reise, Orientierung & Notfall", de: "der Strand", pt: "a praia", phon: "[a praj-a]", visual: "???", kw: "beach", sentPt: "A reuni�o foi cancelada por motivo de: fui � praia.", sentDe: "Das Meeting wurde abgesagt wegen: Ich bin zum Strand gegangen." }
+            { id: 25, cat: "✈️ Reise, Orientierung & Notfall", de: "Wo ist...?", pt: "Onde fica...?", phon: "[on-dschi fi-ka]", visual: "🗺️", kw: "map", sentPt: "Socorro, onde fica o banheiro mais próximo?!", sentDe: "Hilfe, wo ist die nächste Toilette?!" },
+            { id: 26, cat: "✈️ Reise, Orientierung & Notfall", de: "Wie viel kostet das?", pt: "Quanto custa isso?", phon: "[kwan-tu kus-ta i-su]", visual: "🏷️", kw: "price", sentPt: "Quanto custa? Se for preço para turista, eu choro!", sentDe: "Wie viel kostet das? Wenn es der Touristenpreis ist, weine ich!" },
+            { id: 27, cat: "✈️ Reise, Orientierung & Notfall", de: "die Katze", pt: "o gato", phon: "[u ga-tu]", visual: "🐈", kw: "cat", sentPt: "O gato ocupa metade da cama e eu durmo na beirada.", sentDe: "Die Katze nimmt das halbe Bett ein und ich schlafe an der Kante." },
+            { id: 28, cat: "✈️ Reise, Orientierung & Notfall", de: "der Strand", pt: "a praia", phon: "[a praj-a]", visual: "🏖️", kw: "beach", sentPt: "A reunião foi cancelada por motivo de: fui à praia.", sentDe: "Das Meeting wurde abgesagt wegen: Ich bin zum Strand gegangen." }
         ];
 
         // State Variables
@@ -1062,7 +1062,7 @@
                 const count = c === 'Alle' ? vocabList.length : vocabList.filter(v => v.cat === c).length;
                 const optTrainer = document.createElement('option');
                 optTrainer.value = c;
-                optTrainer.textContent = c === 'Alle' ? `?? Alle Bereiche (${count} W�rter)` : `${c} (${count})`;
+                optTrainer.textContent = c === 'Alle' ? `📚 Alle Bereiche (${count} Wörter)` : `${c} (${count})`;
                 trainerSel.appendChild(optTrainer);
 
                 if (c !== 'Alle') {
@@ -1087,13 +1087,13 @@
 
             const customOptAi = document.createElement('option');
             customOptAi.value = '__custom__';
-            customOptAi.textContent = '? Eigenes Wunsch-Thema neu anlegen...';
+            customOptAi.textContent = '✨ Eigenes Wunsch-Thema neu anlegen...';
             aiSel.appendChild(customOptAi);
 
             if (modalCatSel) {
                 const customOptModal = document.createElement('option');
                 customOptModal.value = '__custom__';
-                customOptModal.textContent = '? Neuen Themenbereich erstellen...';
+                customOptModal.textContent = '✨ Neuen Themenbereich erstellen...';
                 modalCatSel.appendChild(customOptModal);
             }
 
@@ -1105,7 +1105,7 @@
             document.getElementById('deckTotalCount').innerText = vocabList.length;
         }
 
-        function showToast(msg, icon = "?") {
+        function showToast(msg, icon = "✅") {
             const t = document.getElementById('toast');
             document.getElementById('toastIcon').innerText = icon;
             document.getElementById('toastMsg').innerText = msg;
@@ -1142,12 +1142,12 @@
         // 3. CEFR LEVEL & TOPIC PROGRESS DASHBOARD ENGINE
         // ============================================================================
         const cefrTiers = [
-            { minXP: 0,   maxXP: 50,  code: "A0",   title: "Brasil-Neuling",          sub: "Du sammelst deine ersten �berlebens-W�rter." },
-            { minXP: 50,  maxXP: 130, code: "A1.1", title: "Basis-Starter",           sub: "Du kannst bestellen, gr��en und einfache W�rter nutzen." },
-            { minXP: 130, maxXP: 240, code: "A1.2", title: "Alltags-Entdecker",       sub: "Du verstehst h�ufige S�tze im Caf�, Uber und Alltag." },
+            { minXP: 0,   maxXP: 50,  code: "A0",   title: "Brasil-Neuling",          sub: "Du sammelst deine ersten Überlebens-Wörter." },
+            { minXP: 50,  maxXP: 130, code: "A1.1", title: "Basis-Starter",           sub: "Du kannst bestellen, grüßen und einfache Wörter nutzen." },
+            { minXP: 130, maxXP: 240, code: "A1.2", title: "Alltags-Entdecker",       sub: "Du verstehst häufige Sätze im Café, Uber und Alltag." },
             { minXP: 240, maxXP: 400, code: "A2.1", title: "Sicherer Reisender",      sub: "Du meisterst Smalltalk und wichtige Alltagssituationen." },
-            { minXP: 400, maxXP: 620, code: "A2.2", title: "Konversations-Fit",       sub: "Du kombinierst Slang, Verben und fl�ssige S�tze." },
-            { minXP: 620, maxXP: 900, code: "B1",   title: "Fortgeschritten (Carioca)", sub: "Du f�hrst spontane Gespr�che auf Brasilianisch." },
+            { minXP: 400, maxXP: 620, code: "A2.2", title: "Konversations-Fit",       sub: "Du kombinierst Slang, Verben und flüssige Sätze." },
+            { minXP: 620, maxXP: 900, code: "B1",   title: "Fortgeschritten (Carioca)", sub: "Du führst spontane Gespräche auf Brasilianisch." },
             { minXP: 900, maxXP: 1500,code: "B2",   title: "Brasil-Profi",            sub: "Breiter Wortschatz und sichere Aussprache in allen Gebieten." }
         ];
 
@@ -1209,7 +1209,7 @@
             userGoalTarget = parseInt(document.getElementById('userGoalSelect').value, 10) || 60;
             localStorage.setItem('ptBrUserGoalV4', String(userGoalTarget));
             updateLevelAndProgressUI();
-            showToast("Pers�nliches Lernziel aktualisiert!", "??");
+            showToast("Persönliches Lernziel aktualisiert!", "🎯");
         }
 
         function updateLevelAndProgressUI() {
@@ -1221,12 +1221,12 @@
             document.getElementById('headerXpText').innerText = `${stats.xp} XP (${stats.mastered} gemeistert, ${stats.learning} im Training)`;
             document.getElementById('headerLevelBar').style.width = `${Math.max(6, stats.tierProgress)}%`;
             document.getElementById('headerNextLevelHint').innerText = stats.xpToNext > 0
-                ? `Noch ${stats.xpToNext} XP bis n�chstes Level`
-                : `Max-Level erreicht! ??`;
+                ? `Noch ${stats.xpToNext} XP bis nächstes Level`
+                : `Max-Level erreicht! 🏆`;
 
             // 2. Update Main Progress Dashboard Tab
             document.getElementById('dashLevelCode').innerText = stats.currentTier.code;
-            document.getElementById('dashLevelName').innerText = `${stats.currentTier.code} - ${stats.currentTier.title}`;
+            document.getElementById('dashLevelName').innerText = `${stats.currentTier.code} – ${stats.currentTier.title}`;
             document.getElementById('dashLevelSub').innerText = stats.currentTier.sub;
 
             // Goal Progress Calculation (Mastered counts 1.0, Learning counts 0.5 toward word goal)
@@ -1235,13 +1235,13 @@
             document.getElementById('dashGoalPercent').innerText = `${goalPct}% erreicht`;
             document.getElementById('dashGoalBar').style.width = `${Math.max(4, goalPct)}%`;
             document.getElementById('dashGoalDetailLeft').innerText = `${stats.mastered} gemeistert + ${stats.learning} im Training`;
-            document.getElementById('dashGoalDetailRight').innerText = `Ziel: ${userGoalTarget} aktiv beherrschte W�rter`;
+            document.getElementById('dashGoalDetailRight').innerText = `Ziel: ${userGoalTarget} aktiv beherrschte Wörter`;
 
             // KPIs
             document.getElementById('kpiMastered').innerText = stats.mastered;
             document.getElementById('kpiLearning').innerText = stats.learning;
             document.getElementById('kpiPronAvg').innerText = stats.pronAvg !== null ? `${stats.pronAvg}%` : '--%';
-            document.getElementById('kpiPronCount').innerText = `${stats.pronCount} W�rter gepr�ft`;
+            document.getElementById('kpiPronCount').innerText = `${stats.pronCount} Wörter geprüft`;
             document.getElementById('kpiTotalCards').innerText = stats.total;
 
             // 3. Render Breakdown by Topic Areas
@@ -1281,7 +1281,7 @@
                                 <span class="text-xs font-extrabold px-2.5 py-0.5 rounded-full shrink-0 ${badgeClass}">Niveau: ${catLevel}</span>
                             </div>
                             <div class="text-[11px] text-slate-500 mt-1 flex items-center justify-between">
-                                <span>?? ${cMastered} gemeistert  ?? ${cLearning} im Training  ?? ${cTotal} im Deck</span>
+                                <span>🏆 ${cMastered} gemeistert • 🔄 ${cLearning} im Training • 📦 ${cTotal} im Deck</span>
                                 <strong class="text-slate-700">${catGoalPct}% Ziel</strong>
                             </div>
 
@@ -1291,16 +1291,16 @@
                                 <div class="bg-blue-500 h-full transition-all" style="width: ${learningWidth}%" title="Im Training"></div>
                             </div>
                             <div class="text-[11px] text-slate-500 mt-1">
-                                Etappenziel f�r dieses Gebiet: <strong>${Math.round(catEffective)} / ${perCatGoal} W�rter</strong> aktiv beherrscht
+                                Etappenziel für dieses Gebiet: <strong>${Math.round(catEffective)} / ${perCatGoal} Wörter</strong> aktiv beherrscht
                             </div>
                         </div>
 
                         <div class="flex items-center gap-2 pt-1">
                             <button onclick="trainSpecificCategory('${safeCat}')" class="flex-1 py-2 px-3 rounded-xl bg-white hover:bg-emerald-50 text-emerald-800 border border-slate-200 hover:border-emerald-300 font-bold text-xs transition text-center">
-                                ? Jetzt �ben
+                                ⚡ Jetzt üben
                             </button>
-                            <button onclick="discoverSpecificCategory('${safeCat}')" class="py-2 px-3 rounded-xl bg-amber-100/80 hover:bg-amber-200 text-amber-950 font-bold text-xs transition" title="Neue KI-W�rter f�r diesen Bereich">
-                                ? +5 KI
+                            <button onclick="discoverSpecificCategory('${safeCat}')" class="py-2 px-3 rounded-xl bg-amber-100/80 hover:bg-amber-200 text-amber-950 font-bold text-xs transition" title="Neue KI-Wörter für diesen Bereich">
+                                ✨ +5 KI
                             </button>
                         </div>
                     </div>
@@ -1327,7 +1327,7 @@
             const btn = document.getElementById('btnAiAssessment');
             const out = document.getElementById('aiAssessmentOutput');
             btn.disabled = true;
-            btn.innerText = "? Analysiere...";
+            btn.innerText = "⏳ Analysiere...";
             out.classList.remove('hidden');
             out.innerHTML = `<span class="italic text-slate-300">KI wertet deinen Lernstand nach Themengebieten und Aussprache aus...</span>`;
 
@@ -1339,13 +1339,13 @@
                 return `${c}: ${m} gemeistert, ${l} im Training (von ${items.length} Karten)`;
             }).join(' | ');
 
-            const prompt = `Du bist ein motivierender brasilianischer Sprachcoach. Gib dem Lernenden eine kurze, strukturierte Gesamtbeurteilung (max. 5-6 S�tze auf Deutsch) zu seinem aktuellen Brasilianisch-Fortschritt:
+            const prompt = `Du bist ein motivierender brasilianischer Sprachcoach. Gib dem Lernenden eine kurze, strukturierte Gesamtbeurteilung (max. 5-6 Sätze auf Deutsch) zu seinem aktuellen Brasilianisch-Fortschritt:
 - Aktuelles System-Niveau: ${stats.currentTier.code} (${stats.currentTier.title}), ${stats.xp} XP
-- Ziel-Fortschritt: ${stats.mastered} gemeisterte W�rter, ${stats.learning} im Training (Pers�nliches Ziel: ${userGoalTarget} W�rter)
+- Ziel-Fortschritt: ${stats.mastered} gemeisterte Wörter, ${stats.learning} im Training (Persönliches Ziel: ${userGoalTarget} Wörter)
 - Aussprache-Durchschnitt: ${stats.pronAvg !== null ? stats.pronAvg + '%' : 'Noch keine Aufnahme gemacht'}
-- Aufschl�sselung nach Themengebieten: ${catSummary}
+- Aufschlüsselung nach Themengebieten: ${catSummary}
 
-Gehe konkret auf seine st�rksten Themengebiete ein, nenne 1 Gebiet mit Aufholbedarf und gib einen motivierenden Tipp f�r die n�chsten 10 Minuten.`;
+Gehe konkret auf seine stärksten Themengebiete ein, nenne 1 Gebiet mit Aufholbedarf und gib einen motivierenden Tipp für die nächsten 10 Minuten.`;
 
             try {
                 const res = await callGeminiAPI({
@@ -1357,7 +1357,7 @@ Gehe konkret auf seine st�rksten Themengebiete ein, nenne 1 Gebiet mit Aufholb
                 out.innerHTML = "Verbindungsfehler bei der KI-Analyse. Bitte versuche es gleich noch einmal.";
             } finally {
                 btn.disabled = false;
-                btn.innerText = "? Beurteilung aktualisieren";
+                btn.innerText = "✨ Beurteilung aktualisieren";
             }
         }
 
@@ -1396,12 +1396,12 @@ Gehe konkret auf seine st�rksten Themengebiete ein, nenne 1 Gebiet mit Aufholb
             const mode = document.getElementById('pronModeSelect').value;
 
             document.getElementById('pronCatBadge').innerText = pronTargetCard.cat;
-            document.getElementById('pronEmoji').innerText = pronTargetCard.visual && !pronTargetCard.visual.startsWith('http') ? pronTargetCard.visual : "????";
+            document.getElementById('pronEmoji').innerText = pronTargetCard.visual && !pronTargetCard.visual.startsWith('http') ? pronTargetCard.visual : "🇧🇷";
 
             if (typeof pronTargetCard.pronScore === 'number') {
                 document.getElementById('pronLastScoreBadge').innerHTML = `<span class="text-emerald-700">Letzter Score: ${pronTargetCard.pronScore}%</span>`;
             } else {
-                document.getElementById('pronLastScoreBadge').innerText = "Noch nicht gepr�ft";
+                document.getElementById('pronLastScoreBadge').innerText = "Noch nicht geprüft";
             }
 
             if (mode === 'sentence' && pronTargetCard.sentPt && pronTargetCard.sentPt !== '-') {
@@ -1439,13 +1439,13 @@ Gehe konkret auf seine st�rksten Themengebiete ein, nenne 1 Gebiet mit Aufholb
                 }
                 btn.classList.remove('pulse-mic', 'bg-slate-900');
                 btn.classList.add('bg-rose-600');
-                statusText.innerText = "? KI analysiert deine brasilianische Aussprache...";
+                statusText.innerText = "⏳ KI analysiert deine brasilianische Aussprache...";
                 return;
             }
 
             // Start Recording
             pronLiveText = "";
-            liveTranscriptEl.innerText = "H�re zu...";
+            liveTranscriptEl.innerText = "Höre zu...";
             document.getElementById('pronResultBox').classList.add('hidden');
 
             // 1. Start Parallel Browser SpeechRecognition (for live visual transcript & fallback)
@@ -1461,7 +1461,7 @@ Gehe konkret auf seine st�rksten Themengebiete ein, nenne 1 Gebiet mit Aufholb
                             t += ev.results[i][0].transcript;
                         }
                         pronLiveText = t.trim();
-                        liveTranscriptEl.innerText = pronLiveText ? `Erkannt: "${pronLiveText}"` : "H�re zu...";
+                        liveTranscriptEl.innerText = pronLiveText ? `Erkannt: „${pronLiveText}“` : "Höre zu...";
                     };
                     pronSpeechRec.start();
                 } catch (e) {}
@@ -1490,10 +1490,10 @@ Gehe konkret auf seine st�rksten Themengebiete ein, nenne 1 Gebiet mit Aufholb
                 isPronRecording = true;
                 btn.classList.add('pulse-mic', 'bg-slate-900');
                 btn.classList.remove('bg-rose-600');
-                statusText.innerText = "?? Aufnahme l�uft... Sprich jetzt und klicke danach erneut zum Stoppen!";
+                statusText.innerText = "🔴 Aufnahme läuft... Sprich jetzt und klicke danach erneut zum Stoppen!";
             } catch (err) {
-                console.warn("MediaRecorder nicht verf�gbar oder Mikrofon verweigert:", err);
-                showToast("Bitte erlaube den Mikrofon-Zugriff im Browser!", "???");
+                console.warn("MediaRecorder nicht verfügbar oder Mikrofon verweigert:", err);
+                showToast("Bitte erlaube den Mikrofon-Zugriff im Browser!", "🎙️");
                 statusText.innerText = "Mikrofon-Zugriff erforderlich.";
             }
         }
@@ -1525,28 +1525,28 @@ Gehe konkret auf seine st�rksten Themengebiete ein, nenne 1 Gebiet mit Aufholb
                 const base64Audio = await blobToBase64(audioBlob);
                 const cleanMime = mimeType.split(';')[0] || 'audio/webm';
 
-                const systemPrompt = `Du bist ein herzlicher, pr�ziser Phonetik-Coach f�r Brasilianisches Portugiesisch (pt-BR).
+                const systemPrompt = `Du bist ein herzlicher, präziser Phonetik-Coach für Brasilianisches Portugiesisch (pt-BR).
 Der deutschsprachige Lernende wollte folgenden brasilianischen Ausdruck sprechen:
 Ziel-Text: "${targetPt}" (Erwartete Lautschrift: ${targetPhon}).
 ${pronLiveText ? `Hinweis der Spracherkennung: "${pronLiveText}".` : ''}
 
-H�re dir die Audioaufnahme des Lernenden genau an und bewerte die Aussprache nach echtem brasilianischem Standard (z.B. Palatalisierung von ti/di als tschi/dschi, unbetontes o/e am Ende als u/i, nasale Vokale wie �o/em, offenes vs. geschlossenes e/o, l am Silbenende wie u).
+Höre dir die Audioaufnahme des Lernenden genau an und bewerte die Aussprache nach echtem brasilianischem Standard (z.B. Palatalisierung von ti/di als tschi/dschi, unbetontes o/e am Ende als u/i, nasale Vokale wie ão/em, offenes vs. geschlossenes e/o, l am Silbenende wie u).
 
 Antworte im JSON-Format:
-- "score": Zahl von 0 bis 100 (Sei fair und motivierend: 85-100 = sehr gut/nat�rlich, 65-84 = gut verst�ndlich mit leichtem Akzent, <65 = noch �bungsbedarf).
+- "score": Zahl von 0 bis 100 (Sei fair und motivierend: 85-100 = sehr gut/natürlich, 65-84 = gut verständlich mit leichtem Akzent, <65 = noch Übungsbedarf).
 - "headline": Kurzes, motivierendes Fazit (z.B. "Muito bom! Super brasilianischer Klang!").
-- "spokenTranscript": Was du in der Aufnahme geh�rt hast (falls die Aufnahme still/unverst�ndlich war, schreibe "[Keine deutliche Sprache erkannt]").
-- "wordBreakdown": Array f�r jedes Wort des Ziel-Textes mit:
+- "spokenTranscript": Was du in der Aufnahme gehört hast (falls die Aufnahme still/unverständlich war, schreibe "[Keine deutliche Sprache erkannt]").
+- "wordBreakdown": Array für jedes Wort des Ziel-Textes mit:
     - "word": Das portugiesische Wort
-    - "status": "good" (gr�n), "warning" (gelb - kleiner Akzent) oder "error" (rot - falsch ausgesprochen/gefehlt)
+    - "status": "good" (grün), "warning" (gelb - kleiner Akzent) oder "error" (rot - falsch ausgesprochen/gefehlt)
     - "tip": Kurzer phonetischer Hinweis zu genau diesem Wort (z.B. "klingt am Ende wie -dschi")
-- "feedbackDe": 2-3 konkrete, freundliche S�tze auf Deutsch mit Tipps, wie der Lernende noch brasilianischer klingt.`;
+- "feedbackDe": 2-3 konkrete, freundliche Sätze auf Deutsch mit Tipps, wie der Lernende noch brasilianischer klingt.`;
 
                 const payload = {
                     contents: [{
                         role: "user",
                         parts: [
-                            { text: `Bewerte meine brasilianische Aussprache f�r: "${targetPt}"` },
+                            { text: `Bewerte meine brasilianische Aussprache für: "${targetPt}"` },
                             {
                                 inlineData: {
                                     mimeType: cleanMime,
@@ -1593,7 +1593,7 @@ Antworte im JSON-Format:
                 if (pronLiveText) {
                     await evaluatePronunciationViaTranscriptFallback(targetPt, pronLiveText);
                 } else {
-                    statusText.innerText = "?? Aufnahme konnte nicht ausgewertet werden. Bitte sprich laut und deutlich ins Mikrofon.";
+                    statusText.innerText = "⚠️ Aufnahme konnte nicht ausgewertet werden. Bitte sprich laut und deutlich ins Mikrofon.";
                 }
             }
         }
@@ -1602,7 +1602,7 @@ Antworte im JSON-Format:
             const payload = {
                 contents: [{
                     parts: [{
-                        text: `Ziel-Satz (pt-BR): "${targetPt}". Vom Mikrofon erkannt: "${heardText}". Bewerte die �bereinstimmung und gib Tipps zur brasilianischen Aussprache.`
+                        text: `Ziel-Satz (pt-BR): "${targetPt}". Vom Mikrofon erkannt: "${heardText}". Bewerte die Übereinstimmung und gib Tipps zur brasilianischen Aussprache.`
                     }]
                 }],
                 generationConfig: {
@@ -1637,7 +1637,7 @@ Antworte im JSON-Format:
         }
 
         function displayPronunciationResult(ev) {
-            document.getElementById('pronStatusText').innerText = "Klicke auf das Mikrofon f�r einen weiteren Versuch";
+            document.getElementById('pronStatusText').innerText = "Klicke auf das Mikrofon für einen weiteren Versuch";
             const box = document.getElementById('pronResultBox');
             box.classList.remove('hidden');
 
@@ -1651,7 +1651,7 @@ Antworte im JSON-Format:
             else circle.classList.add('bg-rose-600');
 
             document.getElementById('pronResultHeadline').innerText = ev.headline || "Auswertung abgeschlossen";
-            document.getElementById('pronHeardText').innerText = `"${ev.spokenTranscript || pronLiveText || '...'}"`;
+            document.getElementById('pronHeardText').innerText = `„${ev.spokenTranscript || pronLiveText || '...'}“`;
             document.getElementById('pronFeedbackDe').innerText = ev.feedbackDe || "";
 
             const playOwnBtn = document.getElementById('btnPlayOwnAudio');
@@ -1663,9 +1663,9 @@ Antworte im JSON-Format:
             const breakdownEl = document.getElementById('pronWordBreakdown');
             breakdownEl.innerHTML = (ev.wordBreakdown || []).map(w => {
                 let color = "bg-emerald-50 border-emerald-300 text-emerald-900";
-                let icon = "?";
-                if (w.status === 'warning') { color = "bg-amber-50 border-amber-300 text-amber-900"; icon = "?"; }
-                else if (w.status === 'error') { color = "bg-rose-50 border-rose-300 text-rose-900"; icon = "?"; }
+                let icon = "✅";
+                if (w.status === 'warning') { color = "bg-amber-50 border-amber-300 text-amber-900"; icon = "⚡"; }
+                else if (w.status === 'error') { color = "bg-rose-50 border-rose-300 text-rose-900"; icon = "❌"; }
 
                 return `
                     <div class="border rounded-xl px-3 py-2 text-xs ${color}">
@@ -1680,7 +1680,7 @@ Antworte im JSON-Format:
                 pronTargetCard.pronScore = Math.max(pronTargetCard.pronScore || 0, score);
                 saveData();
                 renderPronunciationTarget();
-                showToast(`Aussprache-Score (${score}%) gespeichert!`, "???");
+                showToast(`Aussprache-Score (${score}%) gespeichert!`, "🎙️");
             }
         }
 
@@ -1724,7 +1724,7 @@ Antworte im JSON-Format:
             document.getElementById('settingsApiKeyInput').value = val;
             updateApiKeyStatusBadge();
             closeApiKeyModal();
-            showToast(val ? "Eigener Gemini API-Key gespeichert!" : "API-Key aktualisiert!", "??");
+            showToast(val ? "Eigener Gemini API-Key gespeichert!" : "API-Key aktualisiert!", "🔑");
         }
 
         function saveUserApiKey() {
@@ -1733,7 +1733,7 @@ Antworte im JSON-Format:
             localStorage.setItem('ptBrUserApiKey', val);
             document.getElementById('modalApiKeyInput').value = val;
             updateApiKeyStatusBadge();
-            showToast(val ? "Gemini API-Key gespeichert!" : "Auf Standard-Modus zur�ckgesetzt.", "??");
+            showToast(val ? "Gemini API-Key gespeichert!" : "Auf Standard-Modus zurückgesetzt.", "🔑");
         }
 
         function clearUserApiKey() {
@@ -1742,7 +1742,7 @@ Antworte im JSON-Format:
             document.getElementById('settingsApiKeyInput').value = "";
             document.getElementById('modalApiKeyInput').value = "";
             updateApiKeyStatusBadge();
-            showToast("Eigener API-Key entfernt.", "???");
+            showToast("Eigener API-Key entfernt.", "🗑️");
         }
 
         function toggleShowApiKey() {
@@ -1791,7 +1791,7 @@ Antworte im JSON-Format:
         }
 
         async function quickGenerateForCurrentCat() {
-            const cat = currentCategory === 'Alle' ? '??? Echt Brasilianisch (Slang & Alltag)' : currentCategory;
+            const cat = currentCategory === 'Alle' ? '🗣️ Echt Brasilianisch (Slang & Alltag)' : currentCategory;
             populateCategoryDropdowns();
             document.getElementById('aiCategorySelect').value = cat;
             document.getElementById('aiCountSelect').value = "5";
@@ -1808,10 +1808,10 @@ Antworte im JSON-Format:
             let targetCategory = selCat;
             if (selCat === '__custom__' || !targetCategory) {
                 if (!customTopic) {
-                    showToast("Bitte gib ein Wunsch-Thema ein!", "??");
+                    showToast("Bitte gib ein Wunsch-Thema ein!", "⚠️");
                     return;
                 }
-                targetCategory = customTopic.startsWith('?') ? customTopic : `? ${customTopic}`;
+                targetCategory = customTopic.startsWith('✨') ? customTopic : `✨ ${customTopic}`;
             }
 
             ensureCategoryRegistered(targetCategory);
@@ -1827,25 +1827,25 @@ Antworte im JSON-Format:
 
             const existingPtWords = vocabList.map(v => v.pt.toLowerCase().trim()).join(', ');
 
-            const systemPrompt = `Du bist ein erstklassiger Sprachcoach f�r Brasilianisches Portugiesisch (pt-BR) f�r deutschsprachige Lernende.
-Generiere exakt ${count} NEUE, extrem n�tzliche und hochfrequente Vokabeln oder Alltagsausdr�cke (Pareto-Prinzip 80/20) f�r das Thema "${targetCategory}".
-${focus ? `Zus�tzlicher Wunsch-Fokus des Nutzers: "${focus}".` : ''}
+            const systemPrompt = `Du bist ein erstklassiger Sprachcoach für Brasilianisches Portugiesisch (pt-BR) für deutschsprachige Lernende.
+Generiere exakt ${count} NEUE, extrem nützliche und hochfrequente Vokabeln oder Alltagsausdrücke (Pareto-Prinzip 80/20) für das Thema "${targetCategory}".
+${focus ? `Zusätzlicher Wunsch-Fokus des Nutzers: "${focus}".` : ''}
 
 WICHTIGSTE REGEL (KEINE DUPLIKATE):
-Der Nutzer kennt bereits folgende W�rter - generiere KEINESfalls W�rter aus dieser Liste:
+Der Nutzer kennt bereits folgende Wörter – generiere KEINESfalls Wörter aus dieser Liste:
 [${existingPtWords}]
 
-Anforderungen f�r jedes Wort:
-- "de": Pr�zise deutsche Bedeutung (mit Artikel bei Nomen).
-- "pt": Nat�rliches Brasilianisches Portugiesisch (pt-BR, mit Artikel bei Nomen).
-- "phon": Leicht lesbare deutsche Lautschrift f�r die echte brasilianische Aussprache (z.B. "[u a-ba-ka-schi]").
+Anforderungen für jedes Wort:
+- "de": Präzise deutsche Bedeutung (mit Artikel bei Nomen).
+- "pt": Natürliches Brasilianisches Portugiesisch (pt-BR, mit Artikel bei Nomen).
+- "phon": Leicht lesbare deutsche Lautschrift für die echte brasilianische Aussprache (z.B. "[u a-ba-ka-schi]").
 - "visual": Ein einzelnes passendes Emoji.
-- "kw": Ein kurzes englisches Suchwort f�r ein Foto (1-2 W�rter).
-- "sentPt": Ein kurzer, lustiger oder einpr�gsamer Beispielsatz auf Brasilianischem Portugiesisch.
-- "sentDe": Die deutsche �bersetzung des Beispielsatzes.`;
+- "kw": Ein kurzes englisches Suchwort für ein Foto (1-2 Wörter).
+- "sentPt": Ein kurzer, lustiger oder einprägsamer Beispielsatz auf Brasilianischem Portugiesisch.
+- "sentDe": Die deutsche Übersetzung des Beispielsatzes.`;
 
             const payload = {
-                contents: [{ parts: [{ text: `Erstelle ${count} neue brasilianische Vokabeln f�r den Bereich "${targetCategory}".` }] }],
+                contents: [{ parts: [{ text: `Erstelle ${count} neue brasilianische Vokabeln für den Bereich "${targetCategory}".` }] }],
                 systemInstruction: { parts: [{ text: systemPrompt }] },
                 generationConfig: {
                     responseMimeType: "application/json",
@@ -1884,7 +1884,7 @@ Anforderungen f�r jedes Wort:
                             de: item.de.trim(),
                             pt: item.pt.trim(),
                             phon: item.phon || "",
-                            visual: item.visual || "????",
+                            visual: item.visual || "🇧🇷",
                             kw: item.kw || "brazil",
                             sentPt: item.sentPt || item.pt,
                             sentDe: item.sentDe || item.de,
@@ -1913,7 +1913,7 @@ Anforderungen f�r jedes Wort:
                             <div class="flex-grow min-w-0">
                                 <div class="flex items-center justify-between gap-2">
                                     <span class="font-extrabold text-emerald-700 text-base truncate">${escapeHtml(c.pt)}</span>
-                                    <button onclick="speakText('${safePt}')" class="text-slate-500 hover:text-emerald-600 p-1" title="Anh�ren">??</button>
+                                    <button onclick="speakText('${safePt}')" class="text-slate-500 hover:text-emerald-600 p-1" title="Anhören">🔊</button>
                                 </div>
                                 <div class="text-xs font-mono text-slate-400">${escapeHtml(c.phon)}</div>
                                 <div class="font-bold text-slate-800 text-sm mt-0.5">${escapeHtml(c.de)}</div>
@@ -1928,10 +1928,10 @@ Anforderungen f�r jedes Wort:
 
                 listWrapper.classList.remove('hidden');
                 loadNextCard();
-                showToast(`? ${addedCards.length} neue Vokabeln dauerhaft gespeichert!`, "??");
+                showToast(`✅ ${addedCards.length} neue Vokabeln dauerhaft gespeichert!`, "🎉");
             } catch (err) {
                 console.error(err);
-                showToast("KI-Anfrage fehlgeschlagen. Bitte pr�fe deine Verbindung / Key.", "??");
+                showToast("KI-Anfrage fehlgeschlagen. Bitte prüfe deine Verbindung / Key.", "⚠️");
             } finally {
                 btn.disabled = false;
                 btn.classList.remove('opacity-60');
@@ -1949,7 +1949,7 @@ Anforderungen f�r jedes Wort:
 
         function toggleImageMode() {
             showPhotos = !showPhotos;
-            document.getElementById('imgModeBtn').innerText = showPhotos ? "??? Fotos: An" : "?? Emojis: An";
+            document.getElementById('imgModeBtn').innerText = showPhotos ? "🖼️ Fotos: An" : "😊 Emojis: An";
             if (currentCard) renderVisual(currentCard);
         }
 
@@ -1960,9 +1960,9 @@ Anforderungen f�r jedes Wort:
                 visEl.innerHTML = `<img src="${card.visual}" class="max-h-36 rounded-2xl shadow-md object-cover" alt="Bild">`;
             } else if (showPhotos && card.kw) {
                 const imgUrl = `https://loremflickr.com/340/220/${encodeURIComponent(card.kw)}?lock=${card.id % 1000}`;
-                visEl.innerHTML = `<img src="${imgUrl}" class="max-h-36 rounded-2xl shadow-md object-cover" alt="${escapeHtml(card.de)}" onerror="this.outerHTML='<span class=\\'text-7xl\\'>${card.visual || '????'}</span>'">`;
+                visEl.innerHTML = `<img src="${imgUrl}" class="max-h-36 rounded-2xl shadow-md object-cover" alt="${escapeHtml(card.de)}" onerror="this.outerHTML='<span class=\\'text-7xl\\'>${card.visual || '🇧🇷'}</span>'">`;
             } else {
-                visEl.innerHTML = `<span class="text-7xl">${card.visual || "????"}</span>`;
+                visEl.innerHTML = `<span class="text-7xl">${card.visual || "🇧🇷"}</span>`;
             }
         }
 
@@ -2008,11 +2008,11 @@ Anforderungen f�r jedes Wort:
             currentCard = dueCards[0];
 
             document.getElementById('cardCategory').innerText = currentCard.cat;
-            document.getElementById('cardSrsBadge').innerText = currentCard.reps === 0 ? "?? Neue Karte" : `?? Stufe ${currentCard.reps} (${currentCard.interval}T)`;
+            document.getElementById('cardSrsBadge').innerText = currentCard.reps === 0 ? "🆕 Neue Karte" : `🔁 Stufe ${currentCard.reps} (${currentCard.interval}T)`;
             
             const pronBadge = document.getElementById('cardPronBadge');
             if (typeof currentCard.pronScore === 'number') {
-                pronBadge.innerText = `??? ${currentCard.pronScore}%`;
+                pronBadge.innerText = `🎙️ ${currentCard.pronScore}%`;
                 pronBadge.classList.remove('hidden');
             } else {
                 pronBadge.classList.add('hidden');
@@ -2117,17 +2117,17 @@ Anforderungen f�r jedes Wort:
 
         function saveWordObject({ cat, de, pt, phon, visual, sentPt, sentDe }) {
             if (!de || !pt) {
-                showToast("Bitte mindestens das deutsche und portugiesische Wort eingeben!", "??");
+                showToast("Bitte mindestens das deutsche und portugiesische Wort eingeben!", "⚠️");
                 return false;
             }
 
-            const finalCat = cat && cat !== 'Alle' ? cat : "??? Echt Brasilianisch (Slang & Alltag)";
+            const finalCat = cat && cat !== 'Alle' ? cat : "🗣️ Echt Brasilianisch (Slang & Alltag)";
             ensureCategoryRegistered(finalCat);
 
             const newCard = {
                 id: Date.now() + Math.floor(Math.random() * 1000),
                 cat: finalCat,
-                visual: visual || "????",
+                visual: visual || "🇧🇷",
                 de: de.trim(),
                 pt: pt.trim(),
                 phon: phon ? phon.trim() : "",
@@ -2147,7 +2147,7 @@ Anforderungen f�r jedes Wort:
             document.getElementById('categorySelect').value = finalCat;
             loadNextCard();
             renderDeckManager();
-            showToast(`? "${newCard.pt}" dauerhaft in "${finalCat}" gespeichert!`, "??");
+            showToast(`✅ „${newCard.pt}“ dauerhaft in „${finalCat}“ gespeichert!`, "🎉");
             return true;
         }
 
@@ -2156,7 +2156,7 @@ Anforderungen f�r jedes Wort:
             if (cat === '__custom__') {
                 const customInput = document.getElementById('modalCustomCatInput').value.trim();
                 if (!customInput) {
-                    showToast("Bitte gib einen Namen f�r den neuen Themenbereich ein!", "??");
+                    showToast("Bitte gib einen Namen für den neuen Themenbereich ein!", "⚠️");
                     return;
                 }
                 cat = customInput;
@@ -2165,7 +2165,7 @@ Anforderungen f�r jedes Wort:
             const de = document.getElementById('modalDe').value.trim();
             const pt = document.getElementById('modalPt').value.trim();
             const phon = document.getElementById('modalPhon').value.trim();
-            const visual = document.getElementById('modalVisual').value.trim() || "??";
+            const visual = document.getElementById('modalVisual').value.trim() || "📝";
             const sentPt = document.getElementById('modalSentPt').value.trim();
             const sentDe = document.getElementById('modalSentDe').value.trim();
 
@@ -2180,7 +2180,7 @@ Anforderungen f�r jedes Wort:
 
         function addNewCardManual() {
             const cat = document.getElementById('newCat').value;
-            const visual = document.getElementById('newVisual').value.trim() || "??";
+            const visual = document.getElementById('newVisual').value.trim() || "📝";
             const de = document.getElementById('newDe').value.trim();
             const pt = document.getElementById('newPt').value.trim();
             const phon = document.getElementById('newPhon').value.trim();
@@ -2200,34 +2200,34 @@ Anforderungen f�r jedes Wort:
         // ============================================================================
         const scenarios = {
             cafe: {
-                title: "? Im Caf� in Rio de Janeiro",
+                title: "☕ Im Café in Rio de Janeiro",
                 role: "Du bist ein freundlicher, entspannter Barista in einer Padaria in Rio de Janeiro (Ipanema).",
-                openingPt: "Oi, bom dia! Tudo bem? O que voc� vai querer hoje? Nosso p�o de queijo acabou de sair do forno!",
-                openingDe: "Hi, guten Morgen! Alles gut? Was m�chtest du heute haben? Unser P�o de Queijo kommt gerade frisch aus dem Ofen!"
+                openingPt: "Oi, bom dia! Tudo bem? O que você vai querer hoje? Nosso pão de queijo acabou de sair do forno!",
+                openingDe: "Hi, guten Morgen! Alles gut? Was möchtest du heute haben? Unser Pão de Queijo kommt gerade frisch aus dem Ofen!"
             },
             smalltalk: {
-                title: "??? Lockerer Smalltalk mit einem Brasilianer",
-                role: "Du bist Lucas aus Florian�polis, ein herzlicher Brasilianer, der sich locker mit dem Nutzer �ber dessen Alltag, Essen, Sport oder Haustiere unterh�lt.",
-                openingPt: "E a�, tudo beleza? Como est� sendo o seu dia hoje? J� fez alguma coisa legal ou s� trabalhou?",
-                openingDe: "Na, alles klar? Wie l�uft dein Tag heute so? Hast du schon was Cooles gemacht oder nur gearbeitet?"
+                title: "🗣️ Lockerer Smalltalk mit einem Brasilianer",
+                role: "Du bist Lucas aus Florianópolis, ein herzlicher Brasilianer, der sich locker mit dem Nutzer über dessen Alltag, Essen, Sport oder Haustiere unterhält.",
+                openingPt: "E aí, tudo beleza? Como está sendo o seu dia hoje? Já fez alguma coisa legal ou só trabalhou?",
+                openingDe: "Na, alles klar? Wie läuft dein Tag heute so? Hast du schon was Cooles gemacht oder nur gearbeitet?"
             },
             beach: {
-                title: "??? Am Strand von Copacabana",
-                role: "Du bist ein gut gelaunter Strandverk�ufer am Kiosk in Rio, der Liegest�hle, Sonnenschirme und eiskalte Kokosn�sse verkauft.",
-                openingPt: "Fala, meu amigo! Bem-vindo � praia! Quer alugar duas cadeiras com guarda-sol ou tomar uma �gua de coco bem gelada?",
-                openingDe: "Hey mein Freund! Willkommen am Strand! M�chtest du zwei St�hle mit Sonnenschirm mieten oder ein eiskaltes Kokoswasser trinken?"
+                title: "🏖️ Am Strand von Copacabana",
+                role: "Du bist ein gut gelaunter Strandverkäufer am Kiosk in Rio, der Liegestühle, Sonnenschirme und eiskalte Kokosnüsse verkauft.",
+                openingPt: "Fala, meu amigo! Bem-vindo à praia! Quer alugar duas cadeiras com guarda-sol ou tomar uma água de coco bem gelada?",
+                openingDe: "Hey mein Freund! Willkommen am Strand! Möchtest du zwei Stühle mit Sonnenschirm mieten oder ein eiskaltes Kokoswasser trinken?"
             },
             market: {
-                title: "?? Im Supermarkt / Wochenmarkt",
-                role: "Du bist ein hilfsbereiter Verk�ufer auf einem brasilianischen Markt (Feira) mit frischem Obst, K�se und Haferflocken.",
-                openingPt: "Bom dia! Fique � vontade! Est� procurando alguma fruta especial, queijo ou aveia hoje?",
-                openingDe: "Guten Morgen! Schau dich gern um! Suchst du heute eine bestimmte Frucht, K�se oder Haferflocken?"
+                title: "🥑 Im Supermarkt / Wochenmarkt",
+                role: "Du bist ein hilfsbereiter Verkäufer auf einem brasilianischen Markt (Feira) mit frischem Obst, Käse und Haferflocken.",
+                openingPt: "Bom dia! Fique à vontade! Está procurando alguma fruta especial, queijo ou aveia hoje?",
+                openingDe: "Guten Morgen! Schau dich gern um! Suchst du heute eine bestimmte Frucht, Käse oder Haferflocken?"
             },
             uber: {
-                title: "?? Im Uber in S�o Paulo",
-                role: "Du bist ein gespr�chiger Uber-Fahrer in S�o Paulo, der den Nutzer vom Hotel abholt.",
-                openingPt: "Ol�, boa tarde! Tudo tranquilo? A temperatura do ar-condicionado est� boa para voc�?",
-                openingDe: "Hallo, guten Tag! Alles entspannt? Ist die Temperatur der Klimaanlage angenehm f�r dich?"
+                title: "🚕 Im Uber in São Paulo",
+                role: "Du bist ein gesprächiger Uber-Fahrer in São Paulo, der den Nutzer vom Hotel abholt.",
+                openingPt: "Olá, boa tarde! Tudo tranquilo? A temperatura do ar-condicionado está boa para você?",
+                openingDe: "Hallo, guten Tag! Alles entspannt? Ist die Temperatur der Klimaanlage angenehm für dich?"
             }
         };
 
@@ -2252,8 +2252,8 @@ Anforderungen f�r jedes Wort:
             let openingDe = "";
 
             if (currentScenarioKey === 'custom') {
-                const customDesc = document.getElementById('customScenarioInput').value.trim() || "Freies Gespr�ch in Brasilien";
-                openingPt = "Oi! Tudo bem? Vamos come�ar! Como posso te ajudar hoje?";
+                const customDesc = document.getElementById('customScenarioInput').value.trim() || "Freies Gespräch in Brasilien";
+                openingPt = "Oi! Tudo bem? Vamos começar! Como posso te ajudar hoje?";
                 openingDe = `Szenario "${customDesc}" gestartet! Schreibe deine erste Nachricht.`;
             } else {
                 openingPt = scenarios[currentScenarioKey].openingPt;
@@ -2290,7 +2290,7 @@ Anforderungen f�r jedes Wort:
                             const encodedV = encodeURIComponent(JSON.stringify(v));
                             return `
                                 <button onclick="addVocabFromChat('${encodedV}')" class="mt-1.5 inline-flex items-center gap-1 bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300 px-2.5 py-1 rounded-lg text-xs font-bold shadow-sm transition">
-                                    ? "${escapeHtml(v.pt)}" (${escapeHtml(v.de)}) speichern
+                                    ➕ „${escapeHtml(v.pt)}“ (${escapeHtml(v.de)}) speichern
                                 </button>
                             `;
                         }).join(' ');
@@ -2299,12 +2299,12 @@ Anforderungen f�r jedes Wort:
                             correctionHtml = `
                                 <div class="mb-2.5 bg-amber-50 border border-amber-200 rounded-2xl p-3.5 text-xs space-y-1.5 text-slate-800">
                                     <div class="flex items-center gap-1.5 font-extrabold text-amber-900">
-                                        <span>?? Sprach-Coach Korrektur:</span>
+                                        <span>✍️ Sprach-Coach Korrektur:</span>
                                     </div>
                                     <div>
                                         <span class="text-slate-500">So sagt es ein Brasilianer:</span>
                                         <span class="font-extrabold text-emerald-700 ml-1">${escapeHtml(c.correctedUserPt)}</span>
-                                        <button onclick="speakText('${c.correctedUserPt.replace(/'/g, "\\'")}')" class="ml-1 text-slate-500 hover:text-emerald-700">??</button>
+                                        <button onclick="speakText('${c.correctedUserPt.replace(/'/g, "\\'")}')" class="ml-1 text-slate-500 hover:text-emerald-700">🔊</button>
                                     </div>
                                     <div class="text-slate-600 leading-relaxed">${escapeHtml(c.explanationDe)}</div>
                                     <div class="flex flex-wrap gap-1.5">${vocabBtns}</div>
@@ -2313,7 +2313,7 @@ Anforderungen f�r jedes Wort:
                         } else if (c.correctedUserPt) {
                             correctionHtml = `
                                 <div class="mb-2.5 bg-emerald-50/80 border border-emerald-200 rounded-2xl p-3 text-xs space-y-1 text-emerald-950">
-                                    <div class="font-extrabold text-emerald-800">? Perfekt ausgedr�ckt!</div>
+                                    <div class="font-extrabold text-emerald-800">✅ Perfekt ausgedrückt!</div>
                                     <div class="text-slate-600">${escapeHtml(c.explanationDe || 'Das klang wie ein echter Brasilianer.')}</div>
                                     <div class="flex flex-wrap gap-1.5">${vocabBtns}</div>
                                 </div>
@@ -2327,8 +2327,8 @@ Anforderungen f�r jedes Wort:
                             <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-none px-4 py-3.5 shadow-sm space-y-1.5">
                                 <div class="flex items-start justify-between gap-3">
                                     <span class="text-sm sm:text-base font-bold text-slate-900 leading-snug">${escapeHtml(msg.replyPt)}</span>
-                                    <button onclick="speakText('${msg.replyPt.replace(/'/g, "\\'")}')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-700 flex items-center justify-center shrink-0 transition" title="Nachricht anh�ren">
-                                        ??
+                                    <button onclick="speakText('${msg.replyPt.replace(/'/g, "\\'")}')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-700 flex items-center justify-center shrink-0 transition" title="Nachricht anhören">
+                                        🔊
                                     </button>
                                 </div>
                                 <div class="text-xs text-slate-500 italic">${escapeHtml(msg.replyDe)}</div>
@@ -2356,27 +2356,27 @@ Anforderungen f�r jedes Wort:
             btn.innerHTML = `<span class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>`;
 
             const scenarioDesc = currentScenarioKey === 'custom'
-                ? (document.getElementById('customScenarioInput').value.trim() || "Alltagsgespr�ch in Brasilien")
+                ? (document.getElementById('customScenarioInput').value.trim() || "Alltagsgespräch in Brasilien")
                 : scenarios[currentScenarioKey].role;
 
             const recentTranscript = chatHistory.slice(-6).map(m =>
                 m.sender === 'user' ? `Lernender: ${m.text}` : `Brasilianer: ${m.replyPt}`
             ).join('\n');
 
-            const systemPrompt = `Du f�hrst ein realistisches Rollenspiel auf Brasilianischem Portugiesisch (pt-BR) mit einem deutschsprachigen Lernenden durch und gibst gleichzeitig konstruktives Fehler-Feedback.
-Deine Rolle im Gespr�ch: ${scenarioDesc}
+            const systemPrompt = `Du führst ein realistisches Rollenspiel auf Brasilianischem Portugiesisch (pt-BR) mit einem deutschsprachigen Lernenden durch und gibst gleichzeitig konstruktives Fehler-Feedback.
+Deine Rolle im Gespräch: ${scenarioDesc}
 
 Regeln:
-1. Antworte im Feld "replyPt" authentisch, herzlich und nat�rlich auf Brasilianischem Portugiesisch (nutze "voc�", "a gente", Alltagssprache) und halte das Gespr�ch mit einer passenden Anschlussfrage am Laufen (1-3 kurze S�tze).
-2. Gib in "replyDe" die deutsche �bersetzung deiner Antwort an.
-3. Pr�fe die letzte Nachricht des Lernenden ("${userText}") im Objekt "correction":
+1. Antworte im Feld "replyPt" authentisch, herzlich und natürlich auf Brasilianischem Portugiesisch (nutze "você", "a gente", Alltagssprache) und halte das Gespräch mit einer passenden Anschlussfrage am Laufen (1-3 kurze Sätze).
+2. Gib in "replyDe" die deutsche Übersetzung deiner Antwort an.
+3. Prüfe die letzte Nachricht des Lernenden ("${userText}") im Objekt "correction":
    - Wenn der Lernende einen Grammatik-, Wortwahl- oder Rechtschreibfehler gemacht hat ODER ein deutsches Wort benutzt hat, setze "hasMistakes": true.
-   - Zeige in "correctedUserPt", wie ein Brasilianer den Satz des Lernenden nat�rlich und korrekt sagen w�rde.
-   - Erkl�re in "explanationDe" kurz, freundlich und auf Deutsch, was korrigiert wurde.
-   - Schlage in "suggestedVocab" 1 bis 2 n�tzliche Vokabeln aus der Korrektur oder deiner Antwort vor (inkl. Lautschrift & kurzem Merksatz).`;
+   - Zeige in "correctedUserPt", wie ein Brasilianer den Satz des Lernenden natürlich und korrekt sagen würde.
+   - Erkläre in "explanationDe" kurz, freundlich und auf Deutsch, was korrigiert wurde.
+   - Schlage in "suggestedVocab" 1 bis 2 nützliche Vokabeln aus der Korrektur oder deiner Antwort vor (inkl. Lautschrift & kurzem Merksatz).`;
 
             const payload = {
-                contents: [{ parts: [{ text: `Bisheriger Gespr�chsverlauf:\n${recentTranscript}\n\nReagiere auf die letzte Nachricht des Lernenden.` }] }],
+                contents: [{ parts: [{ text: `Bisheriger Gesprächsverlauf:\n${recentTranscript}\n\nReagiere auf die letzte Nachricht des Lernenden.` }] }],
                 systemInstruction: { parts: [{ text: systemPrompt }] },
                 generationConfig: {
                     responseMimeType: "application/json",
@@ -2430,7 +2430,7 @@ Regeln:
                 speakText(data.replyPt);
             } catch (e) {
                 console.error(e);
-                showToast("Verbindungsfehler im Chat. Bitte erneut senden.", "??");
+                showToast("Verbindungsfehler im Chat. Bitte erneut senden.", "⚠️");
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = `<span>Senden</span><i data-lucide="send" class="w-4 h-4"></i>`;
@@ -2448,7 +2448,7 @@ Regeln:
             optionsDiv.innerHTML = `<span class="text-amber-800 italic">Generiere passende Antwort-Ideen...</span>`;
 
             const payload = {
-                contents: [{ parts: [{ text: `Der brasilianische Gespr�chspartner hat gerade gesagt: "${lastAiMsg.replyPt}". Gib 3 kurze, nat�rliche Antwortm�glichkeiten auf Brasilianischem Portugiesisch (pt-BR) mit deutscher �bersetzung f�r den Lernenden.` }] }],
+                contents: [{ parts: [{ text: `Der brasilianische Gesprächspartner hat gerade gesagt: "${lastAiMsg.replyPt}". Gib 3 kurze, natürliche Antwortmöglichkeiten auf Brasilianischem Portugiesisch (pt-BR) mit deutscher Übersetzung für den Lernenden.` }] }],
                 generationConfig: {
                     responseMimeType: "application/json",
                     responseSchema: {
@@ -2490,15 +2490,15 @@ Regeln:
                 const v = JSON.parse(decodeURIComponent(encodedJson));
                 const exists = vocabList.some(item => item.pt.toLowerCase().trim() === v.pt.toLowerCase().trim());
                 if (exists) {
-                    showToast(`"${v.pt}" ist bereits in deinem Trainer!`, "??");
+                    showToast(`„${v.pt}“ ist bereits in deinem Trainer!`, "ℹ️");
                     return;
                 }
                 saveWordObject({
-                    cat: "??? Echt Brasilianisch (Slang & Alltag)",
+                    cat: "🗣️ Echt Brasilianisch (Slang & Alltag)",
                     de: v.de,
                     pt: v.pt,
                     phon: v.phon || "",
-                    visual: v.visual || "??",
+                    visual: v.visual || "💬",
                     sentPt: v.sentPt || v.pt,
                     sentDe: v.sentDe || v.de
                 });
@@ -2510,7 +2510,7 @@ Regeln:
         function toggleSpeechRecognition() {
             const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRec) {
-                showToast("Spracherkennung wird von diesem Browser nicht unterst�tzt (Nutze Chrome/Edge).", "??");
+                showToast("Spracherkennung wird von diesem Browser nicht unterstützt (Nutze Chrome/Edge).", "⚠️");
                 return;
             }
 
@@ -2529,7 +2529,7 @@ Regeln:
                 isRecording = true;
                 micBtn.classList.add('bg-rose-600', 'text-white', 'pulse-mic');
                 micBtn.classList.remove('bg-slate-100', 'text-slate-700');
-                showToast("Sprich jetzt auf Portugiesisch...", "???");
+                showToast("Sprich jetzt auf Portugiesisch...", "🎙️");
             };
 
             recognition.onresult = (event) => {
@@ -2576,7 +2576,7 @@ Regeln:
             } else {
                 ptVoices.forEach(v => {
                     const isBest = v.name.includes('Natural') || v.name.includes('Google');
-                    sel.innerHTML += `<option value="${v.voiceURI}">${isBest ? '? ' : ''}${v.name} (${v.lang})</option>`;
+                    sel.innerHTML += `<option value="${v.voiceURI}">${isBest ? '⭐ ' : ''}${v.name} (${v.lang})</option>`;
                 });
                 if (audioSettings.voiceURI && ptVoices.some(v => v.voiceURI === audioSettings.voiceURI)) {
                     sel.value = audioSettings.voiceURI;
@@ -2731,16 +2731,16 @@ Regeln:
             container.innerHTML = vocabList.map(v => `
                 <div class="py-2 px-3 flex items-center justify-between gap-2 hover:bg-slate-50 rounded-lg">
                     <div class="flex items-center gap-2.5 min-w-0">
-                        <span class="text-lg">${v.visual && !v.visual.startsWith('http') ? v.visual : '????'}</span>
+                        <span class="text-lg">${v.visual && !v.visual.startsWith('http') ? v.visual : '🇧🇷'}</span>
                         <div class="truncate">
                             <span class="font-bold text-emerald-700">${escapeHtml(v.pt)}</span>
-                            <span class="text-slate-400 mx-1"></span>
+                            <span class="text-slate-400 mx-1">•</span>
                             <span class="text-slate-700">${escapeHtml(v.de)}</span>
                             <span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full ml-2">${escapeHtml(v.cat)}</span>
-                            ${typeof v.pronScore === 'number' ? `<span class="text-[10px] bg-rose-50 text-rose-700 px-2 py-0.5 rounded-full ml-1 font-bold">??? ${v.pronScore}%</span>` : ''}
+                            ${typeof v.pronScore === 'number' ? `<span class="text-[10px] bg-rose-50 text-rose-700 px-2 py-0.5 rounded-full ml-1 font-bold">🎙️ ${v.pronScore}%</span>` : ''}
                         </div>
                     </div>
-                    <button onclick="deleteVocabItem(${v.id})" class="text-slate-400 hover:text-rose-600 px-2 py-1 font-bold" title="Wort l�schen">?</button>
+                    <button onclick="deleteVocabItem(${v.id})" class="text-slate-400 hover:text-rose-600 px-2 py-1 font-bold" title="Wort löschen">✕</button>
                 </div>
             `).join('');
         }
@@ -2751,7 +2751,7 @@ Regeln:
             populateCategoryDropdowns();
             loadNextCard();
             renderDeckManager();
-            showToast("Vokabel entfernt", "???");
+            showToast("Vokabel entfernt", "🗑️");
         }
 
         function resetDeckConfirm() {
@@ -2780,7 +2780,7 @@ Regeln:
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            showToast("Backup-Datei (.json) heruntergeladen!", "??");
+            showToast("Backup-Datei (.json) heruntergeladen!", "📥");
         }
 
         function importBackupJson(event) {
@@ -2806,12 +2806,12 @@ Regeln:
                         populateCategoryDropdowns();
                         loadNextCard();
                         renderDeckManager();
-                        showToast(`${vocabList.length} Vokabeln erfolgreich wiederhergestellt!`, "??");
+                        showToast(`${vocabList.length} Vokabeln erfolgreich wiederhergestellt!`, "🎉");
                     } else {
-                        showToast("Ung�ltige Backup-Datei.", "??");
+                        showToast("Ungültige Backup-Datei.", "⚠️");
                     }
                 } catch (err) {
-                    showToast("Fehler beim Lesen der Backup-Datei.", "??");
+                    showToast("Fehler beim Lesen der Backup-Datei.", "⚠️");
                 }
             };
             reader.readAsText(file);
@@ -2828,7 +2828,7 @@ Regeln:
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            showToast("Standalone Web-App (index.html) heruntergeladen!", "??");
+            showToast("Standalone Web-App (index.html) heruntergeladen!", "🚀");
         }
 
         function escapeHtml(str) {
@@ -2844,4 +2844,3 @@ Regeln:
     </script>
 </body>
 </html>
-

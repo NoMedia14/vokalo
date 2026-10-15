@@ -1,0 +1,12 @@
+.DS_Store
+Thumbs.db
+.env
+.env.*
+!.env.example
+.supabase/
+node_modules/
+outputs/
+work/
+library_file_transfer.py
+Portugiesisch_BR_Trainer.html
+

@@ -1,28 +1,26 @@
-# Brasil Fokus-Trainer
+# Vokalo
 
-Eine eigenst�ndige Lern-Webseite f�r brasilianisches Portugiesisch mit:
+Web-App zum Sprachenlernen, aktuell mit brasilianischem Portugiesisch.
 
-- Pareto-Vokabeltrainer und Spaced Repetition
+- Vokabeltrainer mit Spaced Repetition
 - Aussprachetraining und Sprachausgabe
-- Fortschrittsanzeige mit Lernzielen
-- eigenen W�rtern, Kategorien sowie JSON-Import und -Export
-- optionalen Gemini-Funktionen f�r neue Vokabeln, Dialoge und Auswertungen
+- Lernziele und Fortschrittsanzeige
+- Eigene Vokabeln und Kategorien
+- JSON-Import und -Export
+- Optionale Gemini-Funktionen für Vokabeln, Dialoge und Auswertungen
 
-## Lokal starten
+## Start
 
-`index.html` per Doppelklick im Browser �ffnen. Es ist keine Installation und kein Build-Schritt n�tig.
+index.html im Browser öffnen. Kein Build-Schritt erforderlich.
+
+## KI
+
+In den Einstellungen einen eigenen Gemini-API-Key eintragen. Im Repository ist kein privater API-Key enthalten.
 
 ## Speicherung
 
-Lernstand und Einstellungen werden im `localStorage` des jeweiligen Browsers gespeichert. �ber die Backup-Funktion in der App l�sst sich der Stand als JSON sichern und wiederherstellen.
+Die aktuelle Version speichert Lernstand und Einstellungen im jeweiligen Browser. Beim Wechsel zum Namen Vokalo werden vorhandene Daten übernommen. Die geplante zentrale Speicherung mit Supabase ist noch nicht eingerichtet.
 
-## KI-Funktionen
+## Veröffentlichung
 
-Die Kern-App l�uft ohne API-Key. F�r die optionalen KI-Funktionen kann in den Einstellungen ein eigener Google-Gemini-Key hinterlegt werden. Der Key wird nur im lokalen Browserspeicher gespeichert und direkt an die Gemini API gesendet; im Repository befindet sich kein Key.
-
-F�r eine �ffentliche Nutzung empfiehlt sich sp�ter eine Supabase Edge Function als gesch�tzter Proxy. Dadurch bleibt der Gemini-Key serverseitig und kann nicht im Browser ausgelesen werden.
-
-## GitHub Pages
-
-In GitHub unter **Settings  Pages** als Quelle **Deploy from a branch** w�hlen. Anschlie�end den Branch `main` und den Ordner `/ (root)` ausw�hlen und speichern. �nderungen auf `main` werden danach automatisch ver�ffentlicht.
-
+GitHub Pages veröffentlicht den Branch main aus dem Stammverzeichnis. Nach einer Repository-Umbenennung muss die Pages-Adresse geprüft werden.

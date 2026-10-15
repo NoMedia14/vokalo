@@ -1,0 +1,2847 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brasil Fokus-Trainer 4.0 - AI Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .brazil-gradient {
+            background: linear-gradient(135deg, #009c3b 0%, #007a2f 50%, #002776 100%);
+        }
+
+        .level-gradient {
+            background: linear-gradient(90deg, #10b981 0%, #f59e0b 50%, #2563eb 100%);
+        }
+
+        .card-shadow {
+            box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pulse-mic {
+            animation: pulseMic 1.4s infinite;
+        }
+
+        @keyframes pulseMic {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 16px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- TOP NAVIGATION HEADER + PERSISTENT LEVEL BAR -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 pt-3 pb-2.5 flex flex-col gap-2.5">
+            
+            <!-- Top Row: Brand & Navigation Tabs -->
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl brazil-gradient flex items-center justify-center text-white font-extrabold text-xl shadow-sm shrink-0">
+                        ????
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <h1 class="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">Brasil Fokus-Trainer</h1>
+                            <span class="bg-emerald-100 text-emerald-800 text-[11px] font-extrabold px-2 py-0.5 rounded-full border border-emerald-200">4.0 AI</span>
+                            <button onclick="openApiKeySetup()" id="apiKeyStatusBadge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full border transition flex items-center gap-1 bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200" title="KI-Verbindung & Standalone API-Key verwalten">
+                                <span>??</span> <span id="apiKeyStatusText">KI: Aktiv</span>
+                            </button>
+                        </div>
+                        <p class="text-[11px] text-slate-500 hidden sm:block">Pareto-Vokabeln, Aussprache-Pr�fung, Niveau-Tracking & Live-Dialoge</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl w-full lg:w-auto overflow-x-auto">
+                    <button onclick="switchTab('trainer')" id="tab-trainer" class="tab-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-emerald-700 shadow-sm whitespace-nowrap">
+                        <i data-lucide="layers" class="w-3.5 h-3.5"></i> Trainer
+                    </button>
+                    <button onclick="switchTab('pronounce')" id="tab-pronounce" class="tab-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 whitespace-nowrap">
+                        <i data-lucide="mic" class="w-3.5 h-3.5 text-rose-500"></i> Aussprache-Coach
+                    </button>
+                    <button onclick="switchTab('progress')" id="tab-progress" class="tab-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 whitespace-nowrap">
+                        <i data-lucide="bar-chart-3" class="w-3.5 h-3.5 text-indigo-600"></i> Niveau & Ziele
+                    </button>
+                    <button onclick="switchTab('discover')" id="tab-discover" class="tab-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 whitespace-nowrap">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i> KI-W�rter
+                    </button>
+                    <button onclick="switchTab('chat')" id="tab-chat" class="tab-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 whitespace-nowrap">
+                        <i data-lucide="message-circle" class="w-3.5 h-3.5 text-blue-600"></i> Dialoge
+                    </button>
+                    <button onclick="switchTab('settings')" id="tab-settings" class="tab-btn flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 whitespace-nowrap" title="Einstellungen & Backup">
+                        <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Persistent Overall CEFR Level Bar -->
+            <div onclick="switchTab('progress')" class="bg-slate-50 hover:bg-slate-100/90 border border-slate-200/80 rounded-xl px-3 py-1.5 flex flex-wrap items-center justify-between gap-3 cursor-pointer transition group" title="Klicken f�r detaillierte Niveau-Aufschl�sselung">
+                <div class="flex items-center gap-2.5">
+                    <span id="headerLevelBadge" class="bg-emerald-600 text-white text-xs font-extrabold px-2.5 py-0.5 rounded-lg shadow-sm">A1.1</span>
+                    <div class="text-xs">
+                        <span id="headerLevelTitle" class="font-extrabold text-slate-800">Basis-Starter</span>
+                        <span class="text-slate-400 mx-1"></span>
+                        <span id="headerXpText" class="text-slate-500 font-semibold">0 XP</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-3 flex-grow max-w-md">
+                    <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden flex">
+                        <div id="headerLevelBar" class="level-gradient h-full transition-all duration-500 rounded-full" style="width: 12%"></div>
+                    </div>
+                    <span id="headerNextLevelHint" class="text-[11px] font-bold text-slate-600 whitespace-nowrap shrink-0">Noch 10 Pkt. bis A1.2</span>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 hidden bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-sm font-semibold animate-fade-in max-w-sm border border-slate-700">
+        <span id="toastIcon" class="text-lg">?</span>
+        <span id="toastMsg">Gespeichert!</span>
+    </div>
+
+    <!-- QUICK MANUAL WORD MODAL (Accessible from anywhere) -->
+    <div id="quickAddModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 card-shadow border border-slate-200 space-y-4 animate-fade-in">
+            <div class="flex items-center justify-between">
+                <h3 class="font-extrabold text-lg text-slate-900 flex items-center gap-2">
+                    <span>? Eigene Vokabel sofort speichern</span>
+                </h3>
+                <button onclick="closeQuickAddModal()" class="text-slate-400 hover:text-slate-700 font-bold text-lg px-2">?</button>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Deutsches Wort *</label>
+                    <input type="text" id="modalDe" placeholder="z.B. die H�ngematte" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm font-semibold focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Portugiesisch (BR) *</label>
+                    <input type="text" id="modalPt" placeholder="z.B. a rede" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm font-semibold focus:outline-none focus:border-emerald-500">
+                </div>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Themenbereich</label>
+                    <select id="modalCat" onchange="toggleModalCustomCat()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm font-semibold"></select>
+                </div>
+                <div id="modalCustomCatBox" class="hidden">
+                    <label class="block text-xs font-bold text-emerald-700 mb-1">Neuer Bereichs-Name</label>
+                    <input type="text" id="modalCustomCatInput" placeholder="z.B. ? Fu�ball & Sport" class="w-full bg-white border-2 border-emerald-500 rounded-xl px-3 py-2 text-sm font-semibold">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Lautschrift & Emoji (optional)</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="modalPhon" placeholder="[a h�-dschi]" class="w-2/3 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm">
+                        <input type="text" id="modalVisual" placeholder="??" class="w-1/3 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-center">
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <input type="text" id="modalSentPt" placeholder="Merksatz auf Portugiesisch (optional)" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm">
+                <input type="text" id="modalSentDe" placeholder="Deutsche �bersetzung des Merksatzes (optional)" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm">
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeQuickAddModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs">Abbrechen</button>
+                <button onclick="saveWordFromModal()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md">? Wort dauerhaft speichern</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STANDALONE API KEY MODAL -->
+    <div id="apiKeyModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 card-shadow border border-slate-200 space-y-4 animate-fade-in">
+            <div class="flex items-start justify-between gap-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xl">??</div>
+                    <div>
+                        <h3 class="font-extrabold text-lg text-slate-900">KI f�r eigene Webseite / Handy aktivieren</h3>
+                        <p class="text-xs text-slate-500">Kostenloser Google Gemini API-Schl�ssel f�r den Standalone-Betrieb</p>
+                    </div>
+                </div>
+                <button onclick="closeApiKeyModal()" class="text-slate-400 hover:text-slate-700 font-bold text-lg px-2">?</button>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs space-y-2 text-slate-700 leading-relaxed">
+                <p>Innerhalb dieses Vorschau-Fensters ist die KI automatisch verbunden. Wenn du die App als eigene Webseite oder auf dem Smartphone nutzt, hinterlege hier deinen kostenlosen Gemini-Key:</p>
+                <ol class="list-decimal list-inside space-y-1 font-semibold text-slate-800">
+                    <li>�ffne <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="text-emerald-600 underline">aistudio.google.com/apikey</a></li>
+                    <li>Klicke auf <strong>"Create API Key"</strong> und f�ge ihn unten ein (100% lokal im Browser gespeichert).</li>
+                </ol>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Dein Gemini API-Key</label>
+                <input type="password" id="modalApiKeyInput" placeholder="AIzaSy..." class="w-full bg-slate-50 border border-slate-300 focus:border-emerald-500 rounded-xl px-3.5 py-2.5 text-sm font-mono focus:outline-none">
+            </div>
+
+            <div class="flex items-center justify-end gap-2 pt-2">
+                <button onclick="closeApiKeyModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs">Sp�ter</button>
+                <button onclick="saveApiKeyFromModal()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-sm">?? Key speichern</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-5">
+
+        <!-- ========================================== -->
+        <!-- TAB 1: VOKABEL-TRAINER (SRS)               -->
+        <!-- ========================================== -->
+        <section id="view-trainer" class="space-y-4">
+            <!-- Top Filter & Action Bar -->
+            <div class="flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center justify-between bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+                <div class="flex items-center gap-2 flex-grow">
+                    <i data-lucide="folder-kanban" class="w-5 h-5 text-emerald-600 shrink-0 ml-1"></i>
+                    <select id="categorySelect" onchange="changeCategory()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm font-bold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    </select>
+                </div>
+                <div class="flex items-center gap-2 flex-wrap">
+                    <button onclick="openQuickAddModal()" class="px-3 py-2 rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-xs font-extrabold text-emerald-800 flex items-center gap-1 shrink-0 transition">
+                        ? Eigenes Wort
+                    </button>
+                    <button onclick="toggleImageMode()" id="imgModeBtn" class="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-700 flex items-center gap-1 shrink-0 transition">
+                        ??? Fotos: An
+                    </button>
+                    <button onclick="quickGenerateForCurrentCat()" id="quickAiBtn" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 text-xs font-extrabold flex items-center gap-1.5 shadow-sm shrink-0 transition">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> +5 KI-W�rter
+                    </button>
+                </div>
+            </div>
+
+            <!-- SRS Stats Bar -->
+            <div class="grid grid-cols-4 gap-2 sm:gap-3">
+                <div class="bg-white p-2.5 sm:p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
+                    <div class="text-[11px] font-semibold text-slate-500">?? F�llig</div>
+                    <div id="statDue" class="text-lg sm:text-xl font-extrabold text-rose-600">0</div>
+                </div>
+                <div class="bg-white p-2.5 sm:p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
+                    <div class="text-[11px] font-semibold text-slate-500">?? Neu</div>
+                    <div id="statNew" class="text-lg sm:text-xl font-extrabold text-blue-600">0</div>
+                </div>
+                <div class="bg-white p-2.5 sm:p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
+                    <div class="text-[11px] font-semibold text-slate-500">? Gelernt</div>
+                    <div id="statLearned" class="text-lg sm:text-xl font-extrabold text-emerald-600">0</div>
+                </div>
+                <div class="bg-white p-2.5 sm:p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
+                    <div class="text-[11px] font-semibold text-slate-500">?? Im Bereich</div>
+                    <div id="statTotal" class="text-lg sm:text-xl font-extrabold text-slate-800">0</div>
+                </div>
+            </div>
+
+            <!-- FLASHCARD BOX -->
+            <div id="cardContainer" class="bg-white rounded-3xl p-6 sm:p-8 card-shadow border border-slate-100 min-h-[420px] flex flex-col justify-between relative overflow-hidden">
+                <!-- Top Card Meta -->
+                <div class="flex items-center justify-between gap-2 z-10">
+                    <span id="cardCategory" class="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1 rounded-full">Kategorie</span>
+                    <div class="flex items-center gap-2">
+                        <span id="cardPronBadge" class="hidden text-xs font-bold px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">??? --%</span>
+                        <span id="cardSrsBadge" class="text-xs font-semibold text-slate-400">Neu</span>
+                    </div>
+                </div>
+
+                <!-- Card Center Content (Dynamic Wrapper for Empty State vs Active Card) -->
+                <div id="cardEmptyState" class="hidden my-auto py-8 px-4 text-center space-y-4 max-w-md mx-auto">
+                    <div class="text-6xl">??</div>
+                    <h3 class="text-xl font-extrabold text-slate-900">Alle f�lligen Vokabeln geschafft!</h3>
+                    <p class="text-sm text-slate-600">Alle Karten in diesem Bereich sind im Langzeitged�chtnis geplant. Entdecke jetzt frische Vokabeln per KI oder f�ge eigene hinzu!</p>
+                    <div class="flex flex-wrap justify-center gap-2 pt-2">
+                        <button onclick="quickGenerateForCurrentCat()" class="px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs sm:text-sm shadow-md inline-flex items-center gap-2">
+                            ? +5 neue KI-Vokabeln laden
+                        </button>
+                        <button onclick="openQuickAddModal()" class="px-4 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs sm:text-sm">
+                            ? Eigenes Wort
+                        </button>
+                    </div>
+                </div>
+
+                <div id="cardContent" class="my-auto py-4 text-center">
+                    <div id="cardVisual" class="h-32 sm:h-36 flex items-center justify-center text-7xl select-none mx-auto mb-3">
+                        ???
+                    </div>
+                    
+                    <div class="text-xs uppercase tracking-wider font-bold text-slate-400 mb-1">Deutsch</div>
+                    <div id="cardDe" class="text-2xl sm:text-3xl font-extrabold text-slate-900">Deutsches Wort</div>
+
+                    <!-- Hidden Answer Section -->
+                    <div id="answerSection" class="hidden mt-5 pt-5 border-t-2 border-dashed border-slate-200 animate-fade-in">
+                        <div class="flex items-center justify-center gap-2.5 flex-wrap">
+                            <span id="cardPt" class="text-2xl sm:text-3xl font-extrabold text-emerald-600">Portugiesisch</span>
+                            <button onclick="speakCurrentWord()" class="w-10 h-10 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 flex items-center justify-center transition shadow-sm" title="Brasilianische Aussprache anh�ren">
+                                <i data-lucide="volume-2" class="w-5 h-5"></i>
+                            </button>
+                            <button onclick="openPronunciationForCurrentCard()" class="px-3 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-extrabold flex items-center gap-1 transition shadow-sm" title="Deine Aussprache f�r dieses Wort testen">
+                                ??? Aussprache pr�fen
+                            </button>
+                        </div>
+                        <div id="cardPhonetic" class="text-sm font-mono text-slate-500 mt-1 mb-4">[Lautschrift]</div>
+
+                        <!-- Funny Memorable Hook Box -->
+                        <div class="bg-amber-50/90 border-l-4 border-amber-400 p-3.5 rounded-xl text-left flex items-center justify-between gap-3 max-w-xl mx-auto">
+                            <div class="space-y-1">
+                                <div id="cardSentPt" class="font-bold text-slate-900 text-sm sm:text-base leading-snug">Beispielsatz PT</div>
+                                <div id="cardSentDe" class="text-slate-600 italic text-xs sm:text-sm">Beispielsatz DE</div>
+                            </div>
+                            <button onclick="speakCurrentSentence()" class="w-9 h-9 shrink-0 rounded-full bg-amber-200/70 hover:bg-amber-300 text-amber-950 flex items-center justify-center transition" title="Ganzen Beispielsatz anh�ren">
+                                <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Bottom Action Buttons -->
+                <div id="actionArea" class="pt-3">
+                    <button id="btnShow" onclick="showAnswer()" class="w-full py-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-base sm:text-lg shadow-md transition flex items-center justify-center gap-2">
+                        <span>Antwort aufdecken</span>
+                        <span class="text-xs font-normal opacity-70 bg-slate-700 px-2 py-0.5 rounded">Leertaste</span>
+                    </button>
+
+                    <div id="srsButtons" class="hidden grid-cols-4 gap-2 sm:gap-3">
+                        <button onclick="rateCard('again')" class="py-3 px-2 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xs sm:text-sm flex flex-col items-center shadow-sm transition">
+                            <span>Nochmal</span>
+                            <span id="lblAgain" class="text-[11px] font-normal opacity-90 mt-0.5">Sofort (1)</span>
+                        </button>
+                        <button onclick="rateCard('hard')" class="py-3 px-2 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs sm:text-sm flex flex-col items-center shadow-sm transition">
+                            <span>Schwer</span>
+                            <span id="lblHard" class="text-[11px] font-normal opacity-90 mt-0.5">1 Tag (2)</span>
+                        </button>
+                        <button onclick="rateCard('good')" class="py-3 px-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs sm:text-sm flex flex-col items-center shadow-sm transition">
+                            <span>Gut</span>
+                            <span id="lblGood" class="text-[11px] font-normal opacity-90 mt-0.5">3 Tage (3)</span>
+                        </button>
+                        <button onclick="rateCard('easy')" class="py-3 px-2 rounded-2xl bg-blue-700 hover:bg-blue-800 text-white font-extrabold text-xs sm:text-sm flex flex-col items-center shadow-sm transition">
+                            <span>Leicht</span>
+                            <span id="lblEasy" class="text-[11px] font-normal opacity-90 mt-0.5">7 Tage (4)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: KI-AUSSPRACHE-COACH (PRONUNCIATION) -->
+        <!-- ========================================== -->
+        <section id="view-pronounce" class="hidden space-y-5 animate-fade-in">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 card-shadow border border-slate-100 space-y-6">
+                
+                <!-- Header & Controls -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                    <div>
+                        <span class="bg-rose-100 text-rose-800 text-xs font-extrabold px-3 py-1 rounded-full">KI PHONETIK-LABOR (pt-BR)</span>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">??? Brasilianischer Aussprache-Trainer</h2>
+                        <p class="text-xs sm:text-sm text-slate-600">H�re dir das Original an, sprich es ins Mikrofon und erhalte pr�zises Feedback zu Klang, Betonung & brasilianischem Akzent.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 shrink-0">
+                        <select id="pronModeSelect" onchange="pickPronunciationTarget()" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
+                            <option value="word">?? Einzelnes Wort �ben</option>
+                            <option value="sentence">??? Ganzen Merksatz �ben</option>
+                        </select>
+                        <button onclick="pickRandomPronTarget()" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold flex items-center gap-1.5 shadow-sm transition">
+                            <i data-lucide="shuffle" class="w-3.5 h-3.5"></i> N�chstes Beispiel
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Target Word / Phrase Display Card -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 text-center space-y-3 relative">
+                    <div class="flex items-center justify-between text-xs text-slate-400 font-bold">
+                        <span id="pronCatBadge" class="bg-white border border-slate-200 px-2.5 py-0.5 rounded-full text-slate-600">Kategorie</span>
+                        <span id="pronLastScoreBadge">Noch nicht gepr�ft</span>
+                    </div>
+
+                    <div id="pronEmoji" class="text-5xl my-1">????</div>
+                    
+                    <div id="pronTargetPt" class="text-2xl sm:text-3xl font-extrabold text-emerald-700 leading-snug">
+                        o p�o de queijo
+                    </div>
+                    <div id="pronTargetPhon" class="text-sm font-mono text-slate-500">[u paung dschi kej-schu]</div>
+                    <div id="pronTargetDe" class="text-sm font-semibold text-slate-700">das brasilianische K�sebr�tchen</div>
+
+                    <div class="pt-3 flex flex-wrap items-center justify-center gap-3">
+                        <button onclick="speakPronTarget(0.95)" class="px-4 py-2.5 rounded-xl bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-200 font-extrabold text-xs flex items-center gap-2 shadow-sm transition">
+                            <i data-lucide="volume-2" class="w-4 h-4"></i> ?? Vorh�ren (Normal)
+                        </button>
+                        <button onclick="speakPronTarget(0.75)" class="px-4 py-2.5 rounded-xl bg-white hover:bg-amber-50 text-amber-900 border border-amber-200 font-bold text-xs flex items-center gap-2 shadow-sm transition">
+                            ?? Langsam (0.75x)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Microphone Recording Area -->
+                <div class="flex flex-col items-center justify-center py-4 space-y-3">
+                    <button id="btnPronRecord" onclick="togglePronunciationRecording()" class="w-20 h-20 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex flex-col items-center justify-center shadow-xl transition transform active:scale-95">
+                        <i data-lucide="mic" class="w-8 h-8"></i>
+                    </button>
+                    <div id="pronStatusText" class="text-sm font-extrabold text-slate-700">
+                        Klicke auf das Mikrofon und sprich den portugiesischen Text
+                    </div>
+                    <div id="pronLiveTranscript" class="text-xs text-slate-500 italic min-h-[18px]"></div>
+                </div>
+
+                <!-- AI Evaluation Result Box -->
+                <div id="pronResultBox" class="hidden border-t border-slate-200 pt-6 space-y-4 animate-fade-in">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                        <div class="flex items-center gap-4">
+                            <div id="pronScoreCircle" class="w-16 h-16 rounded-2xl bg-emerald-600 text-white flex flex-col items-center justify-center font-extrabold shadow-md shrink-0">
+                                <span id="pronScoreVal" class="text-xl">92%</span>
+                                <span class="text-[10px] font-normal opacity-90">Score</span>
+                            </div>
+                            <div>
+                                <div id="pronResultHeadline" class="font-extrabold text-base text-slate-900">Muito bom! Fast wie ein Carioca!</div>
+                                <div class="text-xs text-slate-500 mt-0.5">
+                                    Erkannt / Geh�rt: <strong id="pronHeardText" class="text-slate-800">"..."</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="playRecordedUserAudio()" id="btnPlayOwnAudio" class="hidden px-3.5 py-2 rounded-xl bg-white border border-slate-300 hover:bg-slate-100 text-xs font-bold text-slate-700 items-center gap-1.5 self-start sm:self-center shrink-0">
+                            ?? Eigene Aufnahme anh�ren
+                        </button>
+                    </div>
+
+                    <!-- Word-by-Word Breakdown -->
+                    <div>
+                        <div class="text-xs font-extrabold uppercase text-slate-400 mb-2">Silben- & Wort-Analyse:</div>
+                        <div id="pronWordBreakdown" class="flex flex-wrap gap-2"></div>
+                    </div>
+
+                    <!-- Concrete Coaching Tip -->
+                    <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-xl text-xs sm:text-sm text-slate-800 space-y-1">
+                        <div class="font-extrabold text-amber-950 flex items-center gap-1.5">
+                            <span>???? Brasil-Phonetik-Tipp vom KI-Coach:</span>
+                        </div>
+                        <p id="pronFeedbackDe" class="leading-relaxed text-slate-700"></p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 3: NIVEAU & FORTSCHRITTS-DASHBOARD     -->
+        <!-- ========================================== -->
+        <section id="view-progress" class="hidden space-y-6 animate-fade-in">
+            
+            <!-- Overall Level & Goal Setting Card -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 card-shadow border border-slate-100 space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+                    <div class="flex items-center gap-4">
+                        <div id="dashLevelBadge" class="w-16 h-16 rounded-2xl brazil-gradient text-white flex flex-col items-center justify-center font-extrabold shadow-md shrink-0">
+                            <span class="text-[10px] uppercase tracking-wider opacity-80">Niveau</span>
+                            <span id="dashLevelCode" class="text-2xl">A1.1</span>
+                        </div>
+                        <div>
+                            <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700">Gesamtbeurteilung (GER / CEFR)</span>
+                            <h2 id="dashLevelName" class="text-xl sm:text-2xl font-extrabold text-slate-900">Brasilianischer Basis-Starter</h2>
+                            <p id="dashLevelSub" class="text-xs sm:text-sm text-slate-500">Du baust gerade dein Pareto-Fundament f�r den Alltag auf.</p>
+                        </div>
+                    </div>
+
+                    <!-- Personal Target Selector -->
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 min-w-[240px]">
+                        <label class="block text-[11px] font-extrabold uppercase text-slate-500 mb-1">?? Dein pers�nliches Lernziel:</label>
+                        <select id="userGoalSelect" onchange="saveUserGoal()" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-extrabold text-slate-800 focus:outline-none focus:border-emerald-500">
+                            <option value="30">??? Ziel 1: Urlaubs-Survival (A1.1  ~30 W�rter)</option>
+                            <option value="60" selected>? Ziel 2: Sicher im Alltag & Caf� (A1.2  ~60 W�rter)</option>
+                            <option value="100">??? Ziel 3: Lockere Gespr�che f�hren (A2  ~100 W�rter)</option>
+                            <option value="160">???? Ziel 4: Flie�end im Alltag (B1  ~160 W�rter)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Target Achievement Progress Bar -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between text-xs sm:text-sm font-bold">
+                        <span class="text-slate-700">?? Zielerreichung f�r dein gew�hltes Ziel:</span>
+                        <span id="dashGoalPercent" class="text-emerald-700 font-extrabold">0% erreicht</span>
+                    </div>
+                    <div class="w-full h-4 bg-slate-100 rounded-full overflow-hidden border border-slate-200 p-0.5">
+                        <div id="dashGoalBar" class="level-gradient h-full rounded-full transition-all duration-700" style="width: 10%"></div>
+                    </div>
+                    <div class="flex justify-between text-[11px] text-slate-500 font-semibold">
+                        <span id="dashGoalDetailLeft">0 gemeisterte / aktive W�rter</span>
+                        <span id="dashGoalDetailRight">Ziel: 60 W�rter</span>
+                    </div>
+                </div>
+
+                <!-- Key KPI Metrics Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+                    <div class="bg-emerald-50/70 border border-emerald-200 p-3.5 rounded-2xl">
+                        <div class="text-xs font-bold text-emerald-800">?? Gemeistert (SRS = 2)</div>
+                        <div id="kpiMastered" class="text-2xl font-extrabold text-emerald-700 mt-1">0</div>
+                        <div class="text-[11px] text-emerald-600">Langzeitged�chtnis</div>
+                    </div>
+                    <div class="bg-blue-50/70 border border-blue-200 p-3.5 rounded-2xl">
+                        <div class="text-xs font-bold text-blue-800">?? Im Training (SRS 1)</div>
+                        <div id="kpiLearning" class="text-2xl font-extrabold text-blue-700 mt-1">0</div>
+                        <div class="text-[11px] text-blue-600">Aktiv angefangen</div>
+                    </div>
+                    <div class="bg-rose-50/70 border border-rose-200 p-3.5 rounded-2xl">
+                        <div class="text-xs font-bold text-rose-800">??? Aussprache-Schnitt</div>
+                        <div id="kpiPronAvg" class="text-2xl font-extrabold text-rose-700 mt-1">--%</div>
+                        <div id="kpiPronCount" class="text-[11px] text-rose-600">0 W�rter gepr�ft</div>
+                    </div>
+                    <div class="bg-amber-50/70 border border-amber-200 p-3.5 rounded-2xl">
+                        <div class="text-xs font-bold text-amber-900">?? Gesamter Wortschatz</div>
+                        <div id="kpiTotalCards" class="text-2xl font-extrabold text-amber-700 mt-1">0</div>
+                        <div class="text-[11px] text-amber-700">Inkl. KI-Entdeckungen</div>
+                    </div>
+                </div>
+
+                <!-- AI Overall Assessment Generator -->
+                <div class="bg-slate-900 text-white rounded-2xl p-5 space-y-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h3 class="font-extrabold text-sm sm:text-base flex items-center gap-2">
+                                <span>?? Pers�nliche KI-Gesamtbeurteilung & Lernplan</span>
+                            </h3>
+                            <p class="text-xs text-slate-300">Lass die KI deinen aktuellen Stand nach Themengebieten analysieren und dir sagen, worauf du dich als N�chstes fokussieren solltest.</p>
+                        </div>
+                        <button onclick="generateAiAssessment()" id="btnAiAssessment" class="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs shrink-0 transition shadow-sm">
+                            ? Beurteilung erstellen
+                        </button>
+                    </div>
+                    <div id="aiAssessmentOutput" class="hidden text-xs sm:text-sm text-slate-100 bg-slate-800/90 border border-slate-700 rounded-xl p-4 leading-relaxed space-y-2"></div>
+                </div>
+            </div>
+
+            <!-- Breakdown by Topic Areas (Untergliederung nach Themengebieten) -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 card-shadow border border-slate-100 space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">?? Niveau & Zielerreichung nach Themengebieten</h3>
+                        <p class="text-xs text-slate-500">Jedes Themengebiet hat eigene Meilensteine (Gr�n = Gemeistert, Blau = Im Training, Grau = Noch offen).</p>
+                    </div>
+                </div>
+
+                <div id="topicBreakdownGrid" class="grid sm:grid-cols-2 gap-4">
+                    <!-- Dynamically populated topic cards -->
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 4: KI VOKABEL-FINDER & MANUELLER ADD   -->
+        <!-- ========================================== -->
+        <section id="view-discover" class="hidden space-y-6 animate-fade-in">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 card-shadow border border-slate-100">
+                <div class="flex items-start justify-between gap-4 mb-6">
+                    <div>
+                        <span class="bg-amber-100 text-amber-800 text-xs font-extrabold px-3 py-1 rounded-full">PARETO KI-GENERATOR</span>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">? Neue Vokabeln aktiv per KI suchen</h2>
+                        <p class="text-sm text-slate-600 mt-1">
+                            Die KI gleicht automatisch deine <strong id="discoverExistingCount">0</strong> gespeicherten W�rter ab und sucht dir garantiert <strong>neue, hochfrequente Vokabeln</strong> (inkl. Lautschrift & Eselsbr�cke) heraus.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4 mb-5">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1.5">Themenbereich ausw�hlen</label>
+                        <select id="aiCategorySelect" onchange="toggleCustomTopicInput()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        </select>
+                    </div>
+                    <div id="customTopicWrapper" class="hidden">
+                        <label class="block text-xs font-bold uppercase text-emerald-700 mb-1.5">Neues Wunsch-Thema eingeben</label>
+                        <input type="text" id="aiCustomTopic" placeholder="z.B. Flirten, Fu�ball, Strandbar, Homeoffice, Katzen..." class="w-full bg-white border-2 border-emerald-500 rounded-xl px-3.5 py-2.5 text-sm font-semibold focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1.5">Spezieller Fokus / Niveau (Optional)</label>
+                        <input type="text" id="aiFocusInput" placeholder="z.B. A1 Anf�nger, Umgangssprache in Rio, Verben..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1.5">Anzahl neuer Vokabeln</label>
+                        <select id="aiCountSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-sm font-bold text-slate-800">
+                            <option value="5">5 neue Pareto-Vokabeln (Schnell)</option>
+                            <option value="8" selected>8 neue Pareto-Vokabeln (Optimal)</option>
+                            <option value="12">12 neue Pareto-Vokabeln (Intensiv)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="btnGenerateVocab" onclick="generateNewVocabViaAI()" class="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-base shadow-lg transition flex items-center justify-center gap-2">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                    <span>Jetzt neue Vokabeln suchen & dauerhaft im Deck speichern</span>
+                </button>
+
+                <!-- AI Generation Status / Results Preview -->
+                <div id="aiDiscoverStatus" class="hidden mt-6 p-5 rounded-2xl bg-slate-50 border border-slate-200 text-center">
+                    <div class="inline-block w-7 h-7 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mb-2"></div>
+                    <p class="text-sm font-bold text-slate-800" id="aiStatusText">KI durchsucht den brasilianischen Alltagswortschatz und speichert neue Karten...</p>
+                </div>
+
+                <div id="aiGeneratedListWrapper" class="hidden mt-6 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-extrabold text-slate-800 text-sm uppercase tracking-wider">?? Frisch gespeicherte Vokabeln (Sofort lernbereit):</h3>
+                        <button onclick="switchTab('trainer')" class="text-xs font-bold text-emerald-700 hover:underline flex items-center gap-1">
+                            Jetzt im Trainer �ben <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                    <div id="aiGeneratedList" class="grid sm:grid-cols-2 gap-3"></div>
+                </div>
+            </div>
+
+            <!-- Manual Card Addition Box (Fixed & Enhanced) -->
+            <div class="bg-white rounded-3xl p-6 card-shadow border border-slate-100">
+                <h3 class="font-extrabold text-base text-slate-800 mb-4 flex items-center gap-2">
+                    <i data-lucide="plus-circle" class="w-5 h-5 text-emerald-600"></i> Eigene Vokabel manuell eintragen
+                </h3>
+                <div class="grid sm:grid-cols-3 gap-3 mb-3">
+                    <input type="text" id="newDe" placeholder="Deutsch * (z.B. die H�ngematte)" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-semibold">
+                    <input type="text" id="newPt" placeholder="Portugiesisch * (z.B. a rede)" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-semibold">
+                    <input type="text" id="newPhon" placeholder="Lautschrift (z.B. [a h�-dschi])" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
+                </div>
+                <div class="grid sm:grid-cols-3 gap-3 mb-3">
+                    <select id="newCat" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-semibold"></select>
+                    <input type="text" id="newVisual" placeholder="Emoji (z.B. ??)" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
+                    <input type="text" id="newSentPt" placeholder="Merksatz Portugiesisch" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <input type="text" id="newSentDe" placeholder="Merksatz �bersetzung (Deutsch)" class="flex-grow bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm">
+                    <button onclick="addNewCardManual()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm rounded-xl shrink-0 shadow-sm">
+                        ? Vokabel speichern
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 5: GESPR�CHS-SIMULATOR (REALISTIC CHAT)-->
+        <!-- ========================================== -->
+        <section id="view-chat" class="hidden space-y-4 animate-fade-in">
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <h2 class="font-extrabold text-base sm:text-lg text-slate-900 flex items-center gap-2">
+                            <span>?? Realistischer Gespr�chs-Simulator</span>
+                            <span class="text-xs bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-full font-bold">Inkl. Fehler-Korrektur</span>
+                        </h2>
+                        <p class="text-xs text-slate-500">Schreibe oder sprich auf Portugiesisch (einzelne deutsche W�rter sind erlaubt, wenn dir eins fehlt!).</p>
+                    </div>
+                    <button onclick="startNewConversation()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-1.5 self-start sm:self-auto shrink-0">
+                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Szene neu starten
+                    </button>
+                </div>
+
+                <div class="grid sm:grid-cols-3 gap-2.5">
+                    <div class="sm:col-span-2">
+                        <select id="scenarioSelect" onchange="onScenarioChange()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="cafe">? Im Caf� in Rio: P�o de Queijo & Kaffee bestellen</option>
+                            <option value="smalltalk">??? Lockerer Smalltalk: �ber Alltag, Arbeit, Katze & Training</option>
+                            <option value="beach">??? Am Strand von Ipanema: Kokosnuss & Sonnenschirm mieten</option>
+                            <option value="market">?? Im Supermarkt / Feira: Nach frischen Lebensmitteln fragen</option>
+                            <option value="uber">?? Im Uber in S�o Paulo: Lockeres Gespr�ch mit dem Fahrer</option>
+                            <option value="custom">? Eigenes Szenario frei definieren...</option>
+                        </select>
+                    </div>
+                    <div id="customScenarioBox" class="hidden sm:col-span-3 flex gap-2">
+                        <input type="text" id="customScenarioInput" placeholder="Beschreibe die Situation (z.B. Tisch im Restaurant f�r 2 Personen reservieren)..." class="flex-grow bg-white border-2 border-blue-500 rounded-xl px-3.5 py-2 text-sm">
+                        <button onclick="startNewConversation()" class="px-4 py-2 bg-blue-600 text-white font-bold text-xs rounded-xl shrink-0">Starten</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Window -->
+            <div class="bg-white rounded-3xl card-shadow border border-slate-200 flex flex-col h-[500px] overflow-hidden">
+                <div id="chatMessages" class="flex-grow p-4 sm:p-6 overflow-y-auto space-y-4 bg-slate-50/60"></div>
+
+                <div id="chatHintBox" class="hidden bg-amber-50 border-t border-amber-200 px-4 py-2.5 text-xs">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-extrabold text-amber-900">?? Satz-Hilfe (Klicke auf einen Vorschlag zum �bernehmen):</span>
+                        <button onclick="document.getElementById('chatHintBox').classList.add('hidden')" class="text-amber-700 font-bold">?</button>
+                    </div>
+                    <div id="chatHintOptions" class="flex flex-wrap gap-1.5"></div>
+                </div>
+
+                <div class="p-3 sm:p-4 bg-white border-t border-slate-200">
+                    <div class="flex items-center gap-2">
+                        <button onclick="requestChatHint()" id="btnHint" class="p-2.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs flex items-center gap-1 shrink-0 transition" title="Was kann ich antworten?">
+                            <i data-lucide="lightbulb" class="w-4 h-4"></i> <span class="hidden sm:inline">Hilfe</span>
+                        </button>
+                        <button onclick="toggleSpeechRecognition()" id="btnMic" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center shrink-0 transition" title="Auf Portugiesisch einsprechen">
+                            <i data-lucide="mic" class="w-4 h-4"></i>
+                        </button>
+                        <input type="text" id="chatInput" onkeydown="if(event.key==='Enter') sendChatMessage()" placeholder="Antworte auf Portugiesisch (oder gemischt mit Deutsch)..." class="flex-grow bg-slate-100 focus:bg-white border border-slate-200 focus:border-emerald-500 rounded-xl px-4 py-2.5 text-sm focus:outline-none">
+                        <button onclick="sendChatMessage()" id="btnSendChat" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm flex items-center gap-1.5 shrink-0 transition shadow-sm">
+                            <span>Senden</span>
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 6: EINSTELLUNGEN, AUDIO & BACKUP       -->
+        <!-- ========================================== -->
+        <section id="view-settings" class="hidden space-y-6 animate-fade-in">
+            
+            <!-- Standalone Web & API Key Configuration -->
+            <div class="bg-white rounded-3xl p-6 card-shadow border border-slate-100 space-y-4">
+                <div class="flex items-start justify-between gap-3 flex-wrap">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
+                            <i data-lucide="key" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h2 class="font-extrabold text-lg text-slate-900">?? Standalone KI-Verbindung & Web-Hosting</h2>
+                            <p class="text-xs text-slate-500">Damit KI-Vokabelsuche, Aussprache-Coach & Dialoge auch au�erhalb des Chats auf deinem Handy/PC laufen.</p>
+                        </div>
+                    </div>
+                    <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-xl transition">
+                        ? Kostenlosen Gemini Key holen
+                    </a>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-2.5">
+                    <input type="password" id="settingsApiKeyInput" placeholder="Optional im Chat  F�r eigene Webseite/Handy hier Gemini API-Key (AIzaSy...) eintragen" class="flex-grow bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <button onclick="toggleShowApiKey()" class="px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs shrink-0">??? Zeigen</button>
+                    <button onclick="saveUserApiKey()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shrink-0 shadow-sm">Key speichern</button>
+                    <button onclick="clearUserApiKey()" class="px-3 py-2.5 rounded-xl border border-slate-200 hover:bg-rose-50 hover:text-rose-600 text-slate-500 font-bold text-xs shrink-0">L�schen</button>
+                </div>
+            </div>
+
+            <!-- Backup, Export & Import -->
+            <div class="bg-white rounded-3xl p-6 card-shadow border border-slate-100 space-y-4">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center">
+                        <i data-lucide="hard-drive-download" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-extrabold text-lg text-slate-900">?? Backup, Synchronisation & App-Download</h2>
+                        <p class="text-xs text-slate-500">Dein Lernstand wird sofort im Browser (`localStorage`) gespeichert. Hier kannst du ihn als Datei sichern.</p>
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-3 gap-3">
+                    <button onclick="exportBackupJson()" class="p-3.5 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 text-left transition group">
+                        <div class="font-extrabold text-sm text-slate-900 group-hover:text-emerald-800">?? Backup speichern (.json)</div>
+                        <p class="text-[11px] text-slate-500 mt-1">Sichert alle Vokabeln, Aussprache-Scores & SRS-Stufen.</p>
+                    </button>
+
+                    <label class="p-3.5 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-blue-50 hover:border-blue-300 text-left transition cursor-pointer group block">
+                        <div class="font-extrabold text-sm text-slate-900 group-hover:text-blue-800">?? Backup laden (.json)</div>
+                        <p class="text-[11px] text-slate-500 mt-1">Stellt deinen Lernstand auf dem Handy oder PC wieder her.</p>
+                        <input type="file" id="importBackupInput" accept=".json" onchange="importBackupJson(event)" class="hidden">
+                    </label>
+
+                    <button onclick="downloadStandaloneHtml()" class="p-3.5 rounded-2xl border border-emerald-300 bg-emerald-50/70 hover:bg-emerald-100 text-left transition group">
+                        <div class="font-extrabold text-sm text-emerald-900">?? App herunterladen (.html)</div>
+                        <p class="text-[11px] text-emerald-700 mt-1">L�dt diese komplette Web-App als `index.html` herunter.</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Audio Settings -->
+            <div class="bg-white rounded-3xl p-6 card-shadow border border-slate-100 space-y-4">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                        <i data-lucide="volume-2" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-extrabold text-lg text-slate-900">Brasilianische Sprachausgabe (Audio-Engine)</h2>
+                        <p class="text-xs text-slate-500">W�hle zwischen echter Gemini-KI-Stimme oder System-Stimme.</p>
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Bevorzugte Sprach-Engine</label>
+                        <select id="voiceEngineSelect" onchange="saveAudioSettings()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-bold">
+                            <option value="gemini">? Gemini Native KI-Stimme (Sehr nat�rlich)</option>
+                            <option value="auto">? Beste Browser-Stimme (Sofortige Wiedergabe)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">System-Fallback-Stimme (pt-BR)</label>
+                        <select id="specificVoiceSelect" onchange="saveAudioSettings()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm"></select>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between gap-4 pt-2">
+                    <div class="flex-grow">
+                        <label class="block text-xs font-bold text-slate-600">Sprechgeschwindigkeit: <span id="rateVal">0.95</span>x</label>
+                        <input type="range" id="voiceRate" min="0.75" max="1.15" step="0.05" value="0.95" oninput="document.getElementById('rateVal').innerText=this.value; saveAudioSettings();" class="w-full accent-emerald-600 mt-1">
+                    </div>
+                    <button onclick="speakText('Oi, tudo bem? Agora minha pron�ncia brasileira est� super natural!')" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shrink-0">
+                        ??? Stimme testen
+                    </button>
+                </div>
+            </div>
+
+            <!-- SRS Settings -->
+            <div class="bg-white rounded-3xl p-6 card-shadow border border-slate-100 space-y-4">
+                <h2 class="font-extrabold text-lg text-slate-900">?? Spaced Repetition (SRS) Intervalle</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">Schwer (Tage)</label>
+                        <input type="number" id="setHard" min="1" value="1" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">Gut (Tage)</label>
+                        <input type="number" id="setGood" min="1" value="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">Leicht (Tage)</label>
+                        <input type="number" id="setEasy" min="1" value="7" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">Wachstums-Faktor</label>
+                        <input type="number" id="setFactor" step="0.1" min="1.2" value="2.0" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-bold">
+                    </div>
+                </div>
+                <button onclick="saveSrsSettings()" class="px-5 py-2.5 bg-slate-900 text-white font-bold text-xs rounded-xl">Intervalle speichern</button>
+            </div>
+
+            <!-- Deck Overview & Reset -->
+            <div class="bg-white rounded-3xl p-6 card-shadow border border-slate-100 space-y-4">
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                    <div>
+                        <h2 class="font-extrabold text-lg text-slate-900">?? Gespeicherter Wortschatz (<span id="deckTotalCount">0</span> W�rter)</h2>
+                        <p class="text-xs text-slate-500">Alle W�rter inkl. eigener Eintr�ge und KI-W�rter.</p>
+                    </div>
+                    <button onclick="resetDeckConfirm()" class="px-3 py-2 rounded-xl border border-rose-200 text-rose-600 hover:bg-rose-50 text-xs font-bold">
+                        Auf Basis-Deck zur�cksetzen
+                    </button>
+                </div>
+                <div id="deckListContainer" class="max-h-72 overflow-y-auto divide-y divide-slate-100 border border-slate-100 rounded-2xl p-2 text-xs"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // ============================================================================
+        // 1. CONFIGURATION & STARTER PARETO VOCABULARY DECK
+        // ============================================================================
+        const apiKey = ""; // Vom Canvas zur Laufzeit bereitgestellt
+        let userCustomApiKey = "";
+
+        const defaultCategories = [
+            "Alle",
+            "?? Essen & Supermarkt",
+            "? Restaurant & Caf�",
+            "??? Echt Brasilianisch (Slang & Alltag)",
+            "? Power-Verben & Struktur",
+            "?? K�rper, Training & Erholung",
+            "?? Reise, Orientierung & Notfall"
+        ];
+
+        const starterVocab = [
+            { id: 1, cat: "?? Essen & Supermarkt", de: "die Haferflocken", pt: "a aveia", phon: "[a a-wej-a]", visual: "??", kw: "oats", sentPt: "Minha aveia com mirtilos parece cimento, mas d� muita for�a!", sentDe: "Meine Haferflocken mit Blaubeeren sehen aus wie Zement, geben aber viel Kraft!" },
+            { id: 2, cat: "?? Essen & Supermarkt", de: "die Blaubeeren", pt: "os mirtilos", phon: "[us mir-tschi-lus]", visual: "??", kw: "blueberries", sentPt: "Comi tantos mirtilos que minha l�ngua ficou azul como um Smurf.", sentDe: "Ich habe so viele Blaubeeren gegessen, dass meine Zunge blau wie ein Schlumpf wurde." },
+            { id: 3, cat: "?? Essen & Supermarkt", de: "der K�se", pt: "o queijo", phon: "[u kej-schu]", visual: "??", kw: "cheese", sentPt: "Duas fatias de queijo resolvem 90% dos meus problemas.", sentDe: "Zwei Scheiben K�se l�sen 90 % meiner Probleme." },
+            { id: 4, cat: "?? Essen & Supermarkt", de: "das Kn�ckebrot / der Cracker", pt: "a torrada / o biscoito salgado", phon: "[a to-ha-da]", visual: "??", kw: "crackers", sentPt: "Minha torrada fez tanto barulho que acordou o gato.", sentDe: "Mein Kn�ckebrot hat so laut gekracht, dass es die Katze geweckt hat." },
+            { id: 5, cat: "?? Essen & Supermarkt", de: "der Naturjoghurt", pt: "o iogurte natural", phon: "[u jo-gur-tschi na-tu-rau]", visual: "??", kw: "yogurt", sentPt: "Iogurte natural � noite � o segredo dos campe�es.", sentDe: "Naturjoghurt am Abend ist das Geheimnis der Champions." },
+            { id: 6, cat: "?? Essen & Supermarkt", de: "der Reis mit Bohnen", pt: "o arroz com feij�o", phon: "[u a-hojs kom fej-schaung]", visual: "??", kw: "rice beans", sentPt: "Arroz com feij�o � a verdadeira religi�o do Brasil.", sentDe: "Reis mit Bohnen ist die wahre Religion Brasiliens." },
+
+            { id: 7, cat: "? Restaurant & Caf�", de: "die Rechnung, bitte", pt: "a conta, por favor", phon: "[a kon-ta, pur fa-wor]", visual: "??", kw: "receipt", sentPt: "Gar�om, traz a conta antes que eu pe�a mais uma sobremesa!", sentDe: "Kellner, bring die Rechnung, bevor ich noch ein Dessert bestelle!" },
+            { id: 8, cat: "? Restaurant & Caf�", de: "stilles Wasser / mit Gas", pt: "�gua sem g�s / com g�s", phon: "[a-gua seng gas]", visual: "??", kw: "water glass", sentPt: "No calor do Rio, bebo tr�s litros de �gua sem g�s por hora.", sentDe: "In der Hitze von Rio trinke ich drei Liter stilles Wasser pro Stunde." },
+            { id: 9, cat: "? Restaurant & Caf�", de: "das brasilianische K�sebr�tchen", pt: "o p�o de queijo", phon: "[u paung dschi kej-schu]", visual: "??", kw: "cheese bread", sentPt: "� imposs�vel comer apenas um p�o de queijo, � uma armadilha!", sentDe: "Es ist unm�glich, nur ein P�o de Queijo zu essen - es ist eine Falle!" },
+            { id: 10, cat: "? Restaurant & Caf�", de: "lecker / k�stlich", pt: "gostoso / uma del�cia", phon: "[gos-to-su / u-ma de-li-sja]", visual: "??", kw: "delicious food", sentPt: "Isso aqui est� t�o gostoso que quase chorei na mesa.", sentDe: "Das hier ist so lecker, dass ich am Tisch fast geweint h�tte." },
+            { id: 11, cat: "? Restaurant & Caf�", de: "mit Karte (Kredit / Debit)", pt: "no cart�o (cr�dito / d�bito)", phon: "[nu kar-taung]", visual: "??", kw: "credit card", sentPt: "No Brasil, at� o coco na praia voc� paga no cart�o.", sentDe: "In Brasilien zahlst du selbst die Kokosnuss am Strand mit Karte." },
+
+            { id: 12, cat: "??? Echt Brasilianisch (Slang & Alltag)", de: "Alles gut? / Alles klar!", pt: "Tudo bem? / Tudo bom!", phon: "[tu-du beng / tu-du bong]", visual: "??", kw: "brazil beach", sentPt: ""Tudo bem?" funciona como oi, como vai e at� como tchau.", sentDe: ""Tudo bem?" funktioniert als Hallo, Wie geht's und sogar als Tsch�ss." },
+            { id: 13, cat: "??? Echt Brasilianisch (Slang & Alltag)", de: "Cool / Super / Abgemacht!", pt: "Legal! / Beleza!", phon: "[le-gau / be-le-sa]", visual: "??", kw: "sunglasses", sentPt: "Nos vemos �s tr�s horas? - Beleza, combinado!", sentDe: "Sehen wir uns um drei Uhr? - Alles klar, abgemacht!" },
+            { id: 14, cat: "??? Echt Brasilianisch (Slang & Alltag)", de: "Wir (im echten Alltag)", pt: "a gente (statt 'n�s')", phon: "[a schen-tschi]", visual: "????????", kw: "friends", sentPt: "Brasileiro quase n�o diz "n�s", a gente fala "a gente"!", sentDe: "Brasilianer sagen fast nie "n�s", wir sagen "a gente"!" },
+            { id: 15, cat: "??? Echt Brasilianisch (Slang & Alltag)", de: "Kein Problem / Alles entspannt", pt: "De boa / Tranquilo", phon: "[dschi bo-a / tran-kwi-lu]", visual: "??", kw: "hammock", sentPt: "Sem estresse, hoje eu s� quero ficar de boa.", sentDe: "Kein Stress, heute will ich einfach nur entspannt bleiben." },
+            { id: 16, cat: "??? Echt Brasilianisch (Slang & Alltag)", de: "Kannst du langsamer sprechen?", pt: "Pode falar mais devagar?", phon: "[po-dschi fa-lar majs de-wa-gar]", visual: "??", kw: "turtle", sentPt: "Calma, amigo! Pode falar mais devagar? Meu c�rebro ainda est� em alem�o.", sentDe: "Ruhig, mein Freund! Kannst du langsamer sprechen? Mein Gehirn ist noch auf Deutsch." },
+            { id: 17, cat: "??? Echt Brasilianisch (Slang & Alltag)", de: "Auf geht's! / Lass uns!", pt: "Bora! / Vamos!", phon: "[bo-ra / wa-mus]", visual: "??", kw: "rocket", sentPt: "Bora tomar um caf� antes que eu durma na cadeira!", sentDe: "Auf geht's, lass uns einen Kaffee trinken, bevor ich auf dem Stuhl einschlafe!" },
+
+            { id: 18, cat: "? Power-Verben & Struktur", de: "ich will / ich brauche", pt: "eu quero / eu preciso de", phon: "[eu k�-ru / pre-si-su dschi]", visual: "??", kw: "target", sentPt: "Hoje eu s� quero paz e preciso de um caf� forte.", sentDe: "Heute will ich nur Ruhe und brauche einen starken Kaffee." },
+            { id: 19, cat: "? Power-Verben & Struktur", de: "es gibt / hat", pt: "tem", phon: "[teng]", visual: "??", kw: "box", sentPt: "Tem Wi-Fi gr�tis aqui ou preciso conversar com as pessoas?", sentDe: "Gibt es hier kostenloses WLAN oder muss ich mit den Leuten reden?" },
+            { id: 20, cat: "? Power-Verben & Struktur", de: "ich bin gerade (Zustand / Ort)", pt: "eu estou (kurz: t�)", phon: "[eu is-tou / to]", visual: "??", kw: "map pin", sentPt: "T� chegando em cinco minutos! (Mentira, ainda t� em casa).", sentDe: "Ich bin in f�nf Minuten da! (L�ge, ich bin noch zu Hause)." },
+            { id: 21, cat: "? Power-Verben & Struktur", de: "ich werde (Zukunft bauen)", pt: "eu vou + [Verb]", phon: "[eu wou]", visual: "??", kw: "road", sentPt: "Mais tarde eu vou caminhar meia hora ao ar livre.", sentDe: "Sp�ter werde ich eine halbe Stunde an der frischen Luft spazieren gehen." },
+
+            { id: 22, cat: "?? K�rper, Training & Erholung", de: "die Klimmzugstange", pt: "a barra fixa", phon: "[a ba-ha fik-sa]", visual: "?????", kw: "pullup", sentPt: "Fazer barra fixa em casa � �timo at� o gato pular nas suas costas.", sentDe: "Zuhause Klimmz�ge zu machen ist super, bis die Katze auf deinen R�cken springt." },
+            { id: 23, cat: "?? K�rper, Training & Erholung", de: "spazieren gehen", pt: "caminhar / dar uma volta", phon: "[ka-min-jar / dar u-ma wol-ta]", visual: "????", kw: "walking park", sentPt: "Depois do escrit�rio, preciso dar uma volta para n�o enferrujar.", sentDe: "Nach dem B�ro muss ich eine Runde spazieren gehen, um nicht einzurosten." },
+            { id: 24, cat: "?? K�rper, Training & Erholung", de: "der Schlaf / gut schlafen", pt: "o sono / dormir bem", phon: "[u so-nu / dor-mir beng]", visual: "??", kw: "sleeping", sentPt: "Meu anel inteligente disse que meu sono hoje foi nota dez!", sentDe: "Mein Smart-Ring hat gesagt, mein Schlaf war heute eine glatte Zehn!" },
+
+            { id: 25, cat: "?? Reise, Orientierung & Notfall", de: "Wo ist...?", pt: "Onde fica...?", phon: "[on-dschi fi-ka]", visual: "???", kw: "map", sentPt: "Socorro, onde fica o banheiro mais pr�ximo?!", sentDe: "Hilfe, wo ist die n�chste Toilette?!" },
+            { id: 26, cat: "?? Reise, Orientierung & Notfall", de: "Wie viel kostet das?", pt: "Quanto custa isso?", phon: "[kwan-tu kus-ta i-su]", visual: "???", kw: "price", sentPt: "Quanto custa? Se for pre�o para turista, eu choro!", sentDe: "Wie viel kostet das? Wenn es der Touristenpreis ist, weine ich!" },
+            { id: 27, cat: "?? Reise, Orientierung & Notfall", de: "die Katze", pt: "o gato", phon: "[u ga-tu]", visual: "??", kw: "cat", sentPt: "O gato ocupa metade da cama e eu durmo na beirada.", sentDe: "Die Katze nimmt das halbe Bett ein und ich schlafe an der Kante." },
+            { id: 28, cat: "?? Reise, Orientierung & Notfall", de: "der Strand", pt: "a praia", phon: "[a praj-a]", visual: "???", kw: "beach", sentPt: "A reuni�o foi cancelada por motivo de: fui � praia.", sentDe: "Das Meeting wurde abgesagt wegen: Ich bin zum Strand gegangen." }
+        ];
+
+        // State Variables
+        let vocabList = [];
+        let customCategories = [];
+        let srsSettings = { hard: 1, good: 3, easy: 7, factor: 2.0 };
+        let audioSettings = { engine: 'auto', voiceURI: '', rate: 0.95 };
+        let userGoalTarget = 60;
+        let showPhotos = true;
+        let currentCard = null;
+        let currentCategory = "Alle";
+        let availableVoices = [];
+        let ttsAudioCache = {};
+
+        // Pronunciation Coach State
+        let pronTargetCard = null;
+        let isPronRecording = false;
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let lastRecordedBlobUrl = null;
+        let pronSpeechRec = null;
+        let pronLiveText = "";
+
+        // Chat Simulator State
+        let chatHistory = [];
+        let currentScenarioKey = 'cafe';
+        let isRecording = false;
+        let recognition = null;
+
+        // ============================================================================
+        // 2. INITIALIZATION & ROBUST STORAGE
+        // ============================================================================
+        function init() {
+            lucide.createIcons();
+
+            const savedCustomCats = localStorage.getItem('ptBrCustomCatsV4');
+            if (savedCustomCats) {
+                try { customCategories = JSON.parse(savedCustomCats); } catch(e) { customCategories = []; }
+            }
+
+            const savedVocab = localStorage.getItem('ptBrVocabV3');
+            if (savedVocab) {
+                try { vocabList = JSON.parse(savedVocab); } catch (e) { vocabList = []; }
+            }
+            if (!vocabList || vocabList.length === 0) {
+                const v2 = localStorage.getItem('ptBrVocabV2');
+                if (v2) {
+                    try { vocabList = JSON.parse(v2); } catch(e) {}
+                }
+                if (!vocabList || vocabList.length === 0) {
+                    vocabList = starterVocab.map(v => ({
+                        ...v,
+                        dueDate: Date.now(),
+                        interval: 0,
+                        reps: 0,
+                        pronScore: null
+                    }));
+                }
+                saveData();
+            }
+
+            const savedGoal = localStorage.getItem('ptBrUserGoalV4');
+            if (savedGoal) {
+                userGoalTarget = parseInt(savedGoal, 10) || 60;
+                document.getElementById('userGoalSelect').value = String(userGoalTarget);
+            }
+
+            const savedSrs = localStorage.getItem('ptBrSettingsV3');
+            if (savedSrs) {
+                try {
+                    srsSettings = JSON.parse(savedSrs);
+                    document.getElementById('setHard').value = srsSettings.hard;
+                    document.getElementById('setGood').value = srsSettings.good;
+                    document.getElementById('setEasy').value = srsSettings.easy;
+                    document.getElementById('setFactor').value = srsSettings.factor;
+                } catch(e) {}
+            }
+
+            const savedAudio = localStorage.getItem('ptBrAudioV3');
+            if (savedAudio) {
+                try {
+                    audioSettings = JSON.parse(savedAudio);
+                    document.getElementById('voiceEngineSelect').value = audioSettings.engine;
+                    document.getElementById('voiceRate').value = audioSettings.rate;
+                    document.getElementById('rateVal').innerText = audioSettings.rate;
+                } catch(e) {}
+            }
+
+            const savedUserKey = localStorage.getItem('ptBrUserApiKey');
+            if (savedUserKey) {
+                userCustomApiKey = savedUserKey.trim();
+                document.getElementById('settingsApiKeyInput').value = userCustomApiKey;
+                document.getElementById('modalApiKeyInput').value = userCustomApiKey;
+            }
+            updateApiKeyStatusBadge();
+
+            populateCategoryDropdowns();
+            updateLevelAndProgressUI();
+            initVoices();
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.onvoiceschanged = initVoices;
+            }
+
+            // Keyboard Shortcuts for Trainer
+            document.addEventListener('keydown', (e) => {
+                const isTrainerVisible = !document.getElementById('view-trainer').classList.contains('hidden');
+                const isModalOpen = !document.getElementById('quickAddModal').classList.contains('hidden') || !document.getElementById('apiKeyModal').classList.contains('hidden');
+                if (!isTrainerVisible || isModalOpen || ['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) return;
+
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    if (!document.getElementById('btnShow').classList.contains('hidden')) showAnswer();
+                } else if (!document.getElementById('srsButtons').classList.contains('hidden')) {
+                    if (e.key === '1') rateCard('again');
+                    if (e.key === '2') rateCard('hard');
+                    if (e.key === '3') rateCard('good');
+                    if (e.key === '4') rateCard('easy');
+                }
+            });
+
+            loadNextCard();
+            pickPronunciationTarget(vocabList[0]);
+            startNewConversation();
+            renderDeckManager();
+        }
+
+        function saveData() {
+            localStorage.setItem('ptBrVocabV3', JSON.stringify(vocabList));
+            localStorage.setItem('ptBrCustomCatsV4', JSON.stringify(customCategories));
+            const countEl = document.getElementById('discoverExistingCount');
+            const deckCountEl = document.getElementById('deckTotalCount');
+            if (countEl) countEl.innerText = vocabList.length;
+            if (deckCountEl) deckCountEl.innerText = vocabList.length;
+            updateLevelAndProgressUI();
+        }
+
+        function getAllCategories() {
+            const dynamicCats = new Set(defaultCategories);
+            customCategories.forEach(c => { if (c) dynamicCats.add(c); });
+            vocabList.forEach(v => { if (v.cat) dynamicCats.add(v.cat); });
+            return Array.from(dynamicCats);
+        }
+
+        function ensureCategoryRegistered(catName) {
+            if (!catName || catName === 'Alle') return;
+            if (!defaultCategories.includes(catName) && !customCategories.includes(catName)) {
+                customCategories.push(catName);
+            }
+        }
+
+        function populateCategoryDropdowns() {
+            const allCats = getAllCategories();
+            const trainerSel = document.getElementById('categorySelect');
+            const aiSel = document.getElementById('aiCategorySelect');
+            const newCatSel = document.getElementById('newCat');
+            const modalCatSel = document.getElementById('modalCat');
+
+            const prevTrainer = currentCategory || trainerSel.value || "Alle";
+            const prevAi = aiSel.value;
+            const prevNew = newCatSel.value;
+
+            trainerSel.innerHTML = '';
+            aiSel.innerHTML = '';
+            newCatSel.innerHTML = '';
+            if (modalCatSel) modalCatSel.innerHTML = '';
+
+            allCats.forEach(c => {
+                const count = c === 'Alle' ? vocabList.length : vocabList.filter(v => v.cat === c).length;
+                const optTrainer = document.createElement('option');
+                optTrainer.value = c;
+                optTrainer.textContent = c === 'Alle' ? `?? Alle Bereiche (${count} W�rter)` : `${c} (${count})`;
+                trainerSel.appendChild(optTrainer);
+
+                if (c !== 'Alle') {
+                    const optAi = document.createElement('option');
+                    optAi.value = c;
+                    optAi.textContent = `${c} (${count})`;
+                    aiSel.appendChild(optAi);
+
+                    const optNew = document.createElement('option');
+                    optNew.value = c;
+                    optNew.textContent = c;
+                    newCatSel.appendChild(optNew);
+
+                    if (modalCatSel) {
+                        const optModal = document.createElement('option');
+                        optModal.value = c;
+                        optModal.textContent = c;
+                        modalCatSel.appendChild(optModal);
+                    }
+                }
+            });
+
+            const customOptAi = document.createElement('option');
+            customOptAi.value = '__custom__';
+            customOptAi.textContent = '? Eigenes Wunsch-Thema neu anlegen...';
+            aiSel.appendChild(customOptAi);
+
+            if (modalCatSel) {
+                const customOptModal = document.createElement('option');
+                customOptModal.value = '__custom__';
+                customOptModal.textContent = '? Neuen Themenbereich erstellen...';
+                modalCatSel.appendChild(customOptModal);
+            }
+
+            trainerSel.value = allCats.includes(prevTrainer) ? prevTrainer : "Alle";
+            if (prevAi && Array.from(aiSel.options).some(o => o.value === prevAi)) aiSel.value = prevAi;
+            if (prevNew && Array.from(newCatSel.options).some(o => o.value === prevNew)) newCatSel.value = prevNew;
+
+            document.getElementById('discoverExistingCount').innerText = vocabList.length;
+            document.getElementById('deckTotalCount').innerText = vocabList.length;
+        }
+
+        function showToast(msg, icon = "?") {
+            const t = document.getElementById('toast');
+            document.getElementById('toastIcon').innerText = icon;
+            document.getElementById('toastMsg').innerText = msg;
+            t.classList.remove('hidden');
+            clearTimeout(window.__toastTimer);
+            window.__toastTimer = setTimeout(() => t.classList.add('hidden'), 3800);
+        }
+
+        function switchTab(tab) {
+            ['trainer', 'pronounce', 'progress', 'discover', 'chat', 'settings'].forEach(t => {
+                const viewEl = document.getElementById(`view-${t}`);
+                if (viewEl) viewEl.classList.add('hidden');
+                const btn = document.getElementById(`tab-${t}`);
+                if (btn) {
+                    btn.classList.remove('bg-white', 'text-emerald-700', 'shadow-sm');
+                    btn.classList.add('text-slate-600');
+                }
+            });
+
+            document.getElementById(`view-${tab}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tab}`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-white', 'text-emerald-700', 'shadow-sm');
+                activeBtn.classList.remove('text-slate-600');
+            }
+
+            if (tab === 'trainer') loadNextCard();
+            if (tab === 'progress') updateLevelAndProgressUI();
+            if (tab === 'settings') renderDeckManager();
+            lucide.createIcons();
+        }
+
+        // ============================================================================
+        // 3. CEFR LEVEL & TOPIC PROGRESS DASHBOARD ENGINE
+        // ============================================================================
+        const cefrTiers = [
+            { minXP: 0,   maxXP: 50,  code: "A0",   title: "Brasil-Neuling",          sub: "Du sammelst deine ersten �berlebens-W�rter." },
+            { minXP: 50,  maxXP: 130, code: "A1.1", title: "Basis-Starter",           sub: "Du kannst bestellen, gr��en und einfache W�rter nutzen." },
+            { minXP: 130, maxXP: 240, code: "A1.2", title: "Alltags-Entdecker",       sub: "Du verstehst h�ufige S�tze im Caf�, Uber und Alltag." },
+            { minXP: 240, maxXP: 400, code: "A2.1", title: "Sicherer Reisender",      sub: "Du meisterst Smalltalk und wichtige Alltagssituationen." },
+            { minXP: 400, maxXP: 620, code: "A2.2", title: "Konversations-Fit",       sub: "Du kombinierst Slang, Verben und fl�ssige S�tze." },
+            { minXP: 620, maxXP: 900, code: "B1",   title: "Fortgeschritten (Carioca)", sub: "Du f�hrst spontane Gespr�che auf Brasilianisch." },
+            { minXP: 900, maxXP: 1500,code: "B2",   title: "Brasil-Profi",            sub: "Breiter Wortschatz und sichere Aussprache in allen Gebieten." }
+        ];
+
+        function calculateUserStats() {
+            let mastered = 0;
+            let learning = 0;
+            let unseen = 0;
+            let xp = 0;
+            let pronScores = [];
+
+            vocabList.forEach(v => {
+                const reps = v.reps || 0;
+                if (reps >= 2) {
+                    mastered++;
+                    xp += 5;
+                } else if (reps === 1) {
+                    learning++;
+                    xp += 2;
+                } else {
+                    unseen++;
+                }
+
+                if (typeof v.pronScore === 'number') {
+                    pronScores.push(v.pronScore);
+                    if (v.pronScore >= 80) xp += 2;
+                    else if (v.pronScore >= 50) xp += 1;
+                }
+            });
+
+            const pronAvg = pronScores.length > 0
+                ? Math.round(pronScores.reduce((a, b) => a + b, 0) / pronScores.length)
+                : null;
+
+            // Find current CEFR tier
+            let currentTier = cefrTiers[0];
+            for (const tier of cefrTiers) {
+                if (xp >= tier.minXP) currentTier = tier;
+            }
+
+            const tierSpan = Math.max(1, currentTier.maxXP - currentTier.minXP);
+            const tierProgress = Math.min(100, Math.round(((xp - currentTier.minXP) / tierSpan) * 100));
+            const xpToNext = Math.max(0, currentTier.maxXP - xp);
+
+            return {
+                mastered,
+                learning,
+                unseen,
+                total: vocabList.length,
+                xp,
+                pronAvg,
+                pronCount: pronScores.length,
+                currentTier,
+                tierProgress,
+                xpToNext
+            };
+        }
+
+        function saveUserGoal() {
+            userGoalTarget = parseInt(document.getElementById('userGoalSelect').value, 10) || 60;
+            localStorage.setItem('ptBrUserGoalV4', String(userGoalTarget));
+            updateLevelAndProgressUI();
+            showToast("Pers�nliches Lernziel aktualisiert!", "??");
+        }
+
+        function updateLevelAndProgressUI() {
+            const stats = calculateUserStats();
+
+            // 1. Update Persistent Top Header Bar
+            document.getElementById('headerLevelBadge').innerText = stats.currentTier.code;
+            document.getElementById('headerLevelTitle').innerText = stats.currentTier.title;
+            document.getElementById('headerXpText').innerText = `${stats.xp} XP (${stats.mastered} gemeistert, ${stats.learning} im Training)`;
+            document.getElementById('headerLevelBar').style.width = `${Math.max(6, stats.tierProgress)}%`;
+            document.getElementById('headerNextLevelHint').innerText = stats.xpToNext > 0
+                ? `Noch ${stats.xpToNext} XP bis n�chstes Level`
+                : `Max-Level erreicht! ??`;
+
+            // 2. Update Main Progress Dashboard Tab
+            document.getElementById('dashLevelCode').innerText = stats.currentTier.code;
+            document.getElementById('dashLevelName').innerText = `${stats.currentTier.code} - ${stats.currentTier.title}`;
+            document.getElementById('dashLevelSub').innerText = stats.currentTier.sub;
+
+            // Goal Progress Calculation (Mastered counts 1.0, Learning counts 0.5 toward word goal)
+            const effectiveLearned = stats.mastered + (stats.learning * 0.5);
+            const goalPct = Math.min(100, Math.round((effectiveLearned / userGoalTarget) * 100));
+            document.getElementById('dashGoalPercent').innerText = `${goalPct}% erreicht`;
+            document.getElementById('dashGoalBar').style.width = `${Math.max(4, goalPct)}%`;
+            document.getElementById('dashGoalDetailLeft').innerText = `${stats.mastered} gemeistert + ${stats.learning} im Training`;
+            document.getElementById('dashGoalDetailRight').innerText = `Ziel: ${userGoalTarget} aktiv beherrschte W�rter`;
+
+            // KPIs
+            document.getElementById('kpiMastered').innerText = stats.mastered;
+            document.getElementById('kpiLearning').innerText = stats.learning;
+            document.getElementById('kpiPronAvg').innerText = stats.pronAvg !== null ? `${stats.pronAvg}%` : '--%';
+            document.getElementById('kpiPronCount').innerText = `${stats.pronCount} W�rter gepr�ft`;
+            document.getElementById('kpiTotalCards').innerText = stats.total;
+
+            // 3. Render Breakdown by Topic Areas
+            const grid = document.getElementById('topicBreakdownGrid');
+            if (!grid) return;
+
+            const categories = getAllCategories().filter(c => c !== 'Alle');
+            const perCatGoal = Math.max(8, Math.round(userGoalTarget / Math.max(1, categories.length)));
+
+            grid.innerHTML = categories.map(cat => {
+                const cards = vocabList.filter(v => v.cat === cat);
+                const cMastered = cards.filter(v => (v.reps || 0) >= 2).length;
+                const cLearning = cards.filter(v => (v.reps || 0) === 1).length;
+                const cTotal = cards.length;
+
+                const catEffective = cMastered + (cLearning * 0.5);
+                const catGoalPct = Math.min(100, Math.round((catEffective / perCatGoal) * 100));
+
+                // Topic CEFR Badge
+                let catLevel = "Einsteiger";
+                let badgeClass = "bg-slate-100 text-slate-700";
+                if (catEffective >= 20) { catLevel = "B1"; badgeClass = "bg-indigo-100 text-indigo-800"; }
+                else if (catEffective >= 12) { catLevel = "A2"; badgeClass = "bg-emerald-100 text-emerald-800"; }
+                else if (catEffective >= 6) { catLevel = "A1.2"; badgeClass = "bg-teal-100 text-teal-800"; }
+                else if (catEffective >= 2) { catLevel = "A1.1"; badgeClass = "bg-amber-100 text-amber-900"; }
+
+                const masteredWidth = cTotal > 0 ? Math.round((cMastered / Math.max(cTotal, perCatGoal)) * 100) : 0;
+                const learningWidth = cTotal > 0 ? Math.round((cLearning / Math.max(cTotal, perCatGoal)) * 100) : 0;
+
+                const safeCat = cat.replace(/'/g, "\\'");
+
+                return `
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col justify-between space-y-3 hover:border-slate-300 transition">
+                        <div>
+                            <div class="flex items-start justify-between gap-2">
+                                <h4 class="font-extrabold text-sm text-slate-900">${escapeHtml(cat)}</h4>
+                                <span class="text-xs font-extrabold px-2.5 py-0.5 rounded-full shrink-0 ${badgeClass}">Niveau: ${catLevel}</span>
+                            </div>
+                            <div class="text-[11px] text-slate-500 mt-1 flex items-center justify-between">
+                                <span>?? ${cMastered} gemeistert  ?? ${cLearning} im Training  ?? ${cTotal} im Deck</span>
+                                <strong class="text-slate-700">${catGoalPct}% Ziel</strong>
+                            </div>
+
+                            <!-- Segmented Bar -->
+                            <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden flex mt-2">
+                                <div class="bg-emerald-500 h-full transition-all" style="width: ${masteredWidth}%" title="Gemeistert"></div>
+                                <div class="bg-blue-500 h-full transition-all" style="width: ${learningWidth}%" title="Im Training"></div>
+                            </div>
+                            <div class="text-[11px] text-slate-500 mt-1">
+                                Etappenziel f�r dieses Gebiet: <strong>${Math.round(catEffective)} / ${perCatGoal} W�rter</strong> aktiv beherrscht
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 pt-1">
+                            <button onclick="trainSpecificCategory('${safeCat}')" class="flex-1 py-2 px-3 rounded-xl bg-white hover:bg-emerald-50 text-emerald-800 border border-slate-200 hover:border-emerald-300 font-bold text-xs transition text-center">
+                                ? Jetzt �ben
+                            </button>
+                            <button onclick="discoverSpecificCategory('${safeCat}')" class="py-2 px-3 rounded-xl bg-amber-100/80 hover:bg-amber-200 text-amber-950 font-bold text-xs transition" title="Neue KI-W�rter f�r diesen Bereich">
+                                ? +5 KI
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function trainSpecificCategory(cat) {
+            currentCategory = cat;
+            document.getElementById('categorySelect').value = cat;
+            switchTab('trainer');
+        }
+
+        async function discoverSpecificCategory(cat) {
+            currentCategory = cat;
+            populateCategoryDropdowns();
+            document.getElementById('aiCategorySelect').value = cat;
+            document.getElementById('aiCountSelect').value = "5";
+            switchTab('discover');
+            await generateNewVocabViaAI();
+        }
+
+        async function generateAiAssessment() {
+            const btn = document.getElementById('btnAiAssessment');
+            const out = document.getElementById('aiAssessmentOutput');
+            btn.disabled = true;
+            btn.innerText = "? Analysiere...";
+            out.classList.remove('hidden');
+            out.innerHTML = `<span class="italic text-slate-300">KI wertet deinen Lernstand nach Themengebieten und Aussprache aus...</span>`;
+
+            const stats = calculateUserStats();
+            const catSummary = getAllCategories().filter(c => c !== 'Alle').map(c => {
+                const items = vocabList.filter(v => v.cat === c);
+                const m = items.filter(v => (v.reps || 0) >= 2).length;
+                const l = items.filter(v => (v.reps || 0) === 1).length;
+                return `${c}: ${m} gemeistert, ${l} im Training (von ${items.length} Karten)`;
+            }).join(' | ');
+
+            const prompt = `Du bist ein motivierender brasilianischer Sprachcoach. Gib dem Lernenden eine kurze, strukturierte Gesamtbeurteilung (max. 5-6 S�tze auf Deutsch) zu seinem aktuellen Brasilianisch-Fortschritt:
+- Aktuelles System-Niveau: ${stats.currentTier.code} (${stats.currentTier.title}), ${stats.xp} XP
+- Ziel-Fortschritt: ${stats.mastered} gemeisterte W�rter, ${stats.learning} im Training (Pers�nliches Ziel: ${userGoalTarget} W�rter)
+- Aussprache-Durchschnitt: ${stats.pronAvg !== null ? stats.pronAvg + '%' : 'Noch keine Aufnahme gemacht'}
+- Aufschl�sselung nach Themengebieten: ${catSummary}
+
+Gehe konkret auf seine st�rksten Themengebiete ein, nenne 1 Gebiet mit Aufholbedarf und gib einen motivierenden Tipp f�r die n�chsten 10 Minuten.`;
+
+            try {
+                const res = await callGeminiAPI({
+                    contents: [{ parts: [{ text: prompt }] }]
+                });
+                const text = res?.candidates?.[0]?.content?.parts?.[0]?.text || "Weiter so!";
+                out.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+            } catch (e) {
+                out.innerHTML = "Verbindungsfehler bei der KI-Analyse. Bitte versuche es gleich noch einmal.";
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "? Beurteilung aktualisieren";
+            }
+        }
+
+        // ============================================================================
+        // 4. PRONUNCIATION COACH & AI SPEECH EVALUATOR
+        // ============================================================================
+        function openPronunciationForCurrentCard() {
+            if (!currentCard) return;
+            pronTargetCard = currentCard;
+            document.getElementById('pronModeSelect').value = 'word';
+            renderPronunciationTarget();
+            switchTab('pronounce');
+        }
+
+        function pickPronunciationTarget(specificCard = null) {
+            if (specificCard) {
+                pronTargetCard = specificCard;
+            } else if (!pronTargetCard && vocabList.length > 0) {
+                pronTargetCard = vocabList[0];
+            }
+            renderPronunciationTarget();
+        }
+
+        function pickRandomPronTarget() {
+            if (vocabList.length === 0) return;
+            const pool = currentCategory === 'Alle' ? vocabList : vocabList.filter(v => v.cat === currentCategory);
+            const list = pool.length > 0 ? pool : vocabList;
+            const randomCard = list[Math.floor(Math.random() * list.length)];
+            pronTargetCard = randomCard;
+            document.getElementById('pronResultBox').classList.add('hidden');
+            renderPronunciationTarget();
+        }
+
+        function renderPronunciationTarget() {
+            if (!pronTargetCard) return;
+            const mode = document.getElementById('pronModeSelect').value;
+
+            document.getElementById('pronCatBadge').innerText = pronTargetCard.cat;
+            document.getElementById('pronEmoji').innerText = pronTargetCard.visual && !pronTargetCard.visual.startsWith('http') ? pronTargetCard.visual : "????";
+
+            if (typeof pronTargetCard.pronScore === 'number') {
+                document.getElementById('pronLastScoreBadge').innerHTML = `<span class="text-emerald-700">Letzter Score: ${pronTargetCard.pronScore}%</span>`;
+            } else {
+                document.getElementById('pronLastScoreBadge').innerText = "Noch nicht gepr�ft";
+            }
+
+            if (mode === 'sentence' && pronTargetCard.sentPt && pronTargetCard.sentPt !== '-') {
+                document.getElementById('pronTargetPt').innerText = pronTargetCard.sentPt;
+                document.getElementById('pronTargetPhon').innerText = "Tipp: Achte auf den Satzrhythmus und weiche Endungen";
+                document.getElementById('pronTargetDe').innerText = pronTargetCard.sentDe;
+            } else {
+                document.getElementById('pronTargetPt').innerText = pronTargetCard.pt;
+                document.getElementById('pronTargetPhon').innerText = pronTargetCard.phon || "";
+                document.getElementById('pronTargetDe').innerText = pronTargetCard.de;
+            }
+        }
+
+        function speakPronTarget(customRate = 0.95) {
+            const text = document.getElementById('pronTargetPt').innerText;
+            const prevRate = audioSettings.rate;
+            audioSettings.rate = customRate;
+            speakText(text);
+            audioSettings.rate = prevRate;
+        }
+
+        async function togglePronunciationRecording() {
+            const btn = document.getElementById('btnPronRecord');
+            const statusText = document.getElementById('pronStatusText');
+            const liveTranscriptEl = document.getElementById('pronLiveTranscript');
+
+            if (isPronRecording) {
+                // Stop recording
+                isPronRecording = false;
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                    mediaRecorder.stop();
+                }
+                if (pronSpeechRec) {
+                    try { pronSpeechRec.stop(); } catch(e) {}
+                }
+                btn.classList.remove('pulse-mic', 'bg-slate-900');
+                btn.classList.add('bg-rose-600');
+                statusText.innerText = "? KI analysiert deine brasilianische Aussprache...";
+                return;
+            }
+
+            // Start Recording
+            pronLiveText = "";
+            liveTranscriptEl.innerText = "H�re zu...";
+            document.getElementById('pronResultBox').classList.add('hidden');
+
+            // 1. Start Parallel Browser SpeechRecognition (for live visual transcript & fallback)
+            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (SpeechRec) {
+                try {
+                    pronSpeechRec = new SpeechRec();
+                    pronSpeechRec.lang = 'pt-BR';
+                    pronSpeechRec.interimResults = true;
+                    pronSpeechRec.onresult = (ev) => {
+                        let t = '';
+                        for (let i = 0; i < ev.results.length; i++) {
+                            t += ev.results[i][0].transcript;
+                        }
+                        pronLiveText = t.trim();
+                        liveTranscriptEl.innerText = pronLiveText ? `Erkannt: "${pronLiveText}"` : "H�re zu...";
+                    };
+                    pronSpeechRec.start();
+                } catch (e) {}
+            }
+
+            // 2. Start MediaRecorder for real audio capture
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioChunks = [];
+                mediaRecorder = new MediaRecorder(stream);
+
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data && e.data.size > 0) audioChunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = async () => {
+                    stream.getTracks().forEach(track => track.stop());
+                    const mimeType = mediaRecorder.mimeType || 'audio/webm';
+                    const audioBlob = new Blob(audioChunks, { type: mimeType });
+                    if (lastRecordedBlobUrl) URL.revokeObjectURL(lastRecordedBlobUrl);
+                    lastRecordedBlobUrl = URL.createObjectURL(audioBlob);
+                    await evaluatePronunciationWithAI(audioBlob, mimeType);
+                };
+
+                mediaRecorder.start();
+                isPronRecording = true;
+                btn.classList.add('pulse-mic', 'bg-slate-900');
+                btn.classList.remove('bg-rose-600');
+                statusText.innerText = "?? Aufnahme l�uft... Sprich jetzt und klicke danach erneut zum Stoppen!";
+            } catch (err) {
+                console.warn("MediaRecorder nicht verf�gbar oder Mikrofon verweigert:", err);
+                showToast("Bitte erlaube den Mikrofon-Zugriff im Browser!", "???");
+                statusText.innerText = "Mikrofon-Zugriff erforderlich.";
+            }
+        }
+
+        function playRecordedUserAudio() {
+            if (lastRecordedBlobUrl) {
+                new Audio(lastRecordedBlobUrl).play();
+            }
+        }
+
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const base64String = reader.result.split(',')[1];
+                    resolve(base64String);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        async function evaluatePronunciationWithAI(audioBlob, mimeType) {
+            const targetPt = document.getElementById('pronTargetPt').innerText.trim();
+            const targetPhon = document.getElementById('pronTargetPhon').innerText.trim();
+            const statusText = document.getElementById('pronStatusText');
+
+            try {
+                const base64Audio = await blobToBase64(audioBlob);
+                const cleanMime = mimeType.split(';')[0] || 'audio/webm';
+
+                const systemPrompt = `Du bist ein herzlicher, pr�ziser Phonetik-Coach f�r Brasilianisches Portugiesisch (pt-BR).
+Der deutschsprachige Lernende wollte folgenden brasilianischen Ausdruck sprechen:
+Ziel-Text: "${targetPt}" (Erwartete Lautschrift: ${targetPhon}).
+${pronLiveText ? `Hinweis der Spracherkennung: "${pronLiveText}".` : ''}
+
+H�re dir die Audioaufnahme des Lernenden genau an und bewerte die Aussprache nach echtem brasilianischem Standard (z.B. Palatalisierung von ti/di als tschi/dschi, unbetontes o/e am Ende als u/i, nasale Vokale wie �o/em, offenes vs. geschlossenes e/o, l am Silbenende wie u).
+
+Antworte im JSON-Format:
+- "score": Zahl von 0 bis 100 (Sei fair und motivierend: 85-100 = sehr gut/nat�rlich, 65-84 = gut verst�ndlich mit leichtem Akzent, <65 = noch �bungsbedarf).
+- "headline": Kurzes, motivierendes Fazit (z.B. "Muito bom! Super brasilianischer Klang!").
+- "spokenTranscript": Was du in der Aufnahme geh�rt hast (falls die Aufnahme still/unverst�ndlich war, schreibe "[Keine deutliche Sprache erkannt]").
+- "wordBreakdown": Array f�r jedes Wort des Ziel-Textes mit:
+    - "word": Das portugiesische Wort
+    - "status": "good" (gr�n), "warning" (gelb - kleiner Akzent) oder "error" (rot - falsch ausgesprochen/gefehlt)
+    - "tip": Kurzer phonetischer Hinweis zu genau diesem Wort (z.B. "klingt am Ende wie -dschi")
+- "feedbackDe": 2-3 konkrete, freundliche S�tze auf Deutsch mit Tipps, wie der Lernende noch brasilianischer klingt.`;
+
+                const payload = {
+                    contents: [{
+                        role: "user",
+                        parts: [
+                            { text: `Bewerte meine brasilianische Aussprache f�r: "${targetPt}"` },
+                            {
+                                inlineData: {
+                                    mimeType: cleanMime,
+                                    data: base64Audio
+                                }
+                            }
+                        ]
+                    }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                score: { type: "INTEGER" },
+                                headline: { type: "STRING" },
+                                spokenTranscript: { type: "STRING" },
+                                wordBreakdown: {
+                                    type: "ARRAY",
+                                    items: {
+                                        type: "OBJECT",
+                                        properties: {
+                                            word: { type: "STRING" },
+                                            status: { type: "STRING" },
+                                            tip: { type: "STRING" }
+                                        },
+                                        required: ["word", "status", "tip"]
+                                    }
+                                },
+                                feedbackDe: { type: "STRING" }
+                            },
+                            required: ["score", "headline", "spokenTranscript", "wordBreakdown", "feedbackDe"]
+                        }
+                    }
+                };
+
+                const res = await callGeminiAPI(payload);
+                const evaluation = JSON.parse(res.candidates[0].content.parts[0].text);
+                displayPronunciationResult(evaluation);
+
+            } catch (err) {
+                console.error("Audio-Analyse Fehler, nutze Transcript-Fallback:", err);
+                // Fallback if audio inlineData fails
+                if (pronLiveText) {
+                    await evaluatePronunciationViaTranscriptFallback(targetPt, pronLiveText);
+                } else {
+                    statusText.innerText = "?? Aufnahme konnte nicht ausgewertet werden. Bitte sprich laut und deutlich ins Mikrofon.";
+                }
+            }
+        }
+
+        async function evaluatePronunciationViaTranscriptFallback(targetPt, heardText) {
+            const payload = {
+                contents: [{
+                    parts: [{
+                        text: `Ziel-Satz (pt-BR): "${targetPt}". Vom Mikrofon erkannt: "${heardText}". Bewerte die �bereinstimmung und gib Tipps zur brasilianischen Aussprache.`
+                    }]
+                }],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            score: { type: "INTEGER" },
+                            headline: { type: "STRING" },
+                            spokenTranscript: { type: "STRING" },
+                            wordBreakdown: {
+                                type: "ARRAY",
+                                items: {
+                                    type: "OBJECT",
+                                    properties: {
+                                        word: { type: "STRING" },
+                                        status: { type: "STRING" },
+                                        tip: { type: "STRING" }
+                                    },
+                                    required: ["word", "status", "tip"]
+                                }
+                            },
+                            feedbackDe: { type: "STRING" }
+                        },
+                        required: ["score", "headline", "spokenTranscript", "wordBreakdown", "feedbackDe"]
+                    }
+                }
+            };
+            const res = await callGeminiAPI(payload);
+            const evaluation = JSON.parse(res.candidates[0].content.parts[0].text);
+            displayPronunciationResult(evaluation);
+        }
+
+        function displayPronunciationResult(ev) {
+            document.getElementById('pronStatusText').innerText = "Klicke auf das Mikrofon f�r einen weiteren Versuch";
+            const box = document.getElementById('pronResultBox');
+            box.classList.remove('hidden');
+
+            const score = Math.max(0, Math.min(100, ev.score || 0));
+            const circle = document.getElementById('pronScoreCircle');
+            document.getElementById('pronScoreVal').innerText = `${score}%`;
+
+            circle.className = "w-16 h-16 rounded-2xl text-white flex flex-col items-center justify-center font-extrabold shadow-md shrink-0 ";
+            if (score >= 80) circle.classList.add('bg-emerald-600');
+            else if (score >= 55) circle.classList.add('bg-amber-500');
+            else circle.classList.add('bg-rose-600');
+
+            document.getElementById('pronResultHeadline').innerText = ev.headline || "Auswertung abgeschlossen";
+            document.getElementById('pronHeardText').innerText = `"${ev.spokenTranscript || pronLiveText || '...'}"`;
+            document.getElementById('pronFeedbackDe').innerText = ev.feedbackDe || "";
+
+            const playOwnBtn = document.getElementById('btnPlayOwnAudio');
+            if (lastRecordedBlobUrl) {
+                playOwnBtn.classList.remove('hidden');
+                playOwnBtn.classList.add('inline-flex');
+            }
+
+            const breakdownEl = document.getElementById('pronWordBreakdown');
+            breakdownEl.innerHTML = (ev.wordBreakdown || []).map(w => {
+                let color = "bg-emerald-50 border-emerald-300 text-emerald-900";
+                let icon = "?";
+                if (w.status === 'warning') { color = "bg-amber-50 border-amber-300 text-amber-900"; icon = "?"; }
+                else if (w.status === 'error') { color = "bg-rose-50 border-rose-300 text-rose-900"; icon = "?"; }
+
+                return `
+                    <div class="border rounded-xl px-3 py-2 text-xs ${color}">
+                        <div class="font-extrabold flex items-center gap-1">${icon} <span>${escapeHtml(w.word)}</span></div>
+                        <div class="text-[11px] opacity-85 mt-0.5">${escapeHtml(w.tip)}</div>
+                    </div>
+                `;
+            }).join('');
+
+            // Save pronunciation score to card & update XP
+            if (pronTargetCard && score > 0) {
+                pronTargetCard.pronScore = Math.max(pronTargetCard.pronScore || 0, score);
+                saveData();
+                renderPronunciationTarget();
+                showToast(`Aussprache-Score (${score}%) gespeichert!`, "???");
+            }
+        }
+
+        // ============================================================================
+        // 5. GEMINI API HELPER WITH STANDALONE KEY MANAGEMENT
+        // ============================================================================
+        function getActiveApiKey() {
+            if (userCustomApiKey && userCustomApiKey.trim().length > 5) {
+                return userCustomApiKey.trim();
+            }
+            return apiKey;
+        }
+
+        function updateApiKeyStatusBadge() {
+            const badge = document.getElementById('apiKeyStatusBadge');
+            const text = document.getElementById('apiKeyStatusText');
+            if (!badge || !text) return;
+
+            if (userCustomApiKey && userCustomApiKey.length > 10) {
+                badge.className = "text-[11px] font-bold px-2.5 py-0.5 rounded-full border transition flex items-center gap-1 bg-emerald-100 text-emerald-800 border-emerald-300 hover:bg-emerald-200";
+                text.innerText = "Eigener KI-Key aktiv";
+            } else {
+                badge.className = "text-[11px] font-bold px-2.5 py-0.5 rounded-full border transition flex items-center gap-1 bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200";
+                text.innerText = "KI-Key / Setup";
+            }
+        }
+
+        function openApiKeySetup() {
+            document.getElementById('modalApiKeyInput').value = userCustomApiKey || "";
+            document.getElementById('apiKeyModal').classList.remove('hidden');
+        }
+
+        function closeApiKeyModal() {
+            document.getElementById('apiKeyModal').classList.add('hidden');
+        }
+
+        function saveApiKeyFromModal() {
+            const val = document.getElementById('modalApiKeyInput').value.trim();
+            userCustomApiKey = val;
+            localStorage.setItem('ptBrUserApiKey', val);
+            document.getElementById('settingsApiKeyInput').value = val;
+            updateApiKeyStatusBadge();
+            closeApiKeyModal();
+            showToast(val ? "Eigener Gemini API-Key gespeichert!" : "API-Key aktualisiert!", "??");
+        }
+
+        function saveUserApiKey() {
+            const val = document.getElementById('settingsApiKeyInput').value.trim();
+            userCustomApiKey = val;
+            localStorage.setItem('ptBrUserApiKey', val);
+            document.getElementById('modalApiKeyInput').value = val;
+            updateApiKeyStatusBadge();
+            showToast(val ? "Gemini API-Key gespeichert!" : "Auf Standard-Modus zur�ckgesetzt.", "??");
+        }
+
+        function clearUserApiKey() {
+            userCustomApiKey = "";
+            localStorage.removeItem('ptBrUserApiKey');
+            document.getElementById('settingsApiKeyInput').value = "";
+            document.getElementById('modalApiKeyInput').value = "";
+            updateApiKeyStatusBadge();
+            showToast("Eigener API-Key entfernt.", "???");
+        }
+
+        function toggleShowApiKey() {
+            const inp = document.getElementById('settingsApiKeyInput');
+            inp.type = inp.type === 'password' ? 'text' : 'password';
+        }
+
+        async function callGeminiAPI(payload, model = 'gemini-3-flash-preview') {
+            const activeKey = getActiveApiKey();
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${activeKey}`;
+            const delays = [1000, 2000, 4000];
+            
+            for (let attempt = 0; attempt <= delays.length; attempt++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) {
+                        if (response.status === 400 || response.status === 403) {
+                            openApiKeySetup();
+                        }
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    return await response.json();
+                } catch (err) {
+                    if (attempt === delays.length) throw err;
+                    await new Promise(r => setTimeout(r, delays[attempt]));
+                }
+            }
+        }
+
+        // ============================================================================
+        // 6. DYNAMIC AI VOCABULARY DISCOVERY & GUARANTEED SAVING (BUGFIXED)
+        // ============================================================================
+        function toggleCustomTopicInput() {
+            const val = document.getElementById('aiCategorySelect').value;
+            const wrapper = document.getElementById('customTopicWrapper');
+            if (val === '__custom__') {
+                wrapper.classList.remove('hidden');
+                document.getElementById('aiCustomTopic').focus();
+            } else {
+                wrapper.classList.add('hidden');
+            }
+        }
+
+        async function quickGenerateForCurrentCat() {
+            const cat = currentCategory === 'Alle' ? '??? Echt Brasilianisch (Slang & Alltag)' : currentCategory;
+            populateCategoryDropdowns();
+            document.getElementById('aiCategorySelect').value = cat;
+            document.getElementById('aiCountSelect').value = "5";
+            switchTab('discover');
+            await generateNewVocabViaAI();
+        }
+
+        async function generateNewVocabViaAI() {
+            const selCat = document.getElementById('aiCategorySelect').value;
+            const customTopic = document.getElementById('aiCustomTopic').value.trim();
+            const focus = document.getElementById('aiFocusInput').value.trim();
+            const count = parseInt(document.getElementById('aiCountSelect').value, 10) || 6;
+
+            let targetCategory = selCat;
+            if (selCat === '__custom__' || !targetCategory) {
+                if (!customTopic) {
+                    showToast("Bitte gib ein Wunsch-Thema ein!", "??");
+                    return;
+                }
+                targetCategory = customTopic.startsWith('?') ? customTopic : `? ${customTopic}`;
+            }
+
+            ensureCategoryRegistered(targetCategory);
+
+            const btn = document.getElementById('btnGenerateVocab');
+            const statusBox = document.getElementById('aiDiscoverStatus');
+            const listWrapper = document.getElementById('aiGeneratedListWrapper');
+
+            btn.disabled = true;
+            btn.classList.add('opacity-60');
+            statusBox.classList.remove('hidden');
+            listWrapper.classList.add('hidden');
+
+            const existingPtWords = vocabList.map(v => v.pt.toLowerCase().trim()).join(', ');
+
+            const systemPrompt = `Du bist ein erstklassiger Sprachcoach f�r Brasilianisches Portugiesisch (pt-BR) f�r deutschsprachige Lernende.
+Generiere exakt ${count} NEUE, extrem n�tzliche und hochfrequente Vokabeln oder Alltagsausdr�cke (Pareto-Prinzip 80/20) f�r das Thema "${targetCategory}".
+${focus ? `Zus�tzlicher Wunsch-Fokus des Nutzers: "${focus}".` : ''}
+
+WICHTIGSTE REGEL (KEINE DUPLIKATE):
+Der Nutzer kennt bereits folgende W�rter - generiere KEINESfalls W�rter aus dieser Liste:
+[${existingPtWords}]
+
+Anforderungen f�r jedes Wort:
+- "de": Pr�zise deutsche Bedeutung (mit Artikel bei Nomen).
+- "pt": Nat�rliches Brasilianisches Portugiesisch (pt-BR, mit Artikel bei Nomen).
+- "phon": Leicht lesbare deutsche Lautschrift f�r die echte brasilianische Aussprache (z.B. "[u a-ba-ka-schi]").
+- "visual": Ein einzelnes passendes Emoji.
+- "kw": Ein kurzes englisches Suchwort f�r ein Foto (1-2 W�rter).
+- "sentPt": Ein kurzer, lustiger oder einpr�gsamer Beispielsatz auf Brasilianischem Portugiesisch.
+- "sentDe": Die deutsche �bersetzung des Beispielsatzes.`;
+
+            const payload = {
+                contents: [{ parts: [{ text: `Erstelle ${count} neue brasilianische Vokabeln f�r den Bereich "${targetCategory}".` }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "ARRAY",
+                        items: {
+                            type: "OBJECT",
+                            properties: {
+                                de: { type: "STRING" },
+                                pt: { type: "STRING" },
+                                phon: { type: "STRING" },
+                                visual: { type: "STRING" },
+                                kw: { type: "STRING" },
+                                sentPt: { type: "STRING" },
+                                sentDe: { type: "STRING" }
+                            },
+                            required: ["de", "pt", "phon", "visual", "kw", "sentPt", "sentDe"]
+                        }
+                    }
+                }
+            };
+
+            try {
+                const result = await callGeminiAPI(payload);
+                const rawJson = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+                const newItems = JSON.parse(rawJson);
+
+                const addedCards = [];
+                newItems.forEach((item, idx) => {
+                    if (!item.de || !item.pt) return;
+                    const exists = vocabList.some(v => v.pt.toLowerCase().trim() === item.pt.toLowerCase().trim());
+                    if (!exists) {
+                        const card = {
+                            id: Date.now() + idx + Math.floor(Math.random() * 1000),
+                            cat: targetCategory,
+                            de: item.de.trim(),
+                            pt: item.pt.trim(),
+                            phon: item.phon || "",
+                            visual: item.visual || "????",
+                            kw: item.kw || "brazil",
+                            sentPt: item.sentPt || item.pt,
+                            sentDe: item.sentDe || item.de,
+                            dueDate: Date.now(),
+                            interval: 0,
+                            reps: 0,
+                            pronScore: null
+                        };
+                        vocabList.push(card);
+                        addedCards.push(card);
+                    }
+                });
+
+                currentCategory = targetCategory;
+                saveData();
+                populateCategoryDropdowns();
+                document.getElementById('categorySelect').value = targetCategory;
+
+                const listEl = document.getElementById('aiGeneratedList');
+                listEl.innerHTML = '';
+                addedCards.forEach(c => {
+                    const safePt = c.pt.replace(/'/g, "\\'");
+                    listEl.innerHTML += `
+                        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-start gap-3">
+                            <div class="text-3xl">${c.visual}</div>
+                            <div class="flex-grow min-w-0">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="font-extrabold text-emerald-700 text-base truncate">${escapeHtml(c.pt)}</span>
+                                    <button onclick="speakText('${safePt}')" class="text-slate-500 hover:text-emerald-600 p-1" title="Anh�ren">??</button>
+                                </div>
+                                <div class="text-xs font-mono text-slate-400">${escapeHtml(c.phon)}</div>
+                                <div class="font-bold text-slate-800 text-sm mt-0.5">${escapeHtml(c.de)}</div>
+                                <div class="text-xs text-slate-600 mt-2 bg-amber-50 p-2 rounded-lg border-l-2 border-amber-400">
+                                    <strong>${escapeHtml(c.sentPt)}</strong><br>
+                                    <span class="italic text-slate-500">${escapeHtml(c.sentDe)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                listWrapper.classList.remove('hidden');
+                loadNextCard();
+                showToast(`? ${addedCards.length} neue Vokabeln dauerhaft gespeichert!`, "??");
+            } catch (err) {
+                console.error(err);
+                showToast("KI-Anfrage fehlgeschlagen. Bitte pr�fe deine Verbindung / Key.", "??");
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('opacity-60');
+                statusBox.classList.add('hidden');
+            }
+        }
+
+        // ============================================================================
+        // 7. SPACED REPETITION (SRS) TRAINER LOGIC (FIXED DOM RECOVERY)
+        // ============================================================================
+        function changeCategory() {
+            currentCategory = document.getElementById('categorySelect').value;
+            loadNextCard();
+        }
+
+        function toggleImageMode() {
+            showPhotos = !showPhotos;
+            document.getElementById('imgModeBtn').innerText = showPhotos ? "??? Fotos: An" : "?? Emojis: An";
+            if (currentCard) renderVisual(currentCard);
+        }
+
+        function renderVisual(card) {
+            const visEl = document.getElementById('cardVisual');
+            if (!visEl) return;
+            if (card.visual && card.visual.startsWith('http')) {
+                visEl.innerHTML = `<img src="${card.visual}" class="max-h-36 rounded-2xl shadow-md object-cover" alt="Bild">`;
+            } else if (showPhotos && card.kw) {
+                const imgUrl = `https://loremflickr.com/340/220/${encodeURIComponent(card.kw)}?lock=${card.id % 1000}`;
+                visEl.innerHTML = `<img src="${imgUrl}" class="max-h-36 rounded-2xl shadow-md object-cover" alt="${escapeHtml(card.de)}" onerror="this.outerHTML='<span class=\\'text-7xl\\'>${card.visual || '????'}</span>'">`;
+            } else {
+                visEl.innerHTML = `<span class="text-7xl">${card.visual || "????"}</span>`;
+            }
+        }
+
+        function updateStats(filteredList) {
+            const now = Date.now();
+            const due = filteredList.filter(v => v.dueDate <= now && v.reps > 0).length;
+            const newCards = filteredList.filter(v => v.reps === 0).length;
+            const learned = filteredList.filter(v => v.dueDate > now).length;
+
+            document.getElementById('statDue').innerText = due;
+            document.getElementById('statNew').innerText = newCards;
+            document.getElementById('statLearned').innerText = learned;
+            document.getElementById('statTotal').innerText = filteredList.length;
+        }
+
+        function loadNextCard() {
+            const now = Date.now();
+            const filtered = currentCategory === "Alle"
+                ? vocabList
+                : vocabList.filter(v => v.cat === currentCategory);
+
+            updateStats(filtered);
+
+            const dueCards = filtered.filter(v => v.dueDate <= now).sort((a, b) => a.dueDate - b.dueDate);
+            const emptyStateDiv = document.getElementById('cardEmptyState');
+            const contentDiv = document.getElementById('cardContent');
+            const actionArea = document.getElementById('actionArea');
+
+            if (dueCards.length === 0) {
+                currentCard = null;
+                document.getElementById('cardCategory').innerText = currentCategory;
+                document.getElementById('cardSrsBadge').innerText = "Fertig";
+                document.getElementById('cardPronBadge').classList.add('hidden');
+                emptyStateDiv.classList.remove('hidden');
+                contentDiv.classList.add('hidden');
+                actionArea.classList.add('hidden');
+                return;
+            }
+
+            emptyStateDiv.classList.add('hidden');
+            contentDiv.classList.remove('hidden');
+            actionArea.classList.remove('hidden');
+            currentCard = dueCards[0];
+
+            document.getElementById('cardCategory').innerText = currentCard.cat;
+            document.getElementById('cardSrsBadge').innerText = currentCard.reps === 0 ? "?? Neue Karte" : `?? Stufe ${currentCard.reps} (${currentCard.interval}T)`;
+            
+            const pronBadge = document.getElementById('cardPronBadge');
+            if (typeof currentCard.pronScore === 'number') {
+                pronBadge.innerText = `??? ${currentCard.pronScore}%`;
+                pronBadge.classList.remove('hidden');
+            } else {
+                pronBadge.classList.add('hidden');
+            }
+
+            renderVisual(currentCard);
+
+            document.getElementById('cardDe').innerText = currentCard.de;
+            document.getElementById('cardPt').innerText = currentCard.pt;
+            document.getElementById('cardPhonetic').innerText = currentCard.phon || "";
+            document.getElementById('cardSentPt').innerText = currentCard.sentPt;
+            document.getElementById('cardSentDe').innerText = currentCard.sentDe;
+
+            document.getElementById('answerSection').classList.add('hidden');
+            document.getElementById('btnShow').classList.remove('hidden');
+            document.getElementById('srsButtons').classList.add('hidden');
+            document.getElementById('srsButtons').classList.remove('grid');
+
+            updateButtonLabels();
+            lucide.createIcons();
+        }
+
+        function updateButtonLabels() {
+            if (!currentCard) return;
+            const reps = currentCard.reps;
+            const curInt = currentCard.interval || 1;
+
+            const hardDays = reps === 0 ? srsSettings.hard : Math.max(1, Math.round(curInt * 1.2));
+            const goodDays = reps === 0 ? srsSettings.good : Math.max(2, Math.round(curInt * srsSettings.factor));
+            const easyDays = reps === 0 ? srsSettings.easy : Math.max(4, Math.round(curInt * srsSettings.factor * 1.5));
+
+            document.getElementById('lblAgain').innerText = "Sofort (1)";
+            document.getElementById('lblHard').innerText = `${hardDays} Tag(e) (2)`;
+            document.getElementById('lblGood').innerText = `${goodDays} Tag(e) (3)`;
+            document.getElementById('lblEasy').innerText = `${easyDays} Tag(e) (4)`;
+        }
+
+        function showAnswer() {
+            document.getElementById('answerSection').classList.remove('hidden');
+            document.getElementById('btnShow').classList.add('hidden');
+            document.getElementById('srsButtons').classList.remove('hidden');
+            document.getElementById('srsButtons').classList.add('grid');
+            speakCurrentWord();
+        }
+
+        function rateCard(rating) {
+            if (!currentCard) return;
+            const now = Date.now();
+            const dayMs = 24 * 60 * 60 * 1000;
+            let nextDays = 0;
+
+            if (rating === 'again') {
+                currentCard.reps = 0;
+                currentCard.interval = 0;
+                currentCard.dueDate = now + 45 * 1000;
+            } else {
+                const curInt = currentCard.interval || 1;
+                if (rating === 'hard') {
+                    nextDays = currentCard.reps === 0 ? srsSettings.hard : Math.max(1, Math.round(curInt * 1.2));
+                } else if (rating === 'good') {
+                    nextDays = currentCard.reps === 0 ? srsSettings.good : Math.max(2, Math.round(curInt * srsSettings.factor));
+                } else if (rating === 'easy') {
+                    nextDays = currentCard.reps === 0 ? srsSettings.easy : Math.max(4, Math.round(curInt * srsSettings.factor * 1.5));
+                }
+                currentCard.reps += 1;
+                currentCard.interval = nextDays;
+                currentCard.dueDate = now + (nextDays * dayMs);
+            }
+
+            saveData();
+            loadNextCard();
+        }
+
+        // ============================================================================
+        // 8. MANUAL WORD ADDITION (MODAL + FORM) - FIXED & PERSISTENT
+        // ============================================================================
+        function openQuickAddModal() {
+            populateCategoryDropdowns();
+            const modalCat = document.getElementById('modalCat');
+            if (currentCategory && currentCategory !== 'Alle') {
+                modalCat.value = currentCategory;
+            }
+            document.getElementById('modalCustomCatBox').classList.add('hidden');
+            document.getElementById('quickAddModal').classList.remove('hidden');
+            document.getElementById('modalDe').focus();
+        }
+
+        function closeQuickAddModal() {
+            document.getElementById('quickAddModal').classList.add('hidden');
+        }
+
+        function toggleModalCustomCat() {
+            const val = document.getElementById('modalCat').value;
+            const box = document.getElementById('modalCustomCatBox');
+            if (val === '__custom__') {
+                box.classList.remove('hidden');
+                document.getElementById('modalCustomCatInput').focus();
+            } else {
+                box.classList.add('hidden');
+            }
+        }
+
+        function saveWordObject({ cat, de, pt, phon, visual, sentPt, sentDe }) {
+            if (!de || !pt) {
+                showToast("Bitte mindestens das deutsche und portugiesische Wort eingeben!", "??");
+                return false;
+            }
+
+            const finalCat = cat && cat !== 'Alle' ? cat : "??? Echt Brasilianisch (Slang & Alltag)";
+            ensureCategoryRegistered(finalCat);
+
+            const newCard = {
+                id: Date.now() + Math.floor(Math.random() * 1000),
+                cat: finalCat,
+                visual: visual || "????",
+                de: de.trim(),
+                pt: pt.trim(),
+                phon: phon ? phon.trim() : "",
+                sentPt: sentPt && sentPt.trim() ? sentPt.trim() : pt.trim(),
+                sentDe: sentDe && sentDe.trim() ? sentDe.trim() : de.trim(),
+                kw: "brazil",
+                dueDate: Date.now(),
+                interval: 0,
+                reps: 0,
+                pronScore: null
+            };
+
+            vocabList.unshift(newCard); // Put right at the top so user sees it immediately
+            currentCategory = finalCat;
+            saveData();
+            populateCategoryDropdowns();
+            document.getElementById('categorySelect').value = finalCat;
+            loadNextCard();
+            renderDeckManager();
+            showToast(`? "${newCard.pt}" dauerhaft in "${finalCat}" gespeichert!`, "??");
+            return true;
+        }
+
+        function saveWordFromModal() {
+            let cat = document.getElementById('modalCat').value;
+            if (cat === '__custom__') {
+                const customInput = document.getElementById('modalCustomCatInput').value.trim();
+                if (!customInput) {
+                    showToast("Bitte gib einen Namen f�r den neuen Themenbereich ein!", "??");
+                    return;
+                }
+                cat = customInput;
+            }
+
+            const de = document.getElementById('modalDe').value.trim();
+            const pt = document.getElementById('modalPt').value.trim();
+            const phon = document.getElementById('modalPhon').value.trim();
+            const visual = document.getElementById('modalVisual').value.trim() || "??";
+            const sentPt = document.getElementById('modalSentPt').value.trim();
+            const sentDe = document.getElementById('modalSentDe').value.trim();
+
+            if (saveWordObject({ cat, de, pt, phon, visual, sentPt, sentDe })) {
+                ['modalDe', 'modalPt', 'modalPhon', 'modalVisual', 'modalSentPt', 'modalSentDe', 'modalCustomCatInput'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = "";
+                });
+                closeQuickAddModal();
+            }
+        }
+
+        function addNewCardManual() {
+            const cat = document.getElementById('newCat').value;
+            const visual = document.getElementById('newVisual').value.trim() || "??";
+            const de = document.getElementById('newDe').value.trim();
+            const pt = document.getElementById('newPt').value.trim();
+            const phon = document.getElementById('newPhon').value.trim();
+            const sentPt = document.getElementById('newSentPt').value.trim();
+            const sentDe = document.getElementById('newSentDe').value.trim();
+
+            if (saveWordObject({ cat, de, pt, phon, visual, sentPt, sentDe })) {
+                ['newVisual', 'newDe', 'newPt', 'newPhon', 'newSentPt', 'newSentDe'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = "";
+                });
+            }
+        }
+
+        // ============================================================================
+        // 9. REALISTIC CONVERSATION SIMULATOR WITH ERROR CORRECTION
+        // ============================================================================
+        const scenarios = {
+            cafe: {
+                title: "? Im Caf� in Rio de Janeiro",
+                role: "Du bist ein freundlicher, entspannter Barista in einer Padaria in Rio de Janeiro (Ipanema).",
+                openingPt: "Oi, bom dia! Tudo bem? O que voc� vai querer hoje? Nosso p�o de queijo acabou de sair do forno!",
+                openingDe: "Hi, guten Morgen! Alles gut? Was m�chtest du heute haben? Unser P�o de Queijo kommt gerade frisch aus dem Ofen!"
+            },
+            smalltalk: {
+                title: "??? Lockerer Smalltalk mit einem Brasilianer",
+                role: "Du bist Lucas aus Florian�polis, ein herzlicher Brasilianer, der sich locker mit dem Nutzer �ber dessen Alltag, Essen, Sport oder Haustiere unterh�lt.",
+                openingPt: "E a�, tudo beleza? Como est� sendo o seu dia hoje? J� fez alguma coisa legal ou s� trabalhou?",
+                openingDe: "Na, alles klar? Wie l�uft dein Tag heute so? Hast du schon was Cooles gemacht oder nur gearbeitet?"
+            },
+            beach: {
+                title: "??? Am Strand von Copacabana",
+                role: "Du bist ein gut gelaunter Strandverk�ufer am Kiosk in Rio, der Liegest�hle, Sonnenschirme und eiskalte Kokosn�sse verkauft.",
+                openingPt: "Fala, meu amigo! Bem-vindo � praia! Quer alugar duas cadeiras com guarda-sol ou tomar uma �gua de coco bem gelada?",
+                openingDe: "Hey mein Freund! Willkommen am Strand! M�chtest du zwei St�hle mit Sonnenschirm mieten oder ein eiskaltes Kokoswasser trinken?"
+            },
+            market: {
+                title: "?? Im Supermarkt / Wochenmarkt",
+                role: "Du bist ein hilfsbereiter Verk�ufer auf einem brasilianischen Markt (Feira) mit frischem Obst, K�se und Haferflocken.",
+                openingPt: "Bom dia! Fique � vontade! Est� procurando alguma fruta especial, queijo ou aveia hoje?",
+                openingDe: "Guten Morgen! Schau dich gern um! Suchst du heute eine bestimmte Frucht, K�se oder Haferflocken?"
+            },
+            uber: {
+                title: "?? Im Uber in S�o Paulo",
+                role: "Du bist ein gespr�chiger Uber-Fahrer in S�o Paulo, der den Nutzer vom Hotel abholt.",
+                openingPt: "Ol�, boa tarde! Tudo tranquilo? A temperatura do ar-condicionado est� boa para voc�?",
+                openingDe: "Hallo, guten Tag! Alles entspannt? Ist die Temperatur der Klimaanlage angenehm f�r dich?"
+            }
+        };
+
+        function onScenarioChange() {
+            const val = document.getElementById('scenarioSelect').value;
+            const customBox = document.getElementById('customScenarioBox');
+            if (val === 'custom') {
+                customBox.classList.remove('hidden');
+                document.getElementById('customScenarioInput').focus();
+            } else {
+                customBox.classList.add('hidden');
+                startNewConversation();
+            }
+        }
+
+        function startNewConversation() {
+            currentScenarioKey = document.getElementById('scenarioSelect').value;
+            chatHistory = [];
+            document.getElementById('chatHintBox').classList.add('hidden');
+
+            let openingPt = "";
+            let openingDe = "";
+
+            if (currentScenarioKey === 'custom') {
+                const customDesc = document.getElementById('customScenarioInput').value.trim() || "Freies Gespr�ch in Brasilien";
+                openingPt = "Oi! Tudo bem? Vamos come�ar! Como posso te ajudar hoje?";
+                openingDe = `Szenario "${customDesc}" gestartet! Schreibe deine erste Nachricht.`;
+            } else {
+                openingPt = scenarios[currentScenarioKey].openingPt;
+                openingDe = scenarios[currentScenarioKey].openingDe;
+            }
+
+            chatHistory.push({
+                sender: 'ai',
+                replyPt: openingPt,
+                replyDe: openingDe
+            });
+
+            renderChatMessages();
+        }
+
+        function renderChatMessages() {
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = '';
+
+            chatHistory.forEach((msg) => {
+                if (msg.sender === 'user') {
+                    container.innerHTML += `
+                        <div class="flex justify-end animate-fade-in">
+                            <div class="bg-emerald-600 text-white rounded-2xl rounded-tr-none px-4 py-3 max-w-[82%] shadow-sm">
+                                <div class="text-sm font-semibold">${escapeHtml(msg.text)}</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    let correctionHtml = '';
+                    if (msg.correction) {
+                        const c = msg.correction;
+                        const vocabBtns = (c.suggestedVocab || []).map((v) => {
+                            const encodedV = encodeURIComponent(JSON.stringify(v));
+                            return `
+                                <button onclick="addVocabFromChat('${encodedV}')" class="mt-1.5 inline-flex items-center gap-1 bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300 px-2.5 py-1 rounded-lg text-xs font-bold shadow-sm transition">
+                                    ? "${escapeHtml(v.pt)}" (${escapeHtml(v.de)}) speichern
+                                </button>
+                            `;
+                        }).join(' ');
+
+                        if (c.hasMistakes) {
+                            correctionHtml = `
+                                <div class="mb-2.5 bg-amber-50 border border-amber-200 rounded-2xl p-3.5 text-xs space-y-1.5 text-slate-800">
+                                    <div class="flex items-center gap-1.5 font-extrabold text-amber-900">
+                                        <span>?? Sprach-Coach Korrektur:</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-500">So sagt es ein Brasilianer:</span>
+                                        <span class="font-extrabold text-emerald-700 ml-1">${escapeHtml(c.correctedUserPt)}</span>
+                                        <button onclick="speakText('${c.correctedUserPt.replace(/'/g, "\\'")}')" class="ml-1 text-slate-500 hover:text-emerald-700">??</button>
+                                    </div>
+                                    <div class="text-slate-600 leading-relaxed">${escapeHtml(c.explanationDe)}</div>
+                                    <div class="flex flex-wrap gap-1.5">${vocabBtns}</div>
+                                </div>
+                            `;
+                        } else if (c.correctedUserPt) {
+                            correctionHtml = `
+                                <div class="mb-2.5 bg-emerald-50/80 border border-emerald-200 rounded-2xl p-3 text-xs space-y-1 text-emerald-950">
+                                    <div class="font-extrabold text-emerald-800">? Perfekt ausgedr�ckt!</div>
+                                    <div class="text-slate-600">${escapeHtml(c.explanationDe || 'Das klang wie ein echter Brasilianer.')}</div>
+                                    <div class="flex flex-wrap gap-1.5">${vocabBtns}</div>
+                                </div>
+                            `;
+                        }
+                    }
+
+                    container.innerHTML += `
+                        <div class="flex flex-col items-start max-w-[88%] animate-fade-in">
+                            ${correctionHtml}
+                            <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-none px-4 py-3.5 shadow-sm space-y-1.5">
+                                <div class="flex items-start justify-between gap-3">
+                                    <span class="text-sm sm:text-base font-bold text-slate-900 leading-snug">${escapeHtml(msg.replyPt)}</span>
+                                    <button onclick="speakText('${msg.replyPt.replace(/'/g, "\\'")}')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-700 flex items-center justify-center shrink-0 transition" title="Nachricht anh�ren">
+                                        ??
+                                    </button>
+                                </div>
+                                <div class="text-xs text-slate-500 italic">${escapeHtml(msg.replyDe)}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const userText = input.value.trim();
+            if (!userText) return;
+
+            input.value = '';
+            document.getElementById('chatHintBox').classList.add('hidden');
+            chatHistory.push({ sender: 'user', text: userText });
+            renderChatMessages();
+
+            const btn = document.getElementById('btnSendChat');
+            btn.disabled = true;
+            btn.innerHTML = `<span class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>`;
+
+            const scenarioDesc = currentScenarioKey === 'custom'
+                ? (document.getElementById('customScenarioInput').value.trim() || "Alltagsgespr�ch in Brasilien")
+                : scenarios[currentScenarioKey].role;
+
+            const recentTranscript = chatHistory.slice(-6).map(m =>
+                m.sender === 'user' ? `Lernender: ${m.text}` : `Brasilianer: ${m.replyPt}`
+            ).join('\n');
+
+            const systemPrompt = `Du f�hrst ein realistisches Rollenspiel auf Brasilianischem Portugiesisch (pt-BR) mit einem deutschsprachigen Lernenden durch und gibst gleichzeitig konstruktives Fehler-Feedback.
+Deine Rolle im Gespr�ch: ${scenarioDesc}
+
+Regeln:
+1. Antworte im Feld "replyPt" authentisch, herzlich und nat�rlich auf Brasilianischem Portugiesisch (nutze "voc�", "a gente", Alltagssprache) und halte das Gespr�ch mit einer passenden Anschlussfrage am Laufen (1-3 kurze S�tze).
+2. Gib in "replyDe" die deutsche �bersetzung deiner Antwort an.
+3. Pr�fe die letzte Nachricht des Lernenden ("${userText}") im Objekt "correction":
+   - Wenn der Lernende einen Grammatik-, Wortwahl- oder Rechtschreibfehler gemacht hat ODER ein deutsches Wort benutzt hat, setze "hasMistakes": true.
+   - Zeige in "correctedUserPt", wie ein Brasilianer den Satz des Lernenden nat�rlich und korrekt sagen w�rde.
+   - Erkl�re in "explanationDe" kurz, freundlich und auf Deutsch, was korrigiert wurde.
+   - Schlage in "suggestedVocab" 1 bis 2 n�tzliche Vokabeln aus der Korrektur oder deiner Antwort vor (inkl. Lautschrift & kurzem Merksatz).`;
+
+            const payload = {
+                contents: [{ parts: [{ text: `Bisheriger Gespr�chsverlauf:\n${recentTranscript}\n\nReagiere auf die letzte Nachricht des Lernenden.` }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            replyPt: { type: "STRING" },
+                            replyDe: { type: "STRING" },
+                            correction: {
+                                type: "OBJECT",
+                                properties: {
+                                    hasMistakes: { type: "BOOLEAN" },
+                                    correctedUserPt: { type: "STRING" },
+                                    explanationDe: { type: "STRING" },
+                                    suggestedVocab: {
+                                        type: "ARRAY",
+                                        items: {
+                                            type: "OBJECT",
+                                            properties: {
+                                                de: { type: "STRING" },
+                                                pt: { type: "STRING" },
+                                                phon: { type: "STRING" },
+                                                visual: { type: "STRING" },
+                                                sentPt: { type: "STRING" },
+                                                sentDe: { type: "STRING" }
+                                            },
+                                            required: ["de", "pt", "phon", "visual", "sentPt", "sentDe"]
+                                        }
+                                    }
+                                },
+                                required: ["hasMistakes", "correctedUserPt", "explanationDe", "suggestedVocab"]
+                            }
+                        },
+                        required: ["replyPt", "replyDe", "correction"]
+                    }
+                }
+            };
+
+            try {
+                const res = await callGeminiAPI(payload);
+                const data = JSON.parse(res.candidates[0].content.parts[0].text);
+
+                chatHistory.push({
+                    sender: 'ai',
+                    replyPt: data.replyPt,
+                    replyDe: data.replyDe,
+                    correction: data.correction
+                });
+
+                renderChatMessages();
+                speakText(data.replyPt);
+            } catch (e) {
+                console.error(e);
+                showToast("Verbindungsfehler im Chat. Bitte erneut senden.", "??");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<span>Senden</span><i data-lucide="send" class="w-4 h-4"></i>`;
+                lucide.createIcons();
+            }
+        }
+
+        async function requestChatHint() {
+            const lastAiMsg = [...chatHistory].reverse().find(m => m.sender === 'ai');
+            if (!lastAiMsg) return;
+
+            const hintBox = document.getElementById('chatHintBox');
+            const optionsDiv = document.getElementById('chatHintOptions');
+            hintBox.classList.remove('hidden');
+            optionsDiv.innerHTML = `<span class="text-amber-800 italic">Generiere passende Antwort-Ideen...</span>`;
+
+            const payload = {
+                contents: [{ parts: [{ text: `Der brasilianische Gespr�chspartner hat gerade gesagt: "${lastAiMsg.replyPt}". Gib 3 kurze, nat�rliche Antwortm�glichkeiten auf Brasilianischem Portugiesisch (pt-BR) mit deutscher �bersetzung f�r den Lernenden.` }] }],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "ARRAY",
+                        items: {
+                            type: "OBJECT",
+                            properties: {
+                                pt: { type: "STRING" },
+                                de: { type: "STRING" }
+                            },
+                            required: ["pt", "de"]
+                        }
+                    }
+                }
+            };
+
+            try {
+                const res = await callGeminiAPI(payload);
+                const hints = JSON.parse(res.candidates[0].content.parts[0].text);
+                optionsDiv.innerHTML = hints.map(h => `
+                    <button onclick="useHint('${h.pt.replace(/'/g, "\\'")}')" class="text-left bg-white hover:bg-amber-100 border border-amber-300 rounded-xl px-3 py-1.5 transition">
+                        <div class="font-bold text-slate-900">${escapeHtml(h.pt)}</div>
+                        <div class="text-[11px] text-slate-500">${escapeHtml(h.de)}</div>
+                    </button>
+                `).join('');
+            } catch (e) {
+                optionsDiv.innerHTML = `<span class="text-rose-600">Hinweis konnte nicht geladen werden.</span>`;
+            }
+        }
+
+        function useHint(ptText) {
+            const input = document.getElementById('chatInput');
+            input.value = ptText;
+            input.focus();
+        }
+
+        function addVocabFromChat(encodedJson) {
+            try {
+                const v = JSON.parse(decodeURIComponent(encodedJson));
+                const exists = vocabList.some(item => item.pt.toLowerCase().trim() === v.pt.toLowerCase().trim());
+                if (exists) {
+                    showToast(`"${v.pt}" ist bereits in deinem Trainer!`, "??");
+                    return;
+                }
+                saveWordObject({
+                    cat: "??? Echt Brasilianisch (Slang & Alltag)",
+                    de: v.de,
+                    pt: v.pt,
+                    phon: v.phon || "",
+                    visual: v.visual || "??",
+                    sentPt: v.sentPt || v.pt,
+                    sentDe: v.sentDe || v.de
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function toggleSpeechRecognition() {
+            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRec) {
+                showToast("Spracherkennung wird von diesem Browser nicht unterst�tzt (Nutze Chrome/Edge).", "??");
+                return;
+            }
+
+            const micBtn = document.getElementById('btnMic');
+
+            if (isRecording && recognition) {
+                recognition.stop();
+                return;
+            }
+
+            recognition = new SpeechRec();
+            recognition.lang = 'pt-BR';
+            recognition.interimResults = false;
+
+            recognition.onstart = () => {
+                isRecording = true;
+                micBtn.classList.add('bg-rose-600', 'text-white', 'pulse-mic');
+                micBtn.classList.remove('bg-slate-100', 'text-slate-700');
+                showToast("Sprich jetzt auf Portugiesisch...", "???");
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                const input = document.getElementById('chatInput');
+                input.value = (input.value ? input.value + ' ' : '') + transcript;
+            };
+
+            recognition.onend = () => {
+                isRecording = false;
+                micBtn.classList.remove('bg-rose-600', 'text-white', 'pulse-mic');
+                micBtn.classList.add('bg-slate-100', 'text-slate-700');
+            };
+
+            recognition.start();
+        }
+
+        // ============================================================================
+        // 10. NATURAL BRAZILIAN AUDIO ENGINE (GEMINI TTS + BROWSER NEURAL VOICES)
+        // ============================================================================
+        function initVoices() {
+            if (!('speechSynthesis' in window)) return;
+            const allVoices = window.speechSynthesis.getVoices();
+            const ptVoices = allVoices.filter(v => v.lang.includes('pt-BR') || v.lang.includes('pt_BR') || v.lang.startsWith('pt'));
+
+            ptVoices.sort((a, b) => {
+                const score = (v) => {
+                    let s = 0;
+                    if (v.lang.includes('BR')) s += 10;
+                    if (v.name.includes('Natural') || v.name.includes('Online')) s += 8;
+                    if (v.name.includes('Francisca') || v.name.includes('Antonio') || v.name.includes('Google')) s += 6;
+                    if (v.name.includes('Luciana')) s += 4;
+                    return s;
+                };
+                return score(b) - score(a);
+            });
+
+            availableVoices = ptVoices;
+            const sel = document.getElementById('specificVoiceSelect');
+            sel.innerHTML = '';
+
+            if (ptVoices.length === 0) {
+                sel.innerHTML = `<option value="">Standard-Browserstimme (Nutze Gemini KI-Stimme oben)</option>`;
+            } else {
+                ptVoices.forEach(v => {
+                    const isBest = v.name.includes('Natural') || v.name.includes('Google');
+                    sel.innerHTML += `<option value="${v.voiceURI}">${isBest ? '? ' : ''}${v.name} (${v.lang})</option>`;
+                });
+                if (audioSettings.voiceURI && ptVoices.some(v => v.voiceURI === audioSettings.voiceURI)) {
+                    sel.value = audioSettings.voiceURI;
+                } else {
+                    audioSettings.voiceURI = ptVoices[0].voiceURI;
+                }
+            }
+        }
+
+        function saveAudioSettings() {
+            audioSettings.engine = document.getElementById('voiceEngineSelect').value;
+            audioSettings.voiceURI = document.getElementById('specificVoiceSelect').value;
+            audioSettings.rate = parseFloat(document.getElementById('voiceRate').value) || 0.95;
+            localStorage.setItem('ptBrAudioV3', JSON.stringify(audioSettings));
+        }
+
+        function cleanTextForSpeech(text) {
+            return text
+                .replace(/\(.*?\)/g, '')
+                .replace(/\+ \[.*?\]/g, '')
+                .replace(/\//g, ', ')
+                .trim();
+        }
+
+        async function speakText(rawText) {
+            const text = cleanTextForSpeech(rawText);
+            if (!text) return;
+
+            if (audioSettings.engine === 'gemini') {
+                await speakWithGeminiTTS(text);
+            } else {
+                speakWithBrowser(text);
+            }
+        }
+
+        async function speakWithGeminiTTS(text) {
+            if (ttsAudioCache[text]) {
+                const cachedAudio = new Audio(ttsAudioCache[text]);
+                cachedAudio.playbackRate = audioSettings.rate;
+                cachedAudio.play();
+                return;
+            }
+
+            try {
+                const payload = {
+                    contents: [{ parts: [{ text: `Say naturally in Brazilian Portuguese (pt-BR): ${text}` }] }],
+                    generationConfig: {
+                        responseModalities: ["AUDIO"],
+                        speechConfig: {
+                            voiceConfig: {
+                                prebuiltVoiceConfig: { voiceName: "Aoede" }
+                            }
+                        }
+                    },
+                    model: "gemini-2.5-flash-preview-tts"
+                };
+
+                const res = await callGeminiAPI(payload, "gemini-2.5-flash-preview-tts");
+                const part = res?.candidates?.[0]?.content?.parts?.[0];
+                const audioData = part?.inlineData?.data;
+                const mimeType = part?.inlineData?.mimeType || "audio/L16;rate=24000";
+
+                if (audioData) {
+                    const rateMatch = mimeType.match(/rate=(\d+)/);
+                    const sampleRate = rateMatch ? parseInt(rateMatch[1], 10) : 24000;
+                    const binary = atob(audioData);
+                    const bytes = new Uint8Array(binary.length);
+                    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+                    const pcm16 = new Int16Array(bytes.buffer);
+                    const wavBlob = pcmToWav(pcm16, sampleRate);
+                    const url = URL.createObjectURL(wavBlob);
+                    ttsAudioCache[text] = url;
+
+                    const audio = new Audio(url);
+                    audio.playbackRate = audioSettings.rate;
+                    audio.play();
+                    return;
+                }
+            } catch (e) {
+                console.warn("Gemini TTS Fallback auf Browser-Stimme:", e);
+            }
+
+            speakWithBrowser(text);
+        }
+
+        function pcmToWav(pcm16, sampleRate) {
+            const buffer = new ArrayBuffer(44 + pcm16.length * 2);
+            const view = new DataView(buffer);
+            const writeString = (offset, str) => {
+                for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
+            };
+            writeString(0, 'RIFF');
+            view.setUint32(4, 36 + pcm16.length * 2, true);
+            writeString(8, 'WAVE');
+            writeString(12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, 1, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * 2, true);
+            view.setUint16(32, 2, true);
+            view.setUint16(34, 16, true);
+            writeString(36, 'data');
+            view.setUint32(40, pcm16.length * 2, true);
+            for (let i = 0; i < pcm16.length; i++) {
+                view.setInt16(44 + i * 2, pcm16[i], true);
+            }
+            return new Blob([buffer], { type: 'audio/wav' });
+        }
+
+        function speakWithBrowser(text) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'pt-BR';
+            utterance.rate = audioSettings.rate;
+
+            if (availableVoices.length > 0) {
+                const chosen = availableVoices.find(v => v.voiceURI === audioSettings.voiceURI) || availableVoices[0];
+                utterance.voice = chosen;
+            }
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function speakCurrentWord() {
+            if (currentCard) speakText(currentCard.pt);
+        }
+
+        function speakCurrentSentence() {
+            if (currentCard) speakText(currentCard.sentPt);
+        }
+
+        // ============================================================================
+        // 11. SRS SETTINGS, DECK MANAGER & BACKUP EXPORT/IMPORT
+        // ============================================================================
+        function saveSrsSettings() {
+            srsSettings = {
+                hard: parseFloat(document.getElementById('setHard').value) || 1,
+                good: parseFloat(document.getElementById('setGood').value) || 3,
+                easy: parseFloat(document.getElementById('setEasy').value) || 7,
+                factor: parseFloat(document.getElementById('setFactor').value) || 2.0
+            };
+            localStorage.setItem('ptBrSettingsV3', JSON.stringify(srsSettings));
+            updateButtonLabels();
+            showToast("SRS-Intervalle gespeichert!");
+        }
+
+        function renderDeckManager() {
+            const container = document.getElementById('deckListContainer');
+            if (!container) return;
+            document.getElementById('deckTotalCount').innerText = vocabList.length;
+            container.innerHTML = vocabList.map(v => `
+                <div class="py-2 px-3 flex items-center justify-between gap-2 hover:bg-slate-50 rounded-lg">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="text-lg">${v.visual && !v.visual.startsWith('http') ? v.visual : '????'}</span>
+                        <div class="truncate">
+                            <span class="font-bold text-emerald-700">${escapeHtml(v.pt)}</span>
+                            <span class="text-slate-400 mx-1"></span>
+                            <span class="text-slate-700">${escapeHtml(v.de)}</span>
+                            <span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full ml-2">${escapeHtml(v.cat)}</span>
+                            ${typeof v.pronScore === 'number' ? `<span class="text-[10px] bg-rose-50 text-rose-700 px-2 py-0.5 rounded-full ml-1 font-bold">??? ${v.pronScore}%</span>` : ''}
+                        </div>
+                    </div>
+                    <button onclick="deleteVocabItem(${v.id})" class="text-slate-400 hover:text-rose-600 px-2 py-1 font-bold" title="Wort l�schen">?</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteVocabItem(id) {
+            vocabList = vocabList.filter(v => v.id !== id);
+            saveData();
+            populateCategoryDropdowns();
+            loadNextCard();
+            renderDeckManager();
+            showToast("Vokabel entfernt", "???");
+        }
+
+        function resetDeckConfirm() {
+            localStorage.removeItem('ptBrVocabV3');
+            localStorage.removeItem('ptBrVocabV2');
+            localStorage.removeItem('ptBrCustomCatsV4');
+            location.reload();
+        }
+
+        function exportBackupJson() {
+            const backupData = {
+                version: "4.0",
+                exportDate: new Date().toISOString(),
+                userGoalTarget,
+                customCategories,
+                srsSettings,
+                audioSettings,
+                vocabList
+            };
+            const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `brasil-trainer-backup-${new Date().toISOString().slice(0, 10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast("Backup-Datei (.json) heruntergeladen!", "??");
+        }
+
+        function importBackupJson(event) {
+            const file = event.target.files?.[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (Array.isArray(data.vocabList) && data.vocabList.length > 0) {
+                        vocabList = data.vocabList;
+                        if (Array.isArray(data.customCategories)) customCategories = data.customCategories;
+                        if (data.userGoalTarget) {
+                            userGoalTarget = data.userGoalTarget;
+                            localStorage.setItem('ptBrUserGoalV4', String(userGoalTarget));
+                        }
+                        if (data.srsSettings) {
+                            srsSettings = data.srsSettings;
+                            localStorage.setItem('ptBrSettingsV3', JSON.stringify(srsSettings));
+                        }
+                        saveData();
+                        populateCategoryDropdowns();
+                        loadNextCard();
+                        renderDeckManager();
+                        showToast(`${vocabList.length} Vokabeln erfolgreich wiederhergestellt!`, "??");
+                    } else {
+                        showToast("Ung�ltige Backup-Datei.", "??");
+                    }
+                } catch (err) {
+                    showToast("Fehler beim Lesen der Backup-Datei.", "??");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function downloadStandaloneHtml() {
+            const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "index.html";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast("Standalone Web-App (index.html) heruntergeladen!", "??");
+        }
+
+        function escapeHtml(str) {
+            if (!str) return "";
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
+

@@ -335,19 +335,19 @@
                     <div id="srsButtons" class="hidden grid-cols-4 gap-2 sm:gap-3">
                         <button onclick="rateCard('again')" class="py-3 px-2 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xs sm:text-sm flex flex-col items-center shadow-sm transition">
                             <span>Nochmal</span>
-                            <span id="lblAgain" class="text-[11px] font-normal opacity-90 mt-0.5">Sofort (1)</span>
+                            <span id="lblAgain" class="text-[11px] font-normal opacity-90 mt-0.5">Sofort</span>
                         </button>
                         <button onclick="rateCard('hard')" class="py-3 px-2 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs sm:text-sm flex flex-col items-center shadow-sm transition">
                             <span>Schwer</span>
-                            <span id="lblHard" class="text-[11px] font-normal opacity-90 mt-0.5">1 Tag (2)</span>
+                            <span id="lblHard" class="text-[11px] font-normal opacity-90 mt-0.5">1 Tag</span>
                         </button>
                         <button onclick="rateCard('good')" class="py-3 px-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs sm:text-sm flex flex-col items-center shadow-sm transition">
                             <span>Gut</span>
-                            <span id="lblGood" class="text-[11px] font-normal opacity-90 mt-0.5">3 Tage (3)</span>
+                            <span id="lblGood" class="text-[11px] font-normal opacity-90 mt-0.5">3 Tage</span>
                         </button>
                         <button onclick="rateCard('easy')" class="py-3 px-2 rounded-2xl bg-blue-700 hover:bg-blue-800 text-white font-extrabold text-xs sm:text-sm flex flex-col items-center shadow-sm transition">
                             <span>Leicht</span>
-                            <span id="lblEasy" class="text-[11px] font-normal opacity-90 mt-0.5">7 Tage (4)</span>
+                            <span id="lblEasy" class="text-[11px] font-normal opacity-90 mt-0.5">7 Tage</span>
                         </button>
                     </div>
                 </div>
@@ -2157,10 +2157,10 @@ Anforderungen für jedes Wort:
             const goodDays = reps === 0 ? srsSettings.good : Math.max(2, Math.round(curInt * srsSettings.factor));
             const easyDays = reps === 0 ? srsSettings.easy : Math.max(4, Math.round(curInt * srsSettings.factor * 1.5));
 
-            document.getElementById('lblAgain').innerText = "Sofort (1)";
-            document.getElementById('lblHard').innerText = `${hardDays} Tag(e) (2)`;
-            document.getElementById('lblGood').innerText = `${goodDays} Tag(e) (3)`;
-            document.getElementById('lblEasy').innerText = `${easyDays} Tag(e) (4)`;
+            document.getElementById('lblAgain').innerText = "Sofort";
+            document.getElementById('lblHard').innerText = `${hardDays} ${hardDays === 1 ? "Tag" : "Tage"}`;
+            document.getElementById('lblGood').innerText = `${goodDays} ${goodDays === 1 ? "Tag" : "Tage"}`;
+            document.getElementById('lblEasy').innerText = `${easyDays} ${easyDays === 1 ? "Tag" : "Tage"}`;
         }
 
         function showAnswer() {

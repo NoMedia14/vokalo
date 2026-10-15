@@ -175,7 +175,7 @@
                 
                 <div class="flex items-center gap-3 flex-grow max-w-md">
                     <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden flex">
-                        <div id="headerLevelBar" class="level-gradient h-full transition-all duration-500 rounded-full" style="width: 12%"></div>
+                        <div id="headerLevelBar" class="level-gradient h-full transition-all duration-500 rounded-full" style="width: 0%"></div>
                     </div>
                     <span id="headerNextLevelHint" class="text-[11px] font-bold text-slate-600 whitespace-nowrap shrink-0">Noch 10 Pkt. bis A1.2</span>
                 </div>
@@ -188,7 +188,9 @@
 
     <div id="audioPlaybackPanel" class="hidden fixed bottom-24 left-4 right-4 bg-white border rounded-2xl shadow-xl p-3 z-50">
         <div class="flex justify-between items-center mb-2"><span class="font-bold text-sm">Aussprache anhören</span><button onclick="document.getElementById('audioPlayback').pause();document.getElementById('audioPlaybackPanel').classList.add('hidden')" class="px-3 py-2" aria-label="Audioplayer schließen">✕</button></div>
+        <p id="audioPlaybackStatus" class="text-xs text-slate-600 mb-2" role="status"></p>
         <audio id="audioPlayback" controls class="w-full"></audio>
+        <button onclick="speakWithBrowser(pendingSpokenText,pendingSpokenRate)" class="px-3 py-2 mt-2 rounded-xl border font-bold text-sm">Alternative: Systemstimme starten</button>
     </div>
     <!-- TOAST NOTIFICATION -->
     <div id="toast" class="fixed bottom-5 right-5 z-50 hidden bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-sm font-semibold animate-fade-in max-w-sm border border-slate-700">
@@ -340,7 +342,7 @@
                     <div id="statNew" class="text-lg sm:text-xl font-extrabold text-blue-600">0</div>
                 </div>
                 <div class="bg-white p-2.5 sm:p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
-                    <div class="text-[11px] font-semibold text-slate-500">✅ Gelernt</div>
+                    <div class="text-[11px] font-semibold text-slate-500">✅ Bestätigt</div>
                     <div id="statLearned" class="text-lg sm:text-xl font-extrabold text-emerald-600">0</div>
                 </div>
                 <div class="bg-white p-2.5 sm:p-3 rounded-2xl border border-slate-200 text-center shadow-sm">
@@ -540,6 +542,7 @@
         <!-- TAB 3: NIVEAU & FORTSCHRITTS-DASHBOARD     -->
         <!-- ========================================== -->
         <section id="view-progress" class="hidden space-y-6 animate-fade-in">
+            <p class="text-sm text-slate-600 bg-white border rounded-xl p-3">Dein Fortschritt zählt erfolgreiche, fällige Wiederholungen mit „Gut“ oder „Leicht“. Erstes Anschauen und Aufdecken geben keine Punkte. Aussprachetests werden separat angezeigt.</p>
             
             <!-- Overall Level & Goal Setting Card -->
             <div class="bg-white rounded-3xl p-6 sm:p-8 card-shadow border border-slate-100 space-y-6">
@@ -1303,7 +1306,7 @@
             let pronScores = [];
 
             vocabList.forEach(v => {
-                const reps = v.reps || 0;
+                const reps = v.successfulReviews || 0;
                 if (reps >= 2) {
                     mastered++;
                     xp += 5;
@@ -1316,8 +1319,7 @@
 
                 if (typeof v.pronScore === 'number') {
                     pronScores.push(v.pronScore);
-                    if (v.pronScore >= 80) xp += 2;
-                    else if (v.pronScore >= 50) xp += 1;
+
                 }
             });
 
@@ -1363,7 +1365,7 @@
             document.getElementById('headerLevelBadge').innerText = stats.currentTier.code;
             document.getElementById('headerLevelTitle').innerText = stats.currentTier.title;
             document.getElementById('headerXpText').innerText = `${stats.xp} XP (${stats.mastered} gemeistert, ${stats.learning} im Training)`;
-            document.getElementById('headerLevelBar').style.width = `${Math.max(6, stats.tierProgress)}%`;
+            document.getElementById('headerLevelBar').style.width = `${stats.tierProgress}%`;
             document.getElementById('headerNextLevelHint').innerText = stats.xpToNext > 0
                 ? `Noch ${stats.xpToNext} XP bis nächstes Level`
                 : `Max-Level erreicht! 🏆`;
@@ -1377,7 +1379,7 @@
             const effectiveLearned = stats.mastered + (stats.learning * 0.5);
             const goalPct = Math.min(100, Math.round((effectiveLearned / userGoalTarget) * 100));
             document.getElementById('dashGoalPercent').innerText = `${goalPct}% erreicht`;
-            document.getElementById('dashGoalBar').style.width = `${Math.max(4, goalPct)}%`;
+            document.getElementById('dashGoalBar').style.width = `${goalPct}%`;
             document.getElementById('dashGoalDetailLeft').innerText = `${stats.mastered} gemeistert + ${stats.learning} im Training`;
             document.getElementById('dashGoalDetailRight').innerText = `Ziel: ${userGoalTarget} aktiv beherrschte Wörter`;
 
@@ -1397,8 +1399,8 @@
 
             grid.innerHTML = categories.map(cat => {
                 const cards = vocabList.filter(v => v.cat === cat);
-                const cMastered = cards.filter(v => (v.reps || 0) >= 2).length;
-                const cLearning = cards.filter(v => (v.reps || 0) === 1).length;
+                const cMastered = cards.filter(v => (v.successfulReviews || 0) >= 2).length;
+                const cLearning = cards.filter(v => (v.successfulReviews || 0) === 1).length;
                 const cTotal = cards.length;
 
                 const catEffective = cMastered + (cLearning * 0.5);
@@ -1588,6 +1590,8 @@ Gehe konkret auf seine stärksten Themengebiete ein, nenne 1 Gebiet mit Aufholbe
                 if (recognition) { try { recognition.stop(); } catch(e) {} }
                 const captureTarget = pronTargetCard;
                 const captureText = document.getElementById('pronTargetPt').innerText.trim();
+                try { if (navigator.audioSession) navigator.audioSession.type = 'play-and-record'; } catch(e) {}
+                document.getElementById('audioPlayback').pause();
                 const stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});
                 const formats = ['audio/webm;codecs=opus','audio/mp4','audio/webm'];
                 const format = formats.find(type => MediaRecorder.isTypeSupported?.(type));
@@ -1607,6 +1611,7 @@ Gehe konkret auf seine stärksten Themengebiete ein, nenne 1 Gebiet mit Aufholbe
                     isPronAnalyzing = true; btn.disabled = true;
                     clearTimeout(recordingStopTimer);
                     stream.getTracks().forEach(track=>track.stop());
+                    setAudioPlaybackSession();
                     isPronRecording=false;
                     lastRecordedBlob=new Blob(chunks,{type:recorder.mimeType || 'audio/webm'});
                     if (lastRecordedBlobUrl) URL.revokeObjectURL(lastRecordedBlobUrl);
@@ -2111,7 +2116,7 @@ Anforderungen für jedes Wort:
             const now = Date.now();
             const due = filteredList.filter(v => v.dueDate <= now && v.reps > 0).length;
             const newCards = filteredList.filter(v => v.reps === 0).length;
-            const learned = filteredList.filter(v => v.dueDate > now).length;
+            const learned = filteredList.filter(v => (v.successfulReviews || 0) > 0).length;
 
             document.getElementById('statDue').innerText = due;
             document.getElementById('statNew').innerText = newCards;
@@ -2201,10 +2206,19 @@ Anforderungen für jedes Wort:
         }
 
         function rateCard(rating) {
-            if (!currentCard) return;
+            if (!currentCard || !['again','hard','good','easy'].includes(rating) || document.getElementById('answerSection').classList.contains('hidden')) return;
             const now = Date.now();
             const dayMs = 24 * 60 * 60 * 1000;
             let nextDays = 0;
+            const previouslyStudied = Boolean(currentCard.firstStudyAt) || (currentCard.reps || 0) > 0;
+            const dueForReview = Number(currentCard.dueDate) <= now;
+            if (previouslyStudied && dueForReview && ['good','easy'].includes(rating)) {
+                currentCard.successfulReviews = (currentCard.successfulReviews || 0) + 1;
+                currentCard.lastSuccessfulReviewAt = now;
+            } else if (rating === 'again' || rating === 'hard') {
+                currentCard.successfulReviews = 0;
+            }
+            if (!currentCard.firstStudyAt) currentCard.firstStudyAt = now;
 
             if (rating === 'again') {
                 currentCard.reps = 0;
@@ -2747,17 +2761,29 @@ Regeln:
             const text = cleanTextForSpeech(String(rawText || ''));
             if (!text) return;
             if (isPronRecording || recordingStarting) { showToast('Bitte zuerst die Aufnahme stoppen.'); return; }
+            const requestVersion = ++audioRequestVersion;
             const rate = Number(requestedRate) || 0.95;
+            pendingSpokenText = text; pendingSpokenRate = rate;
+            if (isAppleMobile()) {
+                document.getElementById('audioPlaybackPanel').classList.remove('hidden');
+                document.getElementById('audioPlaybackStatus').textContent = 'Audio wird vorbereitet. Alternativ kannst du direkt die Systemstimme starten.';
+                const player = document.getElementById('audioPlayback');
+                player.pause(); player.removeAttribute('src'); player.load();
+            }
             if (recognition) { try { recognition.stop(); } catch(e) {} }
-            if (audioSettings.engine === 'gemini') {
-                preparePlayback();
-                try { await speakWithGeminiTTS(text, rate); }
-                catch(e) { showToast(e.message || 'KI-Stimme nicht verfügbar. Bitte Systemstimme in den Einstellungen wählen.'); }
+            if (audioSettings.engine === 'gemini' || (isAppleMobile() && audioSettings.engine === 'auto' && getActiveApiKey())) {
+                if (!isAppleMobile()) preparePlayback();
+                try { await speakWithGeminiTTS(text, rate, requestVersion); }
+                catch(e) {
+                    const message = e.message || 'KI-Stimme nicht verfügbar. Bitte Systemstimme verwenden.';
+                    showToast(message);
+                    document.getElementById('audioPlaybackStatus').textContent = message;
+                }
             } else {
                 speakWithBrowser(text, rate);
             }
         }
-        async function speakWithGeminiTTS(text, rate = audioSettings.rate) {
+        async function speakWithGeminiTTS(text, rate = audioSettings.rate, requestVersion = audioRequestVersion) {
             if (window.speechSynthesis) window.speechSynthesis.cancel();
             if (!ttsAudioCache[text]) {
                 showToast('KI-Stimme wird geladen ...');
@@ -2774,6 +2800,7 @@ Regeln:
                     ? pcmToWav(new Int16Array(bytes.buffer), Number(mime.match(/rate=(\d+)/)?.[1]) || 24000)
                     : new Blob([bytes],{type:mime});
             }
+            if (requestVersion !== audioRequestVersion) return;
             try { await playAudioBlob(ttsAudioCache[text],rate); }
             catch(e) {
                 const panel=document.getElementById('audioPlaybackPanel'), player=document.getElementById('audioPlayback');
@@ -2811,11 +2838,13 @@ Regeln:
         }
 
         function speakWithBrowser(text, rate = audioSettings.rate) {
+            audioRequestVersion++;
             if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) { showToast('Die Systemstimme wird in diesem Browser nicht unterstützt. Bitte Safari oder Chrome verwenden.'); return; }
             if (activePlaybackSource) { try { activePlaybackSource.stop(); } catch(e) {} }
+            setAudioPlaybackSession();
+            document.getElementById('audioPlayback')?.pause?.();
             const synth = window.speechSynthesis;
             synth.cancel();
-            synth.resume();
             activeSpeechUtterance = new window.SpeechSynthesisUtterance(text);
             activeSpeechUtterance.lang='pt-BR'; activeSpeechUtterance.rate=Number(rate)||0.95;
             activeSpeechUtterance.volume=1;
@@ -3146,6 +3175,7 @@ Regeln:
             } catch (error) { document.getElementById('cloudAuthMessage').textContent = error.message || 'Cloud-Verbindung fehlgeschlagen.'; }
         }
 
+        let pendingSpokenText = '', pendingSpokenRate = 0.95, audioRequestVersion = 0;
         let lastApiError = '', activeSpeechUtterance = null, playbackContext = null, activePlaybackSource = null;
         let isPronAnalyzing = false, recordingStopTimer = null;
         function apiErrorMessage(status, body) {
@@ -3209,6 +3239,40 @@ Regeln:
                 status.textContent = 'Verbindung erfolgreich. Der Key und das Textmodell funktionieren.';
             } catch (e) { status.textContent = e.message; }
         }
+
+        function isAppleMobile() {
+            return /iPhone|iPad|iPod/i.test(navigator.userAgent || '') ||
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        }
+        function setAudioPlaybackSession() {
+            try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch(e) {}
+        }
+        async function playNativeAudio(blob, rate = 1) {
+            const player = document.getElementById('audioPlayback');
+            const panel = document.getElementById('audioPlaybackPanel');
+            if (!player) throw new Error('Audioplayer nicht verfügbar. Bitte Seite neu laden.');
+            setAudioPlaybackSession();
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+            if (activePlaybackSource) { try { activePlaybackSource.stop(); } catch(e) {} }
+            if (playbackContext?.state === 'running') { try { playbackContext.suspend().catch(() => {}); } catch(e) {} }
+            player.pause();
+            if (player.dataset.url) URL.revokeObjectURL(player.dataset.url);
+            player.dataset.url = URL.createObjectURL(blob);
+            player.src = player.dataset.url;
+            player.playbackRate = rate;
+            player.volume = 1;
+            player.muted = false;
+            player.setAttribute('playsinline','');
+            player.onerror = () => showToast('Safari konnte die Audiodatei nicht wiedergeben. Bitte erneut laden und versuchen.');
+            document.getElementById('audioPlaybackStatus').textContent = 'Audio bereit. Bei Bedarf auf ▶ tippen.';
+            panel.classList.remove('hidden');
+            try { await player.play(); }
+            catch(e) {
+                if (e.name !== 'NotAllowedError' && e.name !== 'AbortError') throw new Error('Die Audiodatei konnte nicht abgespielt werden.');
+                showToast('Audio ist bereit. Bitte im Audioplayer auf ▶ tippen.');
+            }
+        }
+
         function preparePlayback() {
             const Context = window.AudioContext || window.webkitAudioContext;
             if (!Context) return null;
@@ -3217,6 +3281,7 @@ Regeln:
             return playbackContext;
         }
         async function playAudioBlob(blob, rate = 1) {
+            if (isAppleMobile()) return playNativeAudio(blob, rate);
             const ctx = preparePlayback();
             if (!ctx) { const audio = new Audio(URL.createObjectURL(blob)); audio.playbackRate=rate; await audio.play(); return; }
             const buffer = await ctx.decodeAudioData(await blob.arrayBuffer());

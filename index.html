@@ -6,6 +6,7 @@
     <title>Vokalo – Sprachen lernen</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         
@@ -199,10 +200,10 @@
             </div>
 
             <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs space-y-2 text-slate-700 leading-relaxed">
-                <p>Innerhalb dieses Vorschau-Fensters ist die KI automatisch verbunden. Wenn du die App als eigene Webseite oder auf dem Smartphone nutzt, hinterlege hier deinen kostenlosen Gemini-Key:</p>
+                <p>Für die KI-Funktionen hinterlegst du deinen Gemini-API-Key. Er wird privat in deinem Vokalo-Konto gespeichert und für deine Anfragen an Google verwendet.</p>
                 <ol class="list-decimal list-inside space-y-1 font-semibold text-slate-800">
                     <li>Öffne <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="text-emerald-600 underline">aistudio.google.com/apikey</a></li>
-                    <li>Klicke auf <strong>„Create API Key“</strong> und füge ihn unten ein (100% lokal im Browser gespeichert).</li>
+                    <li>Klicke auf <strong>„Create API Key“</strong> und füge ihn unten ein (privat in deinem Konto gespeichert).</li>
                 </ol>
             </div>
 
@@ -219,7 +220,22 @@
     </div>
 
     <!-- MAIN CONTENT CONTAINER -->
-    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-5">
+    <section id="cloudLogin" class="max-w-md w-full mx-auto my-10 px-4">
+        <div class="bg-white p-6 rounded-3xl card-shadow border border-slate-200 space-y-4">
+            <h2 class="text-2xl font-extrabold">Willkommen bei Vokalo</h2>
+            <p class="text-sm text-slate-600">Melde dich auf PC und Handy mit demselben Konto an. Deine Vokabeln und dein Lernstand werden zentral gespeichert.</p>
+            <form onsubmit="event.preventDefault(); cloudAuthAction('login')" class="space-y-3">
+                <label class="block text-sm font-bold" for="cloudEmail">E-Mail</label>
+                <input id="cloudEmail" type="email" required autocomplete="email" class="w-full border rounded-xl p-3">
+                <label class="block text-sm font-bold" for="cloudPassword">Passwort</label>
+                <input id="cloudPassword" type="password" required autocomplete="current-password" class="w-full border rounded-xl p-3">
+                <button data-cloud-auth type="submit" class="w-full bg-emerald-600 text-white font-bold p-3 rounded-xl">Anmelden</button>
+                <button data-cloud-auth type="button" onclick="cloudAuthAction('signup')" class="w-full bg-slate-100 font-bold p-3 rounded-xl">Konto erstellen</button>
+            </form>
+            <p id="cloudAuthMessage" role="status" class="text-sm text-slate-600">Beim ersten Anmelden übernehmen wir vorhandene Vokabeln aus diesem Browser, wenn dein Konto noch keinen Lernstand hat.</p>
+        </div>
+    </section>
+    <main class="hidden flex-grow max-w-4xl w-full mx-auto px-4 py-5">
 
         <!-- ========================================== -->
         <!-- TAB 1: VOKABEL-TRAINER (SRS)               -->
@@ -711,6 +727,16 @@
         <!-- TAB 6: EINSTELLUNGEN, AUDIO & BACKUP       -->
         <!-- ========================================== -->
         <section id="view-settings" class="hidden space-y-6 animate-fade-in">
+            <div class="bg-white rounded-3xl p-6 card-shadow border border-slate-100 space-y-3">
+                <h2 class="font-extrabold text-lg">Konto &amp; Speicherung</h2>
+                <p id="cloudEmailLabel" class="text-sm text-slate-600"></p>
+                <p id="cloudStatus" role="status" aria-live="polite" class="text-sm font-bold text-emerald-700">Cloud wird verbunden ...</p>
+                <div class="flex gap-2 flex-wrap">
+                    <button onclick="flushCloud().catch(() => showToast('Speichern fehlgeschlagen. Bitte Verbindung prüfen.'))" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-sm">Jetzt speichern</button>
+                    <button onclick="cloudRefresh()" class="px-4 py-2 rounded-xl bg-slate-100 font-bold text-sm">Stand neu laden</button>
+                    <button onclick="cloudLogout()" class="px-4 py-2 rounded-xl border font-bold text-sm">Abmelden</button>
+                </div>
+            </div>
             
             <!-- Standalone Web & API Key Configuration -->
             <div class="bg-white rounded-3xl p-6 card-shadow border border-slate-100 space-y-4">
@@ -721,7 +747,7 @@
                         </div>
                         <div>
                             <h2 class="font-extrabold text-lg text-slate-900">KI-Verbindung</h2>
-                            <p class="text-xs text-slate-500">Verbinde Gemini für KI-Vokabeln, Aussprache-Auswertung und Dialoge. Dein Key wird in diesem Browser gespeichert.</p>
+                            <p class="text-xs text-slate-500">Verbinde Gemini für KI-Vokabeln, Aussprache-Auswertung und Dialoge. Dein Key wird privat in deinem Konto gespeichert.</p>
                         </div>
                     </div>
                     <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-xl transition">
@@ -749,7 +775,7 @@
                     </div>
                     <div>
                         <h2 class="font-extrabold text-lg text-slate-900">💾 Backup, Synchronisation & App-Download</h2>
-                        <p class="text-xs text-slate-500">Dein Lernstand wird sofort im Browser (`localStorage`) gespeichert. Hier kannst du ihn als Datei sichern.</p>
+                        <p class="text-xs text-slate-500">Dein Lernstand wird automatisch in deinem Konto gespeichert. Hier kannst du zusätzlich eine Backup-Datei herunterladen.</p>
                     </div>
                 </div>
 
@@ -937,34 +963,25 @@
         // 2. INITIALIZATION & ROBUST STORAGE
         // ============================================================================
         function init() {
-            // Preserve existing progress and API settings when upgrading to Vokalo.
-            try {
-                ['VocabV3','VocabV2','CustomCatsV4','UserGoalV4','SettingsV3','AudioV3','UserApiKey','ShowPhotosV4','PhotoCacheV5'].forEach(suffix => {
-                    const previous = localStorage.getItem('pt' + 'Br' + suffix);
-                    if (previous !== null && localStorage.getItem('vokalo' + suffix) === null) {
-                        localStorage.setItem('vokalo' + suffix, previous);
-                    }
-                });
-            } catch (e) {}
             lucide.createIcons();
             try {
-                showPhotos = localStorage.getItem('vokaloShowPhotosV4') !== 'false';
-                const cache = JSON.parse(localStorage.getItem('vokaloPhotoCacheV5') || '{}');
+                showPhotos = appStorage.getItem('vokaloShowPhotosV4') !== 'false';
+                const cache = JSON.parse(appStorage.getItem('vokaloPhotoCacheV5') || '{}');
                 if (cache && typeof cache === 'object' && !Array.isArray(cache)) photoUrlCache = cache;
             } catch (e) {}
             updateImgModeBtnUI();
 
-            const savedCustomCats = localStorage.getItem('vokaloCustomCatsV4');
+            const savedCustomCats = appStorage.getItem('vokaloCustomCatsV4');
             if (savedCustomCats) {
                 try { customCategories = JSON.parse(savedCustomCats); } catch(e) { customCategories = []; }
             }
 
-            const savedVocab = localStorage.getItem('vokaloVocabV3');
+            const savedVocab = appStorage.getItem('vokaloVocabV3');
             if (savedVocab) {
                 try { vocabList = JSON.parse(savedVocab); } catch (e) { vocabList = []; }
             }
             if (!vocabList || vocabList.length === 0) {
-                const v2 = localStorage.getItem('vokaloVocabV2');
+                const v2 = appStorage.getItem('vokaloVocabV2');
                 if (v2) {
                     try { vocabList = JSON.parse(v2); } catch(e) {}
                 }
@@ -987,13 +1004,13 @@
                 if (keyword) card.kw = keyword;
             });
             saveData();
-            const savedGoal = localStorage.getItem('vokaloUserGoalV4');
+            const savedGoal = appStorage.getItem('vokaloUserGoalV4');
             if (savedGoal) {
                 userGoalTarget = parseInt(savedGoal, 10) || 60;
                 document.getElementById('userGoalSelect').value = String(userGoalTarget);
             }
 
-            const savedSrs = localStorage.getItem('vokaloSettingsV3');
+            const savedSrs = appStorage.getItem('vokaloSettingsV3');
             if (savedSrs) {
                 try {
                     srsSettings = JSON.parse(savedSrs);
@@ -1004,7 +1021,7 @@
                 } catch(e) {}
             }
 
-            const savedAudio = localStorage.getItem('vokaloAudioV3');
+            const savedAudio = appStorage.getItem('vokaloAudioV3');
             if (savedAudio) {
                 try {
                     audioSettings = JSON.parse(savedAudio);
@@ -1014,7 +1031,7 @@
                 } catch(e) {}
             }
 
-            const savedUserKey = localStorage.getItem('vokaloUserApiKey');
+            const savedUserKey = appStorage.getItem('vokaloUserApiKey');
             if (savedUserKey) {
                 userCustomApiKey = savedUserKey.trim();
                 document.getElementById('settingsApiKeyInput').value = userCustomApiKey;
@@ -1053,8 +1070,8 @@
         }
 
         function saveData() {
-            localStorage.setItem('vokaloVocabV3', JSON.stringify(vocabList));
-            localStorage.setItem('vokaloCustomCatsV4', JSON.stringify(customCategories));
+            appStorage.setItem('vokaloVocabV3', JSON.stringify(vocabList));
+            appStorage.setItem('vokaloCustomCatsV4', JSON.stringify(customCategories));
             const countEl = document.getElementById('discoverExistingCount');
             const deckCountEl = document.getElementById('deckTotalCount');
             if (countEl) countEl.innerText = vocabList.length;
@@ -1241,7 +1258,7 @@
 
         function saveUserGoal() {
             userGoalTarget = parseInt(document.getElementById('userGoalSelect').value, 10) || 60;
-            localStorage.setItem('vokaloUserGoalV4', String(userGoalTarget));
+            appStorage.setItem('vokaloUserGoalV4', String(userGoalTarget));
             updateLevelAndProgressUI();
             showToast("Persönliches Lernziel aktualisiert!", "🎯");
         }
@@ -1754,7 +1771,7 @@ Antworte im JSON-Format:
         function saveApiKeyFromModal() {
             const val = document.getElementById('modalApiKeyInput').value.trim();
             userCustomApiKey = val;
-            localStorage.setItem('vokaloUserApiKey', val);
+            appStorage.setItem('vokaloUserApiKey', val);
             document.getElementById('settingsApiKeyInput').value = val;
             updateApiKeyStatusBadge();
             closeApiKeyModal();
@@ -1764,7 +1781,7 @@ Antworte im JSON-Format:
         function saveUserApiKey() {
             const val = document.getElementById('settingsApiKeyInput').value.trim();
             userCustomApiKey = val;
-            localStorage.setItem('vokaloUserApiKey', val);
+            appStorage.setItem('vokaloUserApiKey', val);
             document.getElementById('modalApiKeyInput').value = val;
             updateApiKeyStatusBadge();
             showToast(val ? "Gemini API-Key gespeichert!" : "Auf Standard-Modus zurückgesetzt.", "🔑");
@@ -1772,7 +1789,7 @@ Antworte im JSON-Format:
 
         function clearUserApiKey() {
             userCustomApiKey = "";
-            localStorage.removeItem('vokaloUserApiKey');
+            appStorage.removeItem('vokaloUserApiKey');
             document.getElementById('settingsApiKeyInput').value = "";
             document.getElementById('modalApiKeyInput').value = "";
             updateApiKeyStatusBadge();
@@ -1988,7 +2005,7 @@ Anforderungen für jedes Wort:
 
         function toggleImageMode() {
             showPhotos = !showPhotos;
-            try { localStorage.setItem('vokaloShowPhotosV4', String(showPhotos)); } catch (e) {}
+            try { appStorage.setItem('vokaloShowPhotosV4', String(showPhotos)); } catch (e) {}
             updateImgModeBtnUI();
             if (currentCard) renderVisual(currentCard);
         }
@@ -2046,7 +2063,7 @@ Anforderungen für jedes Wort:
                     // Keep the cache bounded; storage restrictions must never break the trainer.
                     const keys = Object.keys(photoUrlCache);
                     keys.slice(0, Math.max(0, keys.length - 200)).forEach(key => delete photoUrlCache[key]);
-                    try { localStorage.setItem('vokaloPhotoCacheV5', JSON.stringify(photoUrlCache)); } catch (e) {}
+                    try { appStorage.setItem('vokaloPhotoCacheV5', JSON.stringify(photoUrlCache)); } catch (e) {}
                 }
                 return result;
             })();
@@ -2712,7 +2729,7 @@ Regeln:
             audioSettings.engine = document.getElementById('voiceEngineSelect').value;
             audioSettings.voiceURI = document.getElementById('specificVoiceSelect').value;
             audioSettings.rate = parseFloat(document.getElementById('voiceRate').value) || 0.95;
-            localStorage.setItem('vokaloAudioV3', JSON.stringify(audioSettings));
+            appStorage.setItem('vokaloAudioV3', JSON.stringify(audioSettings));
         }
 
         function cleanTextForSpeech(text) {
@@ -2841,7 +2858,7 @@ Regeln:
                 easy: parseFloat(document.getElementById('setEasy').value) || 7,
                 factor: parseFloat(document.getElementById('setFactor').value) || 2.0
             };
-            localStorage.setItem('vokaloSettingsV3', JSON.stringify(srsSettings));
+            appStorage.setItem('vokaloSettingsV3', JSON.stringify(srsSettings));
             updateButtonLabels();
             showToast("SRS-Intervalle gespeichert!");
         }
@@ -2876,11 +2893,11 @@ Regeln:
             showToast("Vokabel entfernt", "🗑️");
         }
 
-        function resetDeckConfirm() {
-            localStorage.removeItem('vokaloVocabV3');
-            localStorage.removeItem('vokaloVocabV2');
-            localStorage.removeItem('vokaloCustomCatsV4');
-            location.reload();
+        async function resetDeckConfirm() {
+            appStorage.removeItem('vokaloVocabV3');
+            appStorage.removeItem('vokaloVocabV2');
+            appStorage.removeItem('vokaloCustomCatsV4');
+            try { await flushCloud(); location.reload(); } catch (e) { showToast('Zurücksetzen konnte nicht gespeichert werden.'); }
         }
 
         function exportBackupJson() {
@@ -2918,11 +2935,11 @@ Regeln:
                         if (Array.isArray(data.customCategories)) customCategories = data.customCategories;
                         if (data.userGoalTarget) {
                             userGoalTarget = data.userGoalTarget;
-                            localStorage.setItem('vokaloUserGoalV4', String(userGoalTarget));
+                            appStorage.setItem('vokaloUserGoalV4', String(userGoalTarget));
                         }
                         if (data.srsSettings) {
                             srsSettings = data.srsSettings;
-                            localStorage.setItem('vokaloSettingsV3', JSON.stringify(srsSettings));
+                            appStorage.setItem('vokaloSettingsV3', JSON.stringify(srsSettings));
                         }
                         saveData();
                         populateCategoryDropdowns();
@@ -2962,7 +2979,138 @@ Regeln:
                 .replace(/"/g, "&quot;");
         }
 
-        window.onload = init;
+        // Learning data lives in Supabase; this adapter only holds working data in RAM.
+        const cloudValues = new Map();
+        let cloudClient = null, cloudUser = null, cloudVersion = 0;
+        let cloudReady = false, cloudDirty = false, cloudSaving = null, cloudTimer = null;
+        let cloudConflict = false;
+        const appStorage = {
+            getItem: key => cloudValues.get(key) ?? null,
+            setItem(key, value) { cloudValues.set(key, String(value)); queueCloudSave(key); },
+            removeItem(key) { cloudValues.delete(key); queueCloudSave(key); }
+        };
+        function cloudStatus(text) {
+            const el = document.getElementById('cloudStatus');
+            if (el) el.textContent = text;
+        }
+        function queueCloudSave(key) {
+            if (!cloudReady || /PhotoCache/.test(key)) return;
+            cloudDirty = true;
+            cloudStatus('Wird gespeichert ...');
+            clearTimeout(cloudTimer);
+            cloudTimer = setTimeout(() => flushCloud().catch(() => {}), 350);
+        }
+        async function flushCloud() {
+            if (cloudSaving) { await cloudSaving; if (cloudDirty) return flushCloud(); return; }
+            if (!cloudReady || !cloudUser || !cloudDirty) return;
+            if (cloudConflict) throw new Error('Konflikt: Bitte zuerst den Lernstand sichern und neu laden.');
+            cloudSaving = (async () => {
+                while (cloudDirty) {
+                    cloudDirty = false;
+                    const snapshot = Object.fromEntries([...cloudValues].filter(([key]) => !/PhotoCache/.test(key)));
+                    const {data, error} = await cloudClient.rpc('vokalo_save_state', {p_payload:snapshot, p_expected_version:cloudVersion});
+                    if (error) {
+                        cloudDirty = true;
+                        cloudConflict = error.code === '40001';
+                        cloudStatus(cloudConflict ? 'Anderes Gerät hat Änderungen gespeichert. Backup sichern und neu laden.' : 'Nicht gespeichert. Verbindung prüfen und erneut speichern.');
+                        throw error;
+                    }
+                    cloudVersion = Number(data);
+                }
+                cloudStatus('In der Cloud gespeichert');
+            })();
+            try { await cloudSaving; } finally { cloudSaving = null; }
+        }
+        function legacyCloudImport() {
+            const imported = new Map();
+            try {
+                ['VocabV3','VocabV2','CustomCatsV4','UserGoalV4','SettingsV3','AudioV3','UserApiKey','ShowPhotosV4'].forEach(suffix => {
+                    const value = window.localStorage.getItem('vokalo'+suffix) ?? window.localStorage.getItem('pt'+'Br'+suffix);
+                    if (value !== null) imported.set('vokalo'+suffix, value);
+                });
+            } catch (e) {}
+            return imported;
+        }
+        async function enterCloudApp(user) {
+            cloudUser = user;
+            cloudReady = false;
+            cloudValues.clear();
+            const {data,error} = await cloudClient.from('vokalo_user_state').select('payload,version').eq('user_id', user.id).maybeSingle();
+            if (error) throw error;
+            cloudVersion = data ? Number(data.version) : 0;
+            if (data) {
+                for (const [key,value] of Object.entries(data.payload || {})) if (typeof value === 'string') cloudValues.set(key,value);
+            } else {
+                for (const [key,value] of legacyCloudImport()) cloudValues.set(key,value);
+            }
+            document.getElementById('cloudEmailLabel').textContent = user.email || '';
+            // Initialize once with the cloud state, never with another device's local data.
+            init();
+            cloudReady = true;
+            const currentPayload = Object.fromEntries([...cloudValues].filter(([key]) => !/PhotoCache/.test(key)));
+            const canonical = value => JSON.stringify(Object.entries(value || {}).sort(([a],[b]) => a.localeCompare(b)));
+            cloudDirty = !data || canonical(data.payload) !== canonical(currentPayload);
+            await flushCloud();
+            document.getElementById('cloudLogin').classList.add('hidden');
+            document.querySelector('main').classList.remove('hidden');
+            cloudStatus('In der Cloud gespeichert');
+        }
+        async function cloudAuthAction(mode) {
+            const message = document.getElementById('cloudAuthMessage');
+            const email = document.getElementById('cloudEmail').value.trim();
+            const password = document.getElementById('cloudPassword').value;
+            if (!email || !password) { message.textContent = 'Bitte E-Mail und Passwort eintragen.'; return; }
+            if (mode === 'signup' && password.length < 8) { message.textContent = 'Bitte mindestens 8 Zeichen als Passwort verwenden.'; return; }
+            const buttons = document.querySelectorAll('[data-cloud-auth]');
+            buttons.forEach(button => button.disabled = true);
+            message.textContent = 'Verbindung wird hergestellt ...';
+            try {
+                if (!cloudClient) throw new Error('Anmeldung konnte nicht geladen werden. Bitte Seite neu laden.');
+                const result = mode === 'signup'
+                    ? await cloudClient.auth.signUp({email,password,options:{emailRedirectTo:'https://nomedia14.github.io/vokalo/'}})
+                    : await cloudClient.auth.signInWithPassword({email,password});
+                if (result.error) throw result.error;
+                if (!result.data.session) { message.textContent = 'Bitte bestätige deine E-Mail. Danach hier mit E-Mail und Passwort anmelden.'; return; }
+                document.getElementById('cloudPassword').value = '';
+                await enterCloudApp(result.data.user);
+            } catch (error) {
+                message.textContent = error.message || 'Anmeldung fehlgeschlagen.';
+                document.getElementById('cloudLogin').classList.remove('hidden');
+            } finally { buttons.forEach(button => button.disabled = false); }
+        }
+        async function cloudLogout() {
+            try {
+                await flushCloud();
+                const {error} = await cloudClient.auth.signOut();
+                if (error) throw error;
+                cloudValues.clear();
+                location.reload();
+            } catch (error) { showToast('Abmelden nicht möglich: Bitte zuerst speichern oder ein Backup herunterladen.'); }
+        }
+        async function cloudRefresh() {
+            try { await flushCloud(); location.reload(); }
+            catch (e) { showToast('Nicht gespeichert. Bitte ein Backup herunterladen, bevor du die Seite neu lädst.'); }
+        }
+        async function bootstrapCloud() {
+            try {
+                if (!window.supabase) throw new Error('Anmeldung konnte nicht geladen werden. Bitte neu laden.');
+                cloudClient = window.supabase.createClient('https://ykeirkmikpoovvuifcds.supabase.co', 'sb_publishable_eqHVskuoZHJNy4xVsrf7vg_IBCeEP8X', {
+                    auth:{persistSession:true,storage:window.sessionStorage,autoRefreshToken:true,detectSessionInUrl:true}
+                });
+                const {data,error} = await cloudClient.auth.getSession();
+                if (error) throw error;
+                if (data.session) await enterCloudApp(data.session.user);
+                cloudClient.auth.onAuthStateChange((event) => {
+                    if (event === 'SIGNED_OUT') { cloudReady=false; document.querySelector('main').classList.add('hidden'); document.getElementById('cloudLogin').classList.remove('hidden'); }
+                });
+                window.addEventListener('beforeunload', event => {
+                    if (cloudDirty || cloudSaving) { event.preventDefault(); event.returnValue = ''; }
+                });
+                window.addEventListener('online', () => flushCloud().catch(() => {}));
+            } catch (error) { document.getElementById('cloudAuthMessage').textContent = error.message || 'Cloud-Verbindung fehlgeschlagen.'; }
+        }
+
+        window.onload = bootstrapCloud;
     </script>
 </body>
 </html>
